@@ -80,7 +80,7 @@ const routes = [
         component: Notifications,
       },
       {
-        path: '/@:name/(comments|followers|followed|reblogs|feed|transfers|activity)?',
+        path: '/@:name/(comments|followers|followed|reblogs|transfers|activity)?',
         component: User,
         exact: true,
         routes: [
