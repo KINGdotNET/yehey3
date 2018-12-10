@@ -91,7 +91,7 @@ class QuickPostEditor extends React.Component {
     );
     const postTitle = " ";
     const data = {
-      body: this.state.currentInputValue,
+      body: postBody + this.state.currentInputValue,
       title: postTitle,
       reward: '50',
       author: this.props.user.name,
@@ -229,11 +229,11 @@ class QuickPostEditor extends React.Component {
   };
 
   handleCreatePost = () => {
-    if (_.isEmpty(this.state.currentInputValue)) {
+    if (_.isEmpty(this.state.currentInputValue) && (_.isEmpty(this.postBody))) {
       this.props.notify(
         this.props.intl.formatMessage({
           id: 'quick_post_error_empty_title',
-          defaultMessage: 'Post title cannot be empty.',
+          defaultMessage: 'Post cannot be empty.',
         }),
         'error',
       );

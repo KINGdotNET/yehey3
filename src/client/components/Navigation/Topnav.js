@@ -4,7 +4,8 @@ import _ from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Menu, Input, AutoComplete } from 'antd';
+import { Menu, Input, AutoComplete, Button } from 'antd';
+import Action from '../Button/Action';
 import classNames from 'classnames';
 import { searchAutoComplete } from '../../search/searchActions';
 import { getUpdatedSCUserMetadata } from '../../auth/authActions';
@@ -170,14 +171,21 @@ class Topnav extends React.Component {
         })}
       >
         <Menu selectedKeys={[]} className="Topnav__menu-container__menu" mode="horizontal">
-          <Menu.Item key="write">
+          <Menu.Item key="write" className="Topnav__link Topnav__link--action">
             <BTooltip
               placement="bottom"
               title={intl.formatMessage({ id: 'write_post', defaultMessage: 'Write post' })}
               mouseEnterDelay={1}
-            >
-              <Link to="/editor" className="Topnav__link Topnav__link--action">
-                <i className="iconfont icon-write" />
+            >  
+              <Link to="/editor">
+                <div className="Topnav__link Topnav__link--action">
+                  <Action primary className="Topnav__postButton">
+                    <div>
+                      <i className="iconfont icon-brush" />
+                      New Post
+                    </div>
+                  </Action>
+                </div>
               </Link>
             </BTooltip>
           </Menu.Item>
