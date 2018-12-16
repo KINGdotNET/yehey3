@@ -38,7 +38,7 @@ BodyShort.propTypes = {
 BodyShort.defaultProps = {
   className: '',
   body: '',
-  length: 140,
+  length: 300,
 };
 
 export default BodyShort;
