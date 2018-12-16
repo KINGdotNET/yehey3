@@ -85,14 +85,16 @@ class Page extends React.Component {
 								onTopicClose={this.handleTopicClose}
                 />
 							)} */}
-							<TopicSelector
+							
+              {authenticated && <QuickPostEditor />}
+              <TopicSelector
                   isSingle={false}
                   sort={sortBy}
                   topics={category ? [category] : []}
                   onSortChange={this.handleSortChange}
                   onTopicClose={this.handleTopicClose}
-                />
-              {authenticated && <QuickPostEditor />}
+              />
+              
               <SubFeed />
 							{/* <UserWallet isCurrentUser className="userWalletPage"></UserWallet> */}
             </div>

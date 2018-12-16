@@ -20,6 +20,9 @@ const TopicSelector = ({ sort, isSingle, topics, onTopicClose, onSortChange }) =
       <SortSelector.Item key="hot">
         <FormattedMessage id="sort_hot" defaultMessage="Hot" />
       </SortSelector.Item>
+      <SortSelector.Item key="feed">
+        <FormattedMessage id="sort_feed" defaultMessage="Feed" />
+      </SortSelector.Item>
       <SortSelector.Item key="created">
         <FormattedMessage id="sort_created" defaultMessage="Created" />
       </SortSelector.Item>

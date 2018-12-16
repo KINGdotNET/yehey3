@@ -9,7 +9,7 @@ import {
   FormattedTime,
 } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
-import { Tag } from 'antd';
+import { Tag , Icon } from 'antd';
 import formatter from '../../helpers/blockchainProtocolFormatter';
 import { getHasDefaultSlider } from '../../helpers/user';
 import {
@@ -112,6 +112,7 @@ class Story extends React.Component {
     this.handleFollowClick = this.handleFollowClick.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleTransferClick = this.handleTransferClick.bind(this);
+    this.onFollowClick = this.onFollowClick.bind(this);
     // this.getName = this.getName.bind(this);
 	}
 	
@@ -174,6 +175,11 @@ class Story extends React.Component {
 
   handleShareClick(post) {
     this.props.reblog(post.id);
+  }
+
+  onFollowClick() {
+    const { post } = this.props;
+    this.props.onActionInitiated(this.handleFollowClick.bind(this, post));
   }
 
   handleFollowClick(post) {
@@ -320,9 +326,63 @@ class Story extends React.Component {
       rewardFund,
       ownPost,
       sliderMode,
-			defaultVotePercent
+      defaultVotePercent,
+      intl
 		} = this.props;
-		
+    
+    let followText = '';
+
+    if (postState.userFollowed && !pendingFollow) {
+      followText = intl.formatMessage(
+        { id: 'unfollow_username', defaultMessage: 'Unfollow {username}' },
+        { username: post.author },
+      );
+    } else if (postState.userFollowed && pendingFollow) {
+      followText = intl.formatMessage(
+        { id: 'unfollow_username', defaultMessage: 'Unfollow {username}' },
+        { username: post.author },
+      );
+    } else if (!postState.userFollowed && !pendingFollow) {
+      followText = intl.formatMessage(
+        { id: 'follow_username', defaultMessage: 'Follow {username}' },
+        { username: post.author },
+      );
+    } else if (!postState.userFollowed && pendingFollow) {
+      followText = intl.formatMessage(
+        { id: 'follow_username', defaultMessage: 'Follow {username}' },
+        { username: post.author },
+      );
+    }
+    
+    let authorAvatar = null;
+
+    if (!ownPost) {
+      authorAvatar = (
+        <div>
+        <BTooltip
+          title={
+            <Action primary onClick={this.onFollowClick} > 
+              <div className = "Story__followText">
+                {pendingFollow ? <Icon type="loading" /> : <i className="iconfont icon-people" />}
+                {followText}
+              </div>
+            </Action> }>
+        <Link to={`/@${post.author}`}>
+        <Avatar username={post.author} size={60} />
+        </Link>
+        </BTooltip> 
+        </div>
+        );
+      } else {
+      authorAvatar =(
+        <div>
+        <Link to={`/@${post.author}`}>
+        <Avatar username={post.author} size={60} />
+        </Link>
+        </div>
+      );
+    }
+
 		const {
 			accountName
 		} = this.state;
@@ -362,9 +422,7 @@ class Story extends React.Component {
         {rebloggedUI}
         <div className="Story__content">
           <div className="Story__header">
-            <Link to={`/@${post.author}`}>
-              <Avatar username={post.author} size={40} />
-            </Link>
+            {authorAvatar}
             <div className="Story__header__text">
               <span className="Story__header__flex">
                 <Link to={`/@${post.author}`}>
