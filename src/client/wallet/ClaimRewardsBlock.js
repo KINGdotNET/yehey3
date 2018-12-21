@@ -44,11 +44,13 @@ class ClaimRewardsBlock extends Component {
       name,
       TMErewardBalance: TMEbalance,
       TSDrewardBalance: TSDbalance,
-      reward_vesting_balance: SCOREbalance,
+      SCORErewardBalance: SCOREbalance,
     } = user;
     this.setState({
       loading: true,
     });
+    console.log(user);
+    console.log(name, TMEbalance, TSDbalance, SCOREbalance);
     weauthjsInstance.claimRewardBalance(name, TMEbalance, TSDbalance, SCOREbalance, err => {
       if (!err) {
         this.setState({
@@ -97,7 +99,7 @@ class ClaimRewardsBlock extends Component {
           defaultMessage: 'Claim Rewards',
         });
 
-    //if (!userHasRewards || rewardClaimed) return null;
+    if (!userHasRewards || rewardClaimed) return null;
 
     return (
       <div className="SidebarContentBlock ClaimRewardsBlock">
@@ -110,7 +112,7 @@ class ClaimRewardsBlock extends Component {
             <div>
               {TMEreward > 0 && this.renderReward(TMEreward, 'TME', 'TME')}
               {TSDreward > 0 && this.renderReward(TSDreward, 'TSD', 'TSD')}
-              {SCORErewardBalanceInTME > 0 && this.renderReward(SCORErewardBalanceInTME, 'SCORE', 'SCORE')}
+              {SCORErewardBalanceInTME > 0 && this.renderReward(SCORErewardBalanceInTME, 'POWER', 'POWER')}
             </div>
           )}
           <Action

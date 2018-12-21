@@ -4,24 +4,23 @@
 .nightmode {
   .Story {
     background-color: @grey-nero;
-    color: @white-smoke;
+    color: white;
     border-top: @border-width-base @border-style-base @normal-grey;
     border-bottom: @border-width-base @border-style-base @normal-grey;
     @media @small {
       border: @border-width-base @border-style-base @normal-grey;
     }
-
     &__content {
-      &__preview {
-        color: @grey-darkGrey;
-
-        &:hover,
-        &:focus,
-        &:active,
-        &:visited {
-          color: @grey-darkGrey;
-        }
+    word-wrap: break-word;
+      &__title {
+        color: white;
       }
+      &__body {
+        color: white;
+      }
+    &__preview {
+    color: white;
     }
   }
+}
 }

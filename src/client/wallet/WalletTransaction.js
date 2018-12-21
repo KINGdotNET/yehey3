@@ -72,7 +72,7 @@ const WalletTransaction = ({
           timestamp={transaction.timestamp}
           TMEreward={transactionDetails.TMEreward}
           TSDreward={transactionDetails.TSDreward}
-          SCOREreward={transactionDetails.reward_score}
+          SCOREreward={transactionDetails.SCORErewardBalanceInTME}
           totalSCORE={totalSCORE}
           SCOREbackingTMEfundBalance={SCOREbackingTMEfundBalance}
         />

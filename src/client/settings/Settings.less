@@ -1,5 +1,9 @@
+@import (reference) '../styles/custom.less';
+@import (reference) '../styles/modules/variables.less';
+
 .Settings {
   padding-bottom: 24px;
+  background: white;
 
   &__section {
     &:not(:first-child) {
@@ -57,5 +61,10 @@
   &__version {
     margin-top: 16px;
     width: auto;
+  }
+}
+.nightmode {
+  .Settings {
+    background: @grey-nero;
   }
 }
