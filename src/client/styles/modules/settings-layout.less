@@ -3,6 +3,8 @@
 .settings-layout {
   position: relative;
   padding: 0 @mobile-padding;
+  background: white;
+  padding:15px;
 
   @media @large {
     padding: auto;
@@ -40,5 +42,10 @@
       width: calc(100% - (@left-width + @margin));
       margin-left: @margin;
     }
+  }
+}
+.nightmode {
+  .settings-layout {
+      background: @grey-nero;
   }
 }
