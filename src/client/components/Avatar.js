@@ -54,7 +54,6 @@ class Avatar extends React.Component {
 				if(!err && res){
 					let profile = res[0].json ? JSON.parse(res[0].json)['profile'] : undefined
 					let profilePicture = profile ? profile['profile_image'] : undefined
-					console.log('profilePicture', profilePicture)
 					this.setState({
 						profilePicture: profilePicture
 					})

@@ -40,7 +40,7 @@ const DiscoverUser = ({ user }) => {
                 <span className="Discover__user__name">
                   <span className="username">{name || user.name}</span>
                 </span>
-                {/* <ReputationTag reputation={user.reputation} /> */}
+                <ReputationTag reputation={user.reputation} />
               </Link>
               <div className="Discover__user__follow">
                 <FollowButton username={user.name} />

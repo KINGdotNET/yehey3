@@ -11,6 +11,7 @@ describe('settingsReducer', () => {
     votePercent: 10000,
     loading: false,
     showNSFWPosts: false,
+    showImagesOnly: false,
     nightmode: false,
     rewriteLinks: false,
     upvoteSetting: false,
@@ -76,6 +77,7 @@ describe('settingsReducer', () => {
       votePercent: 10000,
       votingPower: 'on',
       showNSFWPosts: true,
+      showImagesOnly: true,
       nightmode: true,
       rewriteLinks: true,
     };
@@ -86,6 +88,7 @@ describe('settingsReducer', () => {
         votingPower: 'on',
         votePercent: 10000,
         showNSFWPosts: true,
+        showImagesOnly: true,
         nightmode: true,
         rewriteLinks: true,
         upvoteSetting: false,

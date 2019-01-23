@@ -44,6 +44,10 @@ const iframeWhitelist = [
     fn: src => src, // handled by embedjs
   },
   {
+    re: /^(https?:)?\/\/(?:www\.)?(?:gfycat.com\/)(.*)?$/i,
+    fn: src => src, // handled by embedjs
+  },
+  {
     re: /^(https?:)?\/\/(?:www\.)?(?:(player.)?twitch.tv\/)(.*)?$/i,
     fn: src => src, // handled by embedjs
   },

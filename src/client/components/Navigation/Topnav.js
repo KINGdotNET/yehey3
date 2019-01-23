@@ -140,9 +140,9 @@ class Topnav extends React.Component {
               <FormattedMessage id="login" defaultMessage="Log in" />
             </a>
           </Menu.Item>
-          <Menu.Item key="language">
+          {/* <Menu.Item key="language">
             <LanguageSettings />
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
       </div>
     );
@@ -346,8 +346,6 @@ class Topnav extends React.Component {
   render() {
     const { intl, autoCompleteSearchResults } = this.props;
     const { searchBarActive, searchBarValue } = this.state;
-
-		// console.log('autoCompleteSearchResults', autoCompleteSearchResults)
     const dropdownOptions = _.map(autoCompleteSearchResults, option => (
       <AutoComplete.Option key={option.replace(/^@/ig, '')} value={option.replace(/^@/ig,'')} className="Topnav__search-autocomplete">
         {'@'+option}

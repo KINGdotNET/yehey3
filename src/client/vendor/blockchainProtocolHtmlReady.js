@@ -90,7 +90,6 @@ export default function(html, { mutate = true, resolveIframe } = {}) {
     const doc = DOMParser.parseFromString(html, 'text/html');
     traverse(doc, state);
     if (mutate) proxifyImages(doc);
-    // console.log('state', state)
     if (!mutate) return state;
     return { html: doc ? XMLSerializer.serializeToString(doc) : '', ...state };
   } catch (error) {

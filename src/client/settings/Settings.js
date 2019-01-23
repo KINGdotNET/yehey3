@@ -11,6 +11,7 @@ import {
   getIsSettingsLoading,
   getVotePercent,
   getShowNSFWPosts,
+  getShowImagesOnly,
   getNightmode,
   getRewriteLinks,
   getUseBeta,
@@ -40,6 +41,7 @@ import packageJson from '../../../package.json';
     votingPower: getVotingPower(state),
     votePercent: getVotePercent(state),
     showNSFWPosts: getShowNSFWPosts(state),
+    showImagesOnly: getShowImagesOnly(state),
     nightmode: getNightmode(state),
     rewriteLinks: getRewriteLinks(state),
     useBeta: getUseBeta(state),
@@ -58,6 +60,7 @@ export default class Settings extends React.Component {
     votePercent: PropTypes.number,
     loading: PropTypes.bool,
     showNSFWPosts: PropTypes.bool,
+    showImagesOnly: PropTypes.bool,
     nightmode: PropTypes.bool,
     rewriteLinks: PropTypes.bool,
     useBeta: PropTypes.bool,
@@ -75,6 +78,7 @@ export default class Settings extends React.Component {
     votePercent: 10000,
     loading: false,
     showNSFWPosts: false,
+    showImagesOnly: false,
     nightmode: false,
     rewriteLinks: false,
     useBeta: false,
@@ -95,6 +99,7 @@ export default class Settings extends React.Component {
     votingPower: false,
     votePercent: 10000,
     showNSFWPosts: false,
+    showImagesOnly: false,
     nightmode: false,
     rewriteLinks: false,
     exitPageSetting: false,
@@ -106,6 +111,7 @@ export default class Settings extends React.Component {
       votingPower: this.props.votingPower,
       votePercent: this.props.votePercent / 100,
       showNSFWPosts: this.props.showNSFWPosts,
+      showImagesOnly: this.props.showImagesOnly,
       nightmode: this.props.nightmode,
       rewriteLinks: this.props.rewriteLinks,
       useBeta: this.props.useBeta,
@@ -133,6 +139,10 @@ export default class Settings extends React.Component {
 
     if (nextProps.showNSFWPosts !== this.props.showNSFWPosts) {
       this.setState({ showNSFWPosts: nextProps.showNSFWPosts });
+    }
+
+    if (nextProps.showImagesOnly !== this.props.showImagesOnly) {
+      this.setState({ showImagesOnly: nextProps.showImagesOnly });
     }
 
     if (nextProps.nightmode !== this.props.nightmode) {
@@ -163,6 +173,7 @@ export default class Settings extends React.Component {
         votingPower: this.state.votingPower,
         votePercent: this.state.votePercent * 100,
         showNSFWPosts: this.state.showNSFWPosts,
+        showImagesOnly: this.state.showImagesOnly,
         nightmode: this.state.nightmode,
         rewriteLinks: this.state.rewriteLinks,
         useBeta: this.state.useBeta,
@@ -181,6 +192,7 @@ export default class Settings extends React.Component {
   handleVotingPowerChange = event => this.setState({ votingPower: event.target.value });
   handleVotePercentChange = value => this.setState({ votePercent: value });
   handleShowNSFWPosts = event => this.setState({ showNSFWPosts: event.target.checked });
+  handleShowImagesOnly = event => this.setState({ showImagesOnly: event.target.checked });
   handleNightmode = event => this.setState({ nightmode: event.target.checked });
   handleRewriteLinksChange = event => this.setState({ rewriteLinks: event.target.checked });
   handleUseBetaChange = event => this.setState({ useBeta: event.target.checked });
@@ -197,6 +209,7 @@ export default class Settings extends React.Component {
       locale: initialLocale,
       votingPower: initialVotingPower,
       showNSFWPosts: initialShowNSFWPosts,
+      showImagesOnly: initialShowImagesOnly,
       nightmode: initialNightmode,
       loading,
     } = this.props;
@@ -204,6 +217,7 @@ export default class Settings extends React.Component {
       votingPower,
       locale,
       showNSFWPosts,
+      showImagesOnly,
       nightmode,
       rewriteLinks,
       useBeta,
@@ -327,6 +341,30 @@ export default class Settings extends React.Component {
                       <FormattedMessage
                         id="display_nsfw_posts"
                         defaultMessage="Display NSFW Posts"
+                      />
+                    </Checkbox>
+                  </div>
+                </div>
+                <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="image_mode" defaultMessage="Image Only Mode" />
+                  </h3>
+                  <p>
+                    <FormattedMessage
+                      id="display_image_mode_details"
+                      defaultMessage="All posts will only display their preview images."
+                    />
+                  </p>
+                  <div className="Settings__section__checkbox">
+                    <Checkbox
+                      name="image_mode"
+                      defaultChecked={initialShowImagesOnly}
+                      checked={showImagesOnly}
+                      onChange={this.handleShowImagesOnly}
+                    >
+                      <FormattedMessage
+                        id="dimage_only_display"
+                        defaultMessage="Only Show Images"
                       />
                     </Checkbox>
                   </div>
