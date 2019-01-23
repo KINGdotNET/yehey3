@@ -26,10 +26,6 @@ const Discover = ({ intl }) => (
           <h1>
             <FormattedMessage id="discover_more_people" defaultMessage="Discover more people" />
           </h1>
-          <FormattedMessage
-            id="discover_more_people_info"
-            defaultMessage="Discover the most reputable users of this platform"
-          />
         </div>
         <div className="Discover__content">
           <DiscoverContent />

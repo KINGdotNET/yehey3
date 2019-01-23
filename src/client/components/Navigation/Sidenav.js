@@ -12,6 +12,7 @@ const isHot = (match, location) => location.pathname.match(/hot/);
 const isReplies = (match, location) => location.pathname.match(/replies/);
 const isPics = (match, location) => location.pathname.match(/pics/);
 const isFeed = (match, location) => location.pathname.match(/feed/);
+const isDiscover = (match, location) => location.pathname.match(/discover/);
 
 const Sidenav = ({ username }) =>
 	<ul className="Sidenav">
@@ -54,6 +55,12 @@ const Sidenav = ({ username }) =>
 				<FormattedMessage id="pics" defaultMessage="Pictures" />
 			</NavLink>
 		</li>
+		<li>
+			<NavLink to="/discover" activeClassName="Sidenav__item--active" exact isActive={isDiscover}>
+				<i className="iconfont icon-addressbook" />
+				<FormattedMessage id="discover" defaultMessage="Discover" />
+			</NavLink>
+		</li>
 		
 		{ username ? (
 		<li>
@@ -83,12 +90,23 @@ const Sidenav = ({ username }) =>
 			</li>
 		) : null }
 		<li>
-			<a href="https://exchange.weyoume.io" >
+			<a href="https://exchange.weyoume.io/market/EZIRA_BTS" target='_blank'>
 				<i className="iconfont icon-chart" />
 				<FormattedMessage id="exchange" defaultMessage="Exchange" />
 			</a>
 		</li>
-		
+		<li>
+			<a href="https://t.me/WeYouMeNetwork" target='_blank' >
+				<i className="iconfont icon-message" />
+				<FormattedMessage id="messenger" defaultMessage="Telegram" />
+			</a>
+		</li>
+		<li>
+			<a href="https://discord.gg/QztnDQc" target='_blank' >
+				<i className="iconfont icon-interactive_fill" />
+				<FormattedMessage id="messenger" defaultMessage="Discord" />
+			</a>
+		</li>
 		<li>
 			<div className="floating-label-container">
 				<div className="floating-label-positioner">
@@ -100,20 +118,6 @@ const Sidenav = ({ username }) =>
 			<NavLink to="/groups" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
 				<i className="iconfont icon-group" />
 				<FormattedMessage id="Groups" defaultMessage="Groups" />
-			</NavLink>
-		</li>
-		<li>
-			<div className="floating-label-container">
-				<div className="floating-label-positioner">
-					<div className="floating-label">
-						<span>soon</span>
-					</div>
-				</div>
-			</div>
-			<NavLink to="/apps" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
-				{/* <i className="iconfont icon-manage" /> */}
-				<i className="iconfont icon-mobilephone_fill" />
-				<FormattedMessage id="apps" defaultMessage="Apps" />
 			</NavLink>
 		</li>
 		<li>
@@ -137,48 +141,9 @@ const Sidenav = ({ username }) =>
 					</div>
 				</div>
 			</div>
-			<NavLink to="/events" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
-				<i className="iconfont icon-remind_fill" />
-				<FormattedMessage id="events" defaultMessage="Events" />
-			</NavLink>
-		</li>
-		<li>
-			<div className="floating-label-container">
-				<div className="floating-label-positioner">
-					<div className="floating-label">
-						<span>soon</span>
-					</div>
-				</div>
-			</div>
 			<NavLink to="/boards" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
 				<i className="iconfont icon-barrage" />
 				<FormattedMessage id="boards" defaultMessage="Boards" />
-			</NavLink>
-		</li>
-		<li>
-			<div className="floating-label-container">
-				<div className="floating-label-positioner">
-					<div className="floating-label">
-						<span>soon</span>
-					</div>
-				</div>
-			</div>
-			<NavLink to="/feeds" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
-				<i className="iconfont icon-keyboard" />
-				<FormattedMessage id="feeds" defaultMessage="Feeds" />
-			</NavLink>
-		</li>
-		<li>
-			<div className="floating-label-container">
-				<div className="floating-label-positioner">
-					<div className="floating-label">
-						<span>soon</span>
-					</div>
-				</div>
-			</div>
-			<NavLink to="/messenger" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
-				<i className="iconfont icon-interactive_fill" />
-				<FormattedMessage id="messenger" defaultMessage="Messenger" />
 			</NavLink>
 		</li>
 		<li>

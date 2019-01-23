@@ -1,4 +1,4 @@
-## Contributing to Busy
+## Contributing to WeYouMe
 
 Want to get involved in Busy development? Thanks! There are plenty of ways you can help!
 
@@ -22,7 +22,7 @@ Please take a moment to review this document in order to make the contribution p
 
 ### Using the issue tracker
 
-The [issue tracker](https://github.com/busyorg/busy/issues) is the preferred channel
+The [issue tracker](https://github.com/weyoume/weapp/issues) is the preferred channel
 for [bug reports](#bug-reports), [features requests](#feature-requests) and [submitting pull requests](#pull-requests).
 
 ### Bug reports

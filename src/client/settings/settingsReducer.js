@@ -7,6 +7,7 @@ const initialState = {
   votingPower: 'auto',
   votePercent: 10000,
   showNSFWPosts: false,
+  showImagesOnly: false,
   nightmode: false,
   rewriteLinks: false,
   loading: false,
@@ -26,6 +27,7 @@ const settings = (state = initialState, action) => {
           locale,
           votingPower,
           votePercent,
+          showImagesOnly,
           showNSFWPosts,
           nightmode,
           rewriteLinks,
@@ -40,6 +42,7 @@ const settings = (state = initialState, action) => {
           votingPower: votingPower || initialState.votingPower,
           votePercent: votePercent || initialState.votePercent,
           showNSFWPosts: showNSFWPosts || initialState.showNSFWPosts,
+          showImagesOnly: showImagesOnly || initialState.showImagesOnly,
           nightmode: nightmode || initialState.nightmode,
           rewriteLinks:
             typeof rewriteLinks === 'boolean' ? rewriteLinks : initialState.rewriteLinks,
@@ -65,6 +68,7 @@ const settings = (state = initialState, action) => {
         votingPower: action.payload.votingPower,
         votePercent: action.payload.votePercent,
         showNSFWPosts: action.payload.showNSFWPosts,
+        showImagesOnly : action.payload.showImagesOnly,
         nightmode: action.payload.nightmode,
         rewriteLinks: action.payload.rewriteLinks,
         upvoteSetting: action.payload.upvoteSetting,
@@ -94,6 +98,7 @@ export const getLocale = state => state.locale;
 export const getVotingPower = state => state.votingPower;
 export const getVotePercent = state => state.votePercent;
 export const getShowNSFWPosts = state => state.showNSFWPosts;
+export const getShowImagesOnly = state => state.showImagesOnly;
 export const getNightmode = state => state.nightmode;
 export const getRewriteLinks = state => !!state.rewriteLinks;
 export const getUpvoteSetting = state => state.upvoteSetting;

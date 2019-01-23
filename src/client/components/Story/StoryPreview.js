@@ -10,15 +10,11 @@ import {
   getPositions,
   postWithPicture,
   postWithAnEmbed,
-  isPostStartsWithAPicture,
-  isPostStartsWithAnEmbed,
-  isPostWithPictureBeforeFirstHalf,
-  isPostWithEmbedBeforeFirstHalf,
 } from './StoryHelper';
 import { getHtml } from './Body';
 import { getProxyImageURL } from '../../helpers/image';
 
-const StoryPreview = ({ post }) => {
+const StoryPreview = ({ post, showImagesOnly }) => {
   const json = jsonParse(post.json);
   let imagePath = '';
 
@@ -66,32 +62,17 @@ const StoryPreview = ({ post }) => {
 
   if (hasVideo) {
     bodyData.push(preview.embed());
-    bodyData.push(preview.text());
-  } else if (htmlBody.length <= 1500 && postWithPicture(tagPositions, 100)) {
+  } else if (postWithPicture(tagPositions, 100)) {
     bodyData.push(preview.image());
-    bodyData.push(preview.text());
-  } else if (htmlBody.length <= 1500 && postWithAnEmbed(tagPositions, 100)) {
-    bodyData.push(preview.embed());
-    bodyData.push(preview.text());
-  } else if (isPostStartsWithAPicture(tagPositions)) {
-    bodyData.push(preview.image());
-    bodyData.push(preview.text());
-  } else if (isPostStartsWithAnEmbed(tagPositions)) {
-    bodyData.push(preview.embed());
-    bodyData.push(preview.text());
-  } else if (isPostWithPictureBeforeFirstHalf(tagPositions)) {
-    bodyData.push(preview.text());
-    bodyData.push(preview.image());
-  } else if (isPostWithEmbedBeforeFirstHalf(tagPositions)) {
-    bodyData.push(preview.text());
+  } else if (postWithAnEmbed(tagPositions, 100)) {
     bodyData.push(preview.embed());
   } else if (imagePath !== '') {
-    bodyData.push(preview.text());
     bodyData.push(preview.image());
-  } else {
+  } 
+    
+  if (!showImagesOnly){
     bodyData.push(preview.text());
   }
-
   return <div>{bodyData}</div>;
 };
 

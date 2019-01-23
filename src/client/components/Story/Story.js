@@ -24,15 +24,12 @@ import ReputationTag from '../ReputationTag';
 import StoryPreview from './StoryPreview';
 import StoryFooter from '../StoryFooter/StoryFooter';
 import Avatar from '../Avatar';
-import Topic from '../Button/Topic';
 import Action from '../Button/Action';
 import NSFWStoryPreviewMessage from './NSFWStoryPreviewMessage';
 import HiddenStoryPreviewMessage from './HiddenStoryPreviewMessage';
 import DMCARemovedMessage from './DMCARemovedMessage';
 import PostedFrom from './PostedFrom';
 import './Story.less';
-import { connect } from 'react-redux';
-import { getAccount } from '../../user/usersActions';
 
 @injectIntl
 
@@ -47,6 +44,7 @@ class Story extends React.Component {
     rewardFund: PropTypes.shape().isRequired,
     defaultVotePercent: PropTypes.number.isRequired,
     showNSFWPosts: PropTypes.bool.isRequired,
+    showImagesOnly: PropTypes.bool.isRequired,
     onActionInitiated: PropTypes.func.isRequired,
     pendingLike: PropTypes.bool,
     pendingDislike: PropTypes.bool,
@@ -113,7 +111,7 @@ class Story extends React.Component {
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleTransferClick = this.handleTransferClick.bind(this);
     this.onFollowClick = this.onFollowClick.bind(this);
-    // this.getName = this.getName.bind(this);
+    //this.getName = this.getName.bind(this);
 	}
 	
 	// componentDidMount(){
@@ -270,7 +268,7 @@ class Story extends React.Component {
   }
 
   renderStoryPreview() {
-    const { post } = this.props;
+    const { post, showImagesOnly } = this.props;
     const showStoryPreview = this.getDisplayStoryPreview();
     const hiddenStoryPreviewMessage = isPostTaggedNSFW(post) ? (
       <NSFWStoryPreviewMessage onClick={this.handleShowStoryPreview} />
@@ -289,7 +287,7 @@ class Story extends React.Component {
         onClick={this.handlePreviewClickPostModalDisplay}
         className="Story__content__preview"
       >
-        <StoryPreview post={post} />
+        <StoryPreview post={post} showImagesOnly={showImagesOnly}/>
       </a>
     ) : (
       hiddenStoryPreviewMessage
@@ -326,6 +324,7 @@ class Story extends React.Component {
       rewardFund,
       ownPost,
       sliderMode,
+      showImagesOnly,
       defaultVotePercent,
       intl
 		} = this.props;
@@ -355,6 +354,7 @@ class Story extends React.Component {
     }
     
     let authorAvatar = null;
+    let authorName = null;
 
     if (!ownPost) {
       authorAvatar = (
@@ -373,6 +373,24 @@ class Story extends React.Component {
         </BTooltip> 
         </div>
         );
+      authorName = (
+        <div>
+          <BTooltip
+            title={
+              <Action primary onClick={this.onFollowClick} > 
+                <div className = "Story__followText">
+                {pendingFollow ? <Icon type="loading" /> : <i className="iconfont icon-people" />}
+                {followText}
+              </div>
+            </Action> }>
+            <Link to={`/@${post.author}`}>
+              <h3	className="Story__username">	
+                <span className="username">{`${post.author}`}</span>
+              </h3>
+            </Link>
+          </BTooltip>
+        </div>
+      );
       } else {
       authorAvatar =(
         <div>
@@ -381,11 +399,14 @@ class Story extends React.Component {
         </Link>
         </div>
       );
+      authorName = (
+        <Link to={`/@${post.author}`}>
+              <h3	className="Story__username">	
+                <span className="username">{`${post.author}`}</span>
+              </h3>
+            </Link>
+      );
     }
-
-		const {
-			accountName
-		} = this.state;
 
     if (isPostDeleted(post)) return <div />;
 
@@ -417,6 +438,27 @@ class Story extends React.Component {
       );
     }
 
+    let storyTitle = (
+
+    <h2>
+      <a
+              href={dropCategory(post.url)}
+              target="_blank"
+              onClick={this.handlePostModalDisplay}
+              className="Story__content__title"
+            >
+              <div className="Story__title">
+                {post.depth !== 0 && <Tag color="#4f545c">RE</Tag>}
+                {post.title || post.root_title}
+              </div>
+          </a>
+            </h2>
+    );
+
+    if (showImagesOnly){
+        storyTitle = null;
+    }
+
     return (
       <div className="Story" id={`${post.author}-${post.permlink}`}>
         {rebloggedUI}
@@ -425,12 +467,7 @@ class Story extends React.Component {
             {authorAvatar}
             <div className="Story__header__text">
               <span className="Story__header__flex">
-                <Link to={`/@${post.author}`}>
-                  <h4	className="send-money-tooltip">	
-										<span className="account_name">{`${accountName || post.author}`}</span>
-										<span className="username">{`@${post.author}`}</span>
-                  </h4>
-                </Link>
+                {authorName}
 								<span className="Story__posted__time">
 									<BTooltip
 										title={
@@ -448,19 +485,7 @@ class Story extends React.Component {
 								</span>
               </span>
 							<div className="Story__content">
-								<a
-									href={dropCategory(post.url)}
-									target="_blank"
-									onClick={this.handlePostModalDisplay}
-									className="Story__content__title"
-								>
-									<div className="Story__title">
-										{post.depth !== 0 && <Tag color="#4f545c">RE</Tag>}
-										{post.title || post.root_title}
-									</div>
-								</a>
-								{/* <div className="Story__content__sub">
-								</div> */}
+								{storyTitle}
 								{this.renderStoryPreview()}
 							</div>
             </div>

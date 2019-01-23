@@ -1,24 +1,28 @@
-[![CircleCI Build Status](https://circleci.com/gh/busyorg/busy.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/busyorg/busy)
-[![Crowdin](http://d322cqt584bo4o.cloudfront.net/busy/localized.svg)](https://translate.busy.org/project/busy)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/busyorg/busy/new-design/LICENSE)
-[![Busy channel on Discord](https://img.shields.io/badge/chat-discord-738bd7.svg)](https://discord.gg/G95rNZs)
+[![WeYouMe channel on Discord](https://img.shields.io/badge/chat-discord-738bd7.svg)](https://discord.gg/QztnDQc)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-# Busy 🚀
+# WeYouMe App - https://alpha.weyoume.io
 
-Busy is an Open Source social network and communications platform which extends itself to a variety of rich features and functionality including free digital payments and a marketplace for goods and services.
+### WeYouMe is the next generation of social media. 
 
-For more info: https://busy.org/@busy.org
+* It is a blockchain protocol to enable everyone to share information and value freely. 
+* Creators earn cryptocurrency when they upload great content, and control their own data. 
+* Social media should be a driver of positive change and individual freedom.
+
+For more info: https://www.weyoume.io
+
+Visit the testnet and try it out at https://alpha.weyoume.io
 
 ## Preview
 
-![Preview](https://user-images.githubusercontent.com/16245250/35974135-6fe56d5a-0d0a-11e8-99f6-a90d59696f82.png)
+![Preview](https://ipfs.busy.org/ipfs/QmZRjP1aPYKznYW4FUadJnUsAKvmGyzqqD1n2fbWi2XFrs)
 
 ## Quick Setup
 
 ```bash
-git clone https://github.com/busyorg/busy.git
-cd busy
+git clone https://github.com/weyoume/weapp.git
+cd weapp
 
 yarn
 yarn dev
@@ -27,8 +31,8 @@ yarn dev
 ## Production build
 
 ```bash
-git clone https://github.com/busyorg/busy.git
-cd busy
+git clone https://github.com/weyoume/weapp.git
+cd weapp
 
 yarn
 yarn build
@@ -37,12 +41,19 @@ yarn start
 
 ## Getting involved
 
-We at Busy really appreciate help from the community. We want to make the Busy project as friendly as possible to contributors. It doesn't matter if you are a beginner looking for a place to improve your skills or just want to help us build something great.
+We at WeYouMe really appreciate help from the community. We want to make WeYouMe as friendly as possible to contributors. It doesn't matter if you are a beginner looking for a place to improve your skills or just want to help us build something great.
 If you would like to contribute, but don't know what to work on, check our [Contributing guide][contributing].
+
+## Preliminary ICO contributors
+
+WeYouMe is funded by the contributors to the preliminary ICO conducted in 2018, who hold the EZIRA bitshares asset.
+Holders of EZIRA will recieve mainnet WYM when the network is launched.
+[Thank you to all EZIRA holders for making this project possible.](http://www.bts.ai/a/EZIRA)
+[You can purchase EZIRA from Bitshares](https://exchange.weyoume.io/market/EZIRA_BTS)
 
 ## Backers
 
-Busy is an MIT-licensed open source project. It's an independent project with its ongoing development made possible entirely thanks to the support by these awesome backers.
+The WeYouMe Alpha is based on [Busy](https://busy.org), which is an MIT-licensed open source project. It's an independent project with its ongoing development made possible entirely thanks to the support by these awesome backers.
 
 [@steemit](https://busy.org/@steemit)
 [@smooth](https://busy.org/@smooth)
@@ -78,10 +89,5 @@ Busy is an MIT-licensed open source project. It's an independent project with it
 [@pharesim](https://busy.org/@pharesim)
 [@buzzbeergeek](https://busy.org/@buzzbeergeek)
 [@timcliff](https://busy.org/@timcliff)
-
-## Partners
-
-[![](https://res.cloudinary.com/hpiynhbhq/image/upload/v1507199425/hevqheh9nltx0dfbuvo8.png)](https://crowdin.com/project/busy)  
-[![](https://res.cloudinary.com/hpiynhbhq/image/upload/v1507199050/fqxowyhiwlj9vhb5wdue.png)](https://www.browserstack.com/)
 
 [contributing]: ./docs/CONTRIBUTING.md

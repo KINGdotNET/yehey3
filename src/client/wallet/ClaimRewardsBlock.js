@@ -49,8 +49,6 @@ class ClaimRewardsBlock extends Component {
     this.setState({
       loading: true,
     });
-    console.log(user);
-    console.log(name, TMEbalance, TSDbalance, SCOREbalance);
     weauthjsInstance.claimRewardBalance(name, TMEbalance, TSDbalance, SCOREbalance, err => {
       if (!err) {
         this.setState({

@@ -17,6 +17,7 @@ import {
   getRewardFund,
   getVotePercent,
   getShowNSFWPosts,
+  getShowImagesOnly,
 } from '../reducers';
 import { votePost } from '../post/postActions';
 import { openTransfer } from '../wallet/walletActions';
@@ -65,6 +66,7 @@ const mapStateToProps = (state, { id }) => {
     rewardFund: getRewardFund(state),
     defaultVotePercent: getVotePercent(state),
     showNSFWPosts: getShowNSFWPosts(state),
+    showImagesOnly: getShowImagesOnly(state),
   };
 };
 
