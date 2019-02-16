@@ -77,7 +77,7 @@ export default class Transfer extends React.Component {
 
   state = {
     currency: Transfer.CURRENCIES.TME,
-    oldAmount: 0,
+    oldAmount: undefined,
   };
 
   componentDidMount() {
@@ -211,7 +211,7 @@ export default class Transfer extends React.Component {
 
   validateUsername = (rule, value, callback) => {
     const { intl } = this.props;
-    this.props.form.validateFields(['to'], { force: true });
+    this.props.form.validateFields(['memo'], { force: true });
 
     if (!value) {
       callback();
