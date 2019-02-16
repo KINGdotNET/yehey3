@@ -58,7 +58,7 @@
 
   &__brand {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 700;
 		// letter-spacing: 0.5px;
 		position: relative;
 		display: flex;
@@ -105,7 +105,28 @@
 		// margin-top: 14px;
 		// left: 70px;
 		// right: 17px;
-		font-size: 14px;
+		font-size: 12px;
+		z-index: 0;
+		// display: none;
+		@media @small {
+			display: initial;
+		}
+		@media (max-width: @small-bp){
+			display: none;
+			// padding-left: 0;
+		}
+		// align-self: flex-end;
+  }
+
+  &__name {
+    color: @primary-color;
+    font-weight: 700;
+    font-family: @font-family-helvetica-neue;
+    // position: absolute;
+		// margin-top: 14px;
+		// left: 70px;
+		// right: 17px;
+		font-size: 20px;
 		z-index: 0;
 		// display: none;
 		@media @small {
@@ -285,17 +306,19 @@
   }
 
   &__notifications-count {
-    height: 35px;
-    min-width: 35px;
+    height: 15px;
+    min-width: 15px;
     border-radius: 50%;
     background-color: @primary-color;
     color: @white;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
-    margin-bottom: 6px;
+    font-size: 10px;
+    margin-bottom: -10px;
+    margin-left:-10px;
   }
+
 
   .icon-caretbottom {
     font-size: 12px !important;

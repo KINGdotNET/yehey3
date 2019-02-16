@@ -257,7 +257,7 @@ class Comment extends React.Component {
       );
     }
 
-    const avatarSize = comment.depth === 1 ? 40 : 32;
+    const avatarSize = comment.depth === 1 ? 45 : 30;
 
     return (
       <div ref={this.setSelf} className="Comment" id={anchorId}>

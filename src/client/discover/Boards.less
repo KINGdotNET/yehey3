@@ -1,0 +1,49 @@
+@import (reference) '../styles/custom.less';
+
+.Boards {
+	// min-width: 150px;
+	width: auto;
+	margin-left: -11px;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+    flex-direction: column;
+    font-weight: 600;
+    color: black;
+    
+
+    &__title {
+        margin: 5px;
+        font-weight: 700;
+        font-size: 24px;
+    }
+
+& .BoardList {
+
+
+  & > li {
+    & > a {
+      padding: 0 10px !important;
+      display: block;
+			color: #99aab5;
+      font-weight: 400;
+      // border: @border-width-base @border-style-base transparent;
+      position: relative;
+      color: #353535;
+      font-size: 36px;
+      line-height: 2em;
+    
+      &:hover {
+          color: red;
+        }
+  
+      &:focus {
+          text-decoration: none;
+        }
+  
+        
+    }
+	
+}
+}
+}

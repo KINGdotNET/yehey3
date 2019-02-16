@@ -64,14 +64,8 @@ class ClaimRewardsBlock extends Component {
     });
   };
 
-  renderReward = (value, currency, rewardField) => (
+  renderReward = (value, currency) => (
     <div className="ClaimRewardsBlock__reward">
-      <span className="ClaimRewardsBlock__reward__field">
-        <FormattedMessage
-          id={rewardField}
-          defaultMessage={_.startCase(rewardField.replace('_', ''))}
-        />
-      </span>
       <span className="ClaimRewardsBlock__reward__value">
         <FormattedNumber value={value} minimumFractionDigits={3} maximumFractionDigits={3} />
         {` ${currency}`}

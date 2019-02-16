@@ -13,6 +13,8 @@ const isReplies = (match, location) => location.pathname.match(/replies/);
 const isPics = (match, location) => location.pathname.match(/pics/);
 const isFeed = (match, location) => location.pathname.match(/feed/);
 const isDiscover = (match, location) => location.pathname.match(/discover/);
+const isBoards = (match, location) => location.pathname.match(/boards/);
+
 
 const Sidenav = ({ username }) =>
 	<ul className="Sidenav">
@@ -49,10 +51,11 @@ const Sidenav = ({ username }) =>
 				<FormattedMessage id="active" defaultMessage="Active" />
 			</NavLink>
 		</li> 
+		
 		<li>
-			<NavLink to="/trending/pics" activeClassName="Sidenav__item--active" exact isActive={isPics}>
-				<i className="iconfont icon-picture" />
-				<FormattedMessage id="pics" defaultMessage="Pictures" />
+			<NavLink to="/boards" activeClassName="Sidenav__item--active" exact isActive={isBoards}>
+				<i className="iconfont icon-barrage" />
+				<FormattedMessage id="boards" defaultMessage="Boards" />
 			</NavLink>
 		</li>
 		<li>
@@ -133,19 +136,7 @@ const Sidenav = ({ username }) =>
 				<FormattedMessage id="marketplace" defaultMessage="Marketplace" />
 			</NavLink>
 		</li>
-		<li>
-			<div className="floating-label-container">
-				<div className="floating-label-positioner">
-					<div className="floating-label">
-						<span>soon</span>
-					</div>
-				</div>
-			</div>
-			<NavLink to="/boards" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
-				<i className="iconfont icon-barrage" />
-				<FormattedMessage id="boards" defaultMessage="Boards" />
-			</NavLink>
-		</li>
+		
 		<li>
 			<div className="floating-label-container">
 				<div className="floating-label-positioner">

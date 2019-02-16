@@ -5,7 +5,7 @@ import _ from 'lodash';
 import PostFeedEmbed from './PostFeedEmbed';
 import BodyShort from './BodyShort';
 import { jsonParse } from '../../helpers/formatter';
-import { getContentImages } from '../../helpers/postHelpers';
+import { getContentImages, dropCategory, } from '../../helpers/postHelpers';
 import {
   getPositions,
   postWithPicture,
@@ -13,6 +13,8 @@ import {
 } from './StoryHelper';
 import { getHtml } from './Body';
 import { getProxyImageURL } from '../../helpers/image';
+import { Tag, Icon } from 'antd';
+
 
 const StoryPreview = ({ post, showImagesOnly }) => {
   const json = jsonParse(post.json);
@@ -54,6 +56,16 @@ const StoryPreview = ({ post, showImagesOnly }) => {
         <img alt="" src={imagePath} />
       </div>
     ),
+    title: () => (
+    <h2 key = "title" className="Story__content__title" >
+          
+            <div className="Story__title">
+              {post.depth !== 0 && <Tag color="#4f545c">RE</Tag>}
+              {post.title || post.root_title}
+            </div>
+        
+    </h2>
+    ),  
   };
 
   const htmlBody = getHtml(post.body, {}, 'text');
@@ -71,6 +83,7 @@ const StoryPreview = ({ post, showImagesOnly }) => {
   } 
     
   if (!showImagesOnly){
+    bodyData.push(preview.title());
     bodyData.push(preview.text());
   }
   return <div>{bodyData}</div>;

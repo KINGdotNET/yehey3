@@ -4,7 +4,7 @@ import DiscoverUser from './DiscoverUser';
 import BlockchainAPI from '../blockchainAPI';
 import ReduxInfiniteScroll from '../vendor/ReduxInfiniteScroll';
 
-const displayLimit = 20;
+const displayLimit = 10;
 
 class DiscoverContent extends React.Component {
   state = {

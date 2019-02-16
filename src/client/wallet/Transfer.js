@@ -14,9 +14,12 @@ import {
   getAuthenticatedUser,
   getIsTransferVisible,
   getTransferTo,
+  getTransferAmount,
+  getTransferMemo,
   getCryptosPriceHistory,
 } from '../reducers';
 import './Transfer.less';
+import { getMoreUserComments } from '../feed/feedActions';
 
 const InputGroup = Input.Group;
 
@@ -25,6 +28,8 @@ const InputGroup = Input.Group;
   state => ({
     visible: getIsTransferVisible(state),
     to: getTransferTo(state),
+    amount: getTransferAmount(state),
+    memo: getTransferMemo(state),
     authenticated: getIsAuthenticated(state),
     user: getAuthenticatedUser(state),
     cryptosPriceHistory: getCryptosPriceHistory(state),
@@ -40,6 +45,8 @@ export default class Transfer extends React.Component {
     intl: PropTypes.shape().isRequired,
     visible: PropTypes.bool,
     to: PropTypes.string,
+    amount: PropTypes.number,
+    memo: PropTypes.string,
     authenticated: PropTypes.bool.isRequired,
     user: PropTypes.shape().isRequired,
     form: PropTypes.shape().isRequired,
@@ -50,6 +57,8 @@ export default class Transfer extends React.Component {
 
   static defaultProps = {
     to: '',
+    amount: 0,
+    memo: '',
     visible: false,
     closeTransfer: () => {},
   };
@@ -68,7 +77,7 @@ export default class Transfer extends React.Component {
 
   state = {
     currency: Transfer.CURRENCIES.TME,
-    oldAmount: undefined,
+    oldAmount: 0,
   };
 
   componentDidMount() {
@@ -86,13 +95,13 @@ export default class Transfer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { form, to } = nextProps;
+    const { form, to, amount, memo } = nextProps;
     if (this.props.to !== to) {
       form.setFieldsValue({
         to,
-        amount: undefined,
+        amount,
         currency: TME.symbol,
-        memo: undefined,
+        memo,
       });
       this.setState({
         currency: TME.symbol,
@@ -149,9 +158,8 @@ export default class Transfer extends React.Component {
         const transferQuery = {
           to: values.to,
           amount: `${parseFloat(values.amount).toFixed(3)} ${values.currency}`,
+          memo: values.memo,
         };
-        if (values.memo) transferQuery.memo = values.memo;
-
         const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
         win.focus();
         this.props.closeTransfer();
@@ -203,7 +211,7 @@ export default class Transfer extends React.Component {
 
   validateUsername = (rule, value, callback) => {
     const { intl } = this.props;
-    this.props.form.validateFields(['memo'], { force: true });
+    this.props.form.validateFields(['to'], { force: true });
 
     if (!value) {
       callback();
