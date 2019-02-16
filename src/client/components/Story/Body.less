@@ -3,23 +3,22 @@
 @import (reference) '../../styles/fonts.less';
 
 .Body {
-  font-family: 'Source Serif Pro', serif;
-  line-height: 1.4;
+  font-family: @font-family;
   font-weight: 400;
   color: @black-text;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
   hyphens: none;
-  margin: 4px 0;
+  margin: 2px;
 
   a[target='_blank'] {
     &:after {
       content: '\e673';
       font-family: 'iconfont' !important;
-      font-size: 80%;
+      font-size: 100%;
       font-style: normal;
-      -webkit-font-smoothing: antialiased;
+      //-webkit-font-smoothing: antialiased;
       margin-left: 4px;
       vertical-align: middle;
     }
@@ -70,7 +69,7 @@
   // Paragraph
 
   p {
-    font-size: 18px;
+    font-size: 14px;
     line-height: 150%;
 
     &:not(:last-child) {
@@ -99,7 +98,7 @@
 
     li {
       list-style-position: outside;
-      margin: 8px 0;
+      margin: 10px 0;
     }
   }
 
@@ -196,7 +195,7 @@
     max-height: none;
     display: inline-block;
     vertical-align: middle;
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   p > img:first-child {

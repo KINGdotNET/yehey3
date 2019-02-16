@@ -90,7 +90,7 @@ export const getNotifications = username => (dispatch, getState, { blockchainLit
     type: GET_NOTIFICATIONS.ACTION,
     meta: targetUsername,
     payload: {
-      promise: blockchainLiteAPI.sendAsync('get_notifications', [targetUsername]),
+      promise: blockchainLiteAPI.callAsync('get_notifications', [targetUsername]),
     },
   });
 };

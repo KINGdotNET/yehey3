@@ -4,18 +4,21 @@ import Helmet from 'react-helmet';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Form, Input } from 'antd';
+import { Form, Input, Icon } from 'antd';
 import weauthjsInstance from '../weauthjsInstance';
 import { getIsReloading, getAuthenticatedUser } from '../reducers';
 import socialProfiles from '../helpers/socialProfiles';
 import withEditor from '../components/Editor/withEditor';
 import EditorInput from '../components/Editor/EditorInput';
+import ImageInput from '../components/Editor/ImageInput';
 import { remarkable } from '../components/Story/Body';
 import BodyContainer from '../containers/Story/BodyContainer';
 import Action from '../components/Button/Action';
 import Affix from '../components/Utils/Affix';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
+import { isValidImage, MAXIMUM_UPLOAD_SIZE } from '../helpers/image';
 import requiresLogin from '../auth/requiresLogin';
+import classNames from 'classnames';
 import './Settings.less';
 
 const FormItem = Form.Item;
@@ -47,6 +50,7 @@ function mapPropsToFields(props) {
   mapPropsToFields,
 })
 @withEditor
+
 export default class ProfileSettings extends React.Component {
   static propTypes = {
     intl: PropTypes.shape().isRequired,
@@ -59,22 +63,71 @@ export default class ProfileSettings extends React.Component {
     onImageUpload: () => {},
     onImageInvalid: () => {},
   };
+  
+  state = {
+    noContent: false,
+    imageUploading: false,
+    dropzoneActive: false,
+    currentInputValue: '',
+    currentImages: [],
+    focusedInput: false,
+    inputMinRows: 1,
+  };
 
   constructor(props) {
     super(props);
 
     this.state = {
       bodyHTML: '',
+      profileImage: '',
     };
 
     this.handleSignatureChange = this.handleSignatureChange.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.renderBody = this.renderBody.bind(this);
-  }
+    this.renderImage = this.renderImage.bind(this);  
+  };
+
+
+handleUpdateCurrentInputValue = e =>
+    this.setState({
+      currentInputValue: e.target.value,
+    });
+
+
+disableAndInsertImage = (image, imageName = 'image') => {
+  this.setState({
+    imageUploading: false,
+  });
+  this.insertImage(image, imageName);
+};
+
+insertImage(image, imageName = 'image') {
+  if (!this.input) return;
+
+  const { value } = this.props;
+
+  const startPos = this.input.selectionStart;
+  const endPos = this.input.selectionEnd;
+  const imageText = `${image}`;
+  const newValue = `${value.substring(0, startPos)}${imageText}${value.substring(
+    endPos,
+    value.length,
+  )}`;
+  this.resizeTextarea();
+  this.setValue(newValue, startPos + imageText.length, startPos + imageText.length);
+}
 
   handleSignatureChange(body) {
     _.throttle(this.renderBody, 200, { leading: false, trailing: true })(body);
   }
+
+  handleImageChange(image) {
+    _.throttle(this.renderImage, 200, { leading: false, trailing: true })(image);
+  }
+
 
   handleSubmit(e) {
     e.preventDefault();
@@ -105,9 +158,17 @@ export default class ProfileSettings extends React.Component {
     });
   }
 
+  renderImage(image) {
+    this.setState({
+      profileImage: remarkable.render(image),
+    });
+  }
+
+
+
   render() {
     const { intl, form } = this.props;
-    const { bodyHTML } = this.state;
+    const { bodyHTML, profileImage  } = this.state;
     const { getFieldDecorator } = form;
 
     const socialInputs = socialProfiles.map(profile => (
@@ -179,6 +240,57 @@ export default class ProfileSettings extends React.Component {
                 </div>
                 <div className="Settings__section">
                   <h3>
+                    <FormattedMessage id="profile_picture" defaultMessage="Profile picture" />
+                  </h3>
+                  <div className="Settings__section__inputs">
+                    <FormItem>
+                    {getFieldDecorator('profile_image', {
+                      initialValue: '',
+                    })(
+                      <ImageInput
+                        rows={2}
+                        onImageUpload={this.props.onImageUpload}
+                        onImageInvalid={this.props.onImageInvalid}
+                        onChange={this.handleImageChange}
+                        inputId={'profile_image'}
+                      />
+                    )}
+                    </FormItem>
+                    {profileImage && (
+                      <Form.Item label={<FormattedMessage id="profile_picture" defaultMessage="Profile Picture" />}>
+                        <BodyContainer full body={profileImage} />
+                      </Form.Item>
+                    )}
+                  </div>
+                </div>
+                
+                {/* <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="profile_cover" defaultMessage="Cover picture" />
+                  </h3>
+                  
+                  <div className="Settings__section__inputs">
+                  <FormItem>
+                    {getFieldDecorator('cover_image', {
+                      initialValue: '',
+                    })(
+                      <ImageInput
+                        rows={2}
+                        onImageUpload={this.props.onImageUpload}
+                        onImageInvalid={this.props.onImageInvalid}
+                        inputId={'profile_cover'}
+                      />,
+                    )}
+                    </FormItem>
+                    {bodyHTML && (
+                      <Form.Item label={<FormattedMessage id="profile_cover" defaultMessage="Cover_Picture" />}>
+                        <BodyContainer full body={bodyHTML} />
+                      </Form.Item>
+                    )}
+                  </div>
+                </div> */}
+                <div className="Settings__section">
+                  <h3>
                     <FormattedMessage id="profile_about" defaultMessage="About me" />
                   </h3>
                   <div className="Settings__section__inputs">
@@ -231,82 +343,7 @@ export default class ProfileSettings extends React.Component {
                     </FormItem>
                   </div>
                 </div>
-                <div className="Settings__section">
-                  <h3>
-                    <FormattedMessage id="profile_picture" defaultMessage="Profile picture" />
-                  </h3>
-                  
-                  {/* <div className="Settings__section__inputs">
-                    <FormItem>
-                      {getFieldDecorator('profile_image')(
-                        <Input
-                          size="large"
-                          placeholder={intl.formatMessage({
-                            id: 'profile_picture',
-                            defaultMessage: 'Profile picture',
-                          })}
-                        />,
-                      )}
-                    </FormItem>
-                  </div> */}
-
-                  <div className="Settings__section__inputs">
-                    {getFieldDecorator('profile_image', {
-                      initialValue: '',
-                    })(
-                      <EditorInput
-                        rows={1}
-                        //onChange={this.handleSignatureChange}
-                        onImageUpload={this.props.onImageUpload}
-                        onImageInvalid={this.props.onImageInvalid}
-                        inputId={'profile_image'}
-                      />,
-                    )}
-                    {bodyHTML && (
-                      <Form.Item label={<FormattedMessage id="profile_picture" defaultMessage="Profile Picture" />}>
-                        <BodyContainer full body={bodyHTML} />
-                      </Form.Item>
-                    )}
-                  </div>
-                </div>
                 
-                <div className="Settings__section">
-                  <h3>
-                    <FormattedMessage id="profile_cover" defaultMessage="Cover picture" />
-                  </h3>
-                  {/* <div className="Settings__section__inputs">
-                    <FormItem>
-                      {getFieldDecorator('cover_image')(
-                        <Input
-                          size="large"
-                          placeholder={intl.formatMessage({
-                            id: 'profile_cover',
-                            defaultMessage: 'Cover picture',
-                          })}
-                        />,
-                      )}
-                    </FormItem>
-                  </div> */}
-                  
-                  <div className="Settings__section__inputs">
-                    {getFieldDecorator('cover_image', {
-                      initialValue: '',
-                    })(
-                      <EditorInput
-                        rows={1}
-                        //onChange={this.handleSignatureChange}
-                        onImageUpload={this.props.onImageUpload}
-                        onImageInvalid={this.props.onImageInvalid}
-                        inputId={'profile_cover'}
-                      />,
-                    )}
-                    {bodyHTML && (
-                      <Form.Item label={<FormattedMessage id="profile_cover" defaultMessage="Cover_Picture" />}>
-                        <BodyContainer full body={bodyHTML} />
-                      </Form.Item>
-                    )}
-                  </div>
-                </div>
                 <div className="Settings__section">
                   <h3>
                     <FormattedMessage
@@ -325,7 +362,7 @@ export default class ProfileSettings extends React.Component {
                       initialValue: '',
                     })(
                       <EditorInput
-                        rows={6}
+                        rows={4}
                         onChange={this.handleSignatureChange}
                         onImageUpload={this.props.onImageUpload}
                         onImageInvalid={this.props.onImageInvalid}

@@ -121,7 +121,12 @@ class Story extends React.Component {
   // }
   
 	handleTransferClick(post) {
-    this.props.openTransfer(post.author);
+    this.transfer = {
+      to: post.author,
+      amount: 1,
+      memo: "Tip for post: " + post.title,
+    };
+    this.props.openTransfer(this.transfer);
   }
   	
   shouldComponentUpdate(nextProps, nextState) {
@@ -368,7 +373,7 @@ class Story extends React.Component {
               </div>
             </Action> }>
         <Link to={`/@${post.author}`}>
-        <Avatar username={post.author} size={60} />
+        <Avatar username={post.author} size={45} />
         </Link>
         </BTooltip> 
         </div>
@@ -395,7 +400,7 @@ class Story extends React.Component {
       authorAvatar =(
         <div>
         <Link to={`/@${post.author}`}>
-        <Avatar username={post.author} size={60} />
+        <Avatar username={post.author} size={45} />
         </Link>
         </div>
       );
@@ -438,36 +443,20 @@ class Story extends React.Component {
       );
     }
 
-    let storyTitle = (
-
-    <h2>
-      <a
-              href={dropCategory(post.url)}
-              target="_blank"
-              onClick={this.handlePostModalDisplay}
-              className="Story__content__title"
-            >
-              <div className="Story__title">
-                {post.depth !== 0 && <Tag color="#4f545c">RE</Tag>}
-                {post.title || post.root_title}
-              </div>
-          </a>
-            </h2>
-    );
-
-    if (showImagesOnly){
-        storyTitle = null;
-    }
 
     return (
       <div className="Story" id={`${post.author}-${post.permlink}`}>
         {rebloggedUI}
         <div className="Story__content">
           <div className="Story__header">
-            {authorAvatar}
             <div className="Story__header__text">
               <span className="Story__header__flex">
+              <span className="Story__avatar">
+              {authorAvatar}
+              </span>
+              <span className="Story__authorName">
                 {authorName}
+                </span>
 								<span className="Story__posted__time">
 									<BTooltip
 										title={
@@ -485,7 +474,6 @@ class Story extends React.Component {
 								</span>
               </span>
 							<div className="Story__content">
-								{storyTitle}
 								{this.renderStoryPreview()}
 							</div>
             </div>

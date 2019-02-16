@@ -115,6 +115,10 @@ class Topnav extends React.Component {
     });
   }
 
+  notificationButton = () => {
+
+  }
+
   menuForLoggedOut = () => {
     const { location } = this.props;
     const { searchBarActive } = this.state;
@@ -215,11 +219,10 @@ class Topnav extends React.Component {
                 title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
               >
                 <a className="Topnav__link Topnav__link--light Topnav__link--action">
+                <i className="iconfont icon-remind" />
                   {displayBadge ? (
                     <div className="Topnav__notifications-count">{notificationsCountDisplay}</div>
-                  ) : (
-                    <i className="iconfont icon-remind" />
-                  )}
+                  ): null }
                 </a>
               </Popover>
             </BTooltip>
@@ -393,7 +396,8 @@ class Topnav extends React.Component {
 									Me
 								</span>
 
-							</div> */}
+              </div> */}
+              <div className="Topnav__name">WeYouMe</div>
 							<div className="Topnav__version">alpha</div>
             </Link>
           </div>

@@ -46,7 +46,12 @@ class WalletSidebar extends React.Component {
   handleOpenTransfer = () => {
     const { match, user, isCurrentUser } = this.props;
     const username = match.params.name === user.name || isCurrentUser ? '' : match.params.name;
-    this.props.openTransfer(username);
+    this.transfer = {
+      to: username,
+      amount: 0,
+      memo: '',
+    };
+    this.props.openTransfer(this.transfer);
   };
 
   handleOpenPowerUp = () => {
@@ -64,18 +69,21 @@ class WalletSidebar extends React.Component {
 
     return (
       <div className="WalletSidebar">
-        <Action big className="WalletSidebar__transfer" primary onClick={this.handleOpenTransfer}>
+        <Action primary className="WalletSidebar__transfer"  onClick={this.handleOpenTransfer}>
           <FormattedMessage id="send" defaultMessage="Send" />
-					{/* <img src="/images/dollar.png" className="send-dollar on-right biggish"/> */}
         </Action>
         {ownProfile && (
           <div className="WalletSidebar__power">
-            <Action big onClick={this.handleOpenPowerUp}>
+          <span>
+            <Action primary onClick={this.handleOpenPowerUp}>
               <FormattedMessage id="power_up" defaultMessage="Power up" />
             </Action>
-            <Action big onClick={this.handleOpenPowerDown}>
+            </span>
+            <span>
+            <Action primary onClick={this.handleOpenPowerDown}>
               <FormattedMessage id="power_down" defaultMessage="Power down" />
             </Action>
+            </span>
           </div>
 				)}
 				{ showMarket && 

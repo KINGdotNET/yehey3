@@ -24,6 +24,7 @@ import Search from '../client/search/Search';
 import Notifications from '../client/notifications/Notifications';
 import Error404 from '../client/statics/Error404';
 import ExitPage from '../client/statics/ExitPage';
+import Boards from '../client/discover/Boards';
 
 const routes = [
   {
@@ -125,6 +126,11 @@ const routes = [
         path: '/discover',
         exact: true,
         component: Discover,
+      },
+      {
+        path: '/boards',
+        exact: true,
+        component: Boards,
       },
       {
         path: '/:category?/@:author/:permlink',

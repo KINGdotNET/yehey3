@@ -146,8 +146,15 @@ class PostContent extends React.Component {
 
   handleShareClick = post => this.props.reblog(post.id);
 
-  handleTransferClick = post => this.props.openTransfer(post.author);
-
+  handleTransferClick = post => {
+    this.transfer = {
+      to: post.author,
+      amount: 1,
+      memo: "Tip for post: " + post.title,
+    };
+    this.props.openTransfer(this.transfer);
+  };
+  
   handleSaveClick = post => this.props.toggleBookmark(post.id, post.author, post.permlink);
 
   handleFollowClick = post => {

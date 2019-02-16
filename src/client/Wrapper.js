@@ -239,7 +239,7 @@ export default class Wrapper extends React.PureComponent {
               <Transfer />
               <PowerUpOrDown />
               <NotificationPopup />
-              <BBackTop className="primary-modal" />
+              {/* <BBackTop className="primary-modal" /> */}
             </div>
           </Layout>
         </LocaleProvider>

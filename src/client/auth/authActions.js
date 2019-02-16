@@ -96,7 +96,7 @@ export const busyLogin = () => (dispatch, getState, { blockchainLiteAPI }) => {
     type: BUSY_LOGIN.ACTION,
     meta: targetUsername,
     payload: {
-      promise: blockchainLiteAPI.sendAsync('login', [accessToken]),
+      promise: blockchainLiteAPI.callAsync('login', [accessToken]),
     },
   });
 };

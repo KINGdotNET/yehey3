@@ -109,7 +109,12 @@ export default class User extends React.Component {
   }
 
   handleTransferClick = () => {
-    this.props.openTransfer(this.props.match.params.name);
+    this.transfer = {
+      to: this.props.match.params.name,
+      amount: 0,
+      memo: '',
+    };
+    this.props.openTransfer(this.transfer);
   };
 
   render() {

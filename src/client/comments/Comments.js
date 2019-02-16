@@ -21,6 +21,7 @@ import * as commentsActions from './commentsActions';
 import { notify } from '../app/Notification/notificationActions';
 import './Comments.less';
 import { openTransfer } from '../wallet/walletActions'
+import ellipsis from 'text-ellipsis';
 
 @connect(
   state => ({
@@ -146,7 +147,12 @@ export default class Comments extends React.Component {
   };
 
   handleTransferClick = comment => {
-    this.props.openTransfer(comment.author);
+    this.transfer = {
+      to: comment.author,
+      amount: 1,
+      memo: "Tip for comment: " + ellipsis(comment.body, 50, { ellipsis: '…' }),
+    };
+    this.props.openTransfer(this.transfer);
   }
 
   render() {

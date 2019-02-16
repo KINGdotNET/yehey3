@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
+import RightSidebar from '../app/Sidebar/RightSidebar';
 import Affix from '../components/Utils/Affix';
 import * as notificationConstants from '../../common/constants/notifications';
 import { getUpdatedSCUserMetadata } from '../auth/authActions';
@@ -65,13 +66,15 @@ class Notifications extends React.Component {
               <LeftSidebar />
             </div>
           </Affix>
-          <div className="NotificationsPage">
-            <div className="NotificationsPage__title">
-              <h1>
-                <FormattedMessage id="notifications" defaultMessage="Notifications" />
-              </h1>
-            </div>
-            <div className="NotificationsPage__content">
+          <div className="center">
+            <div className="NotificationsPage">
+              <div className="NotificationsPage__title">
+                <h1>
+                  <FormattedMessage id="notifications" defaultMessage="Notifications" />
+                </h1>
+              </div>
+              <div className="NotificationsPage__content">
+            
               {loadingNotifications && (
                 <div className="NotificationsPage__loading">
                   <Loading />
@@ -139,7 +142,14 @@ class Notifications extends React.Component {
                 )}
             </div>
           </div>
+          
         </div>
+        <Affix className="rightContainer" stickPosition={77}>
+							<div className="right">
+								<RightSidebar />
+							</div>
+						</Affix>
+      </div>
       </div>
     );
   }

@@ -6,10 +6,9 @@ import { Icon, Input } from 'antd';
 import Dropzone from 'react-dropzone';
 import { HotKeys } from 'react-hotkeys';
 import { MAXIMUM_UPLOAD_SIZE, isValidImage } from '../../helpers/image';
-import EditorToolbar from './EditorToolbar';
-import './EditorInput.less';
+import './ImageInput.less';
 
-class EditorInput extends React.Component {
+class ImageInput extends React.Component {
   static propTypes = {
     value: PropTypes.string, // eslint-disable-line react/require-default-props
     inputId: PropTypes.string,
@@ -29,19 +28,6 @@ class EditorInput extends React.Component {
     onImageInvalid: () => {},
   };
 
-  static hotkeys = {
-    h1: 'ctrl+shift+1',
-    h2: 'ctrl+shift+2',
-    h3: 'ctrl+shift+3',
-    h4: 'ctrl+shift+4',
-    h5: 'ctrl+shift+5',
-    h6: 'ctrl+shift+6',
-    bold: 'ctrl+b',
-    italic: 'ctrl+i',
-    quote: 'ctrl+q',
-    link: 'ctrl+k',
-    image: 'ctrl+m',
-  };
 
   constructor(props) {
     super(props);
@@ -53,7 +39,6 @@ class EditorInput extends React.Component {
 
     this.setInput = this.setInput.bind(this);
     this.disableAndInsertImage = this.disableAndInsertImage.bind(this);
-    this.insertCode = this.insertCode.bind(this);
     this.handlePastedImage = this.handlePastedImage.bind(this);
     this.handleImageChange = this.handleImageChange.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
@@ -126,70 +111,12 @@ class EditorInput extends React.Component {
     this.setValue(newValue, startPos + imageText.length, startPos + imageText.length);
   }
 
-  insertCode(type) {
-    if (!this.input) return;
-    this.input.focus();
-
-    switch (type) {
-      case 'h1':
-        this.insertAtCursor('# ', '', 2, 2);
-        break;
-      case 'h2':
-        this.insertAtCursor('## ', '', 3, 3);
-        break;
-      case 'h3':
-        this.insertAtCursor('### ', '', 4, 4);
-        break;
-      case 'h4':
-        this.insertAtCursor('#### ', '', 5, 5);
-        break;
-      case 'h5':
-        this.insertAtCursor('##### ', '', 6, 6);
-        break;
-      case 'h6':
-        this.insertAtCursor('###### ', '', 7, 7);
-        break;
-      case 'b':
-        this.insertAtCursor('**', '**', 2, 2);
-        break;
-      case 'i':
-        this.insertAtCursor('*', '*', 1, 1);
-        break;
-      case 'q':
-        this.insertAtCursor('> ', '', 2, 2);
-        break;
-      case 'link':
-        this.insertAtCursor('[', '](url)', 1, 1);
-        break;
-      case 'image':
-        this.insertAtCursor('![', '](url)', 2, 2);
-        break;
-      default:
-        break;
-    }
-
-    this.resizeTextarea();
-  }
-
   resizeTextarea() {
     if (this.originalInput) this.originalInput.resizeTextarea();
   }
 
   handlers = {
-    h1: () => this.insertCode('h1'),
-    h2: () => this.insertCode('h2'),
-    h3: () => this.insertCode('h3'),
-    h4: () => this.insertCode('h4'),
-    h5: () => this.insertCode('h5'),
-    h6: () => this.insertCode('h6'),
-    bold: () => this.insertCode('b'),
-    italic: () => this.insertCode('i'),
-    quote: () => this.insertCode('q'),
-    link: e => {
-      e.preventDefault();
-      this.insertCode('link');
-    },
-    image: () => this.insertCode('image'),
+    
   };
 
   handlePastedImage(e) {
@@ -301,8 +228,7 @@ class EditorInput extends React.Component {
 
     return (
       <React.Fragment>
-        <EditorToolbar onSelect={this.insertCode} />
-        <div className="EditorInput__dropzone-base">
+        <div className="ImageInput__dropzone-base">
           <Dropzone
             disableClick
             style={{}}
@@ -313,25 +239,7 @@ class EditorInput extends React.Component {
             onDragEnter={this.handleDragEnter}
             onDragLeave={this.handleDragLeave}
           >
-            {dropzoneActive && (
-              <div className="EditorInput__dropzone">
-                <div>
-                  <i className="iconfont icon-picture" />
-                  <FormattedMessage id="drop_image" defaultMessage="Drop your images here" />
-                </div>
-              </div>
-            )}
-            <HotKeys keyMap={this.constructor.hotkeys} handlers={this.handlers}>
-              <Input.TextArea
-                {...restProps}
-                onChange={this.handleChange}
-                value={value}
-                ref={this.setInput}
-              />
-            </HotKeys>
-          </Dropzone>
-        </div>
-        <p className="EditorInput__imagebox">
+          <p className="ImageInput__imagebox">
           <input
             type="file"
             id={this.props.inputId || 'inputfile'}
@@ -353,13 +261,29 @@ class EditorInput extends React.Component {
               />
             )}
           </label>
-          <label htmlFor="reading_time" className="EditorInput__addon">
-            {addon}
-          </label>
         </p>
+            {dropzoneActive && (
+              <div className="ImageInput__dropzone">
+                <div>
+                  <i className="iconfont icon-picture" />
+                  <FormattedMessage id="drop_image" defaultMessage="Drop your images here" />
+                </div>
+              </div>
+            )}
+            <HotKeys keyMap={this.constructor.hotkeys} handlers={this.handlers}>
+              <Input.TextArea
+                {...restProps}
+                onChange={this.handleChange}
+                value={value}
+                ref={this.setInput}
+              />
+            </HotKeys>
+          </Dropzone>
+        </div>
+        
       </React.Fragment>
     );
   }
 }
 
-export default EditorInput;
+export default ImageInput;

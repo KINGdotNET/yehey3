@@ -6,6 +6,8 @@ import { getUserDetailsKey } from '../helpers/stateHelpers';
 const initialState = {
   transferVisible: false,
   transferTo: '',
+  transferAmount: 0,
+  transferMemo: '',
   powerUpOrDownVisible: false,
   powerDown: false,
   totalSCORE: '',
@@ -28,7 +30,9 @@ export default function walletReducer(state = initialState, action) {
       return {
         ...state,
         transferVisible: true,
-        transferTo: action.payload,
+        transferTo: action.payload.to,
+        transferAmount: action.payload.amount,
+        transferMemo: action.payload.memo,
       };
     case walletActions.CLOSE_TRANSFER:
       return {
@@ -192,6 +196,8 @@ export default function walletReducer(state = initialState, action) {
 
 export const getIsTransferVisible = state => state.transferVisible;
 export const getTransferTo = state => state.transferTo;
+export const getTransferAmount = state => state.transferAmount;
+export const getTransferMemo = state => state.transferMemo;
 export const getIsPowerUpOrDownVisible = state => state.powerUpOrDownVisible;
 export const getIsPowerDown = state => state.powerDown;
 export const gettotalSCORE = state => state.totalSCORE;
