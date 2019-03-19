@@ -78,8 +78,10 @@ class ClaimRewardsBlock extends Component {
     const { rewardClaimed } = this.state;
     const TMEreward = parseFloat(user.TMErewardBalance);
     const TSDreward = parseFloat(user.TSDrewardBalance);
-    const SCORErewardBalanceInTME = parseFloat(user.SCORErewardBalanceInTME);
-    const userHasRewards = TMEreward > 0 || TSDreward > 0 || SCORErewardBalanceInTME > 0;
+    const SCOREreward = parseFloat(user.SCORErewardBalance);
+    const POWERreward = parseFloat(user.SCORErewardBalanceInTME);
+    const userHasRewards = TMEreward > 0 || TSDreward > 0 || SCOREreward > 0;
+    // console.log(TMEreward, TSDreward, SCOREreward, POWERreward)
 
     const buttonText = rewardClaimed
       ? intl.formatMessage({
@@ -102,9 +104,9 @@ class ClaimRewardsBlock extends Component {
         <div className="SidebarContentBlock__content">
           {!rewardClaimed && (
             <div>
-              {TMEreward > 0 && this.renderReward(TMEreward, 'TME', 'TME')}
-              {TSDreward > 0 && this.renderReward(TSDreward, 'TSD', 'TSD')}
-              {SCORErewardBalanceInTME > 0 && this.renderReward(SCORErewardBalanceInTME, 'POWER', 'POWER')}
+              {TMEreward > 0 && this.renderReward(TMEreward, 'TME')}
+              {TSDreward > 0 && this.renderReward(TSDreward, 'TSD')}
+              {SCOREreward > 0 && this.renderReward(POWERreward, 'POWER')}
             </div>
           )}
           <Action

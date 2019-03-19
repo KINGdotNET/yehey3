@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import find from 'lodash/find';
 import Slider from '../Slider/Slider';
-import Payout from './Payout';
 import Buttons from './Buttons';
 import Confirmation from './Confirmation';
 import { getHasDefaultSlider, getVoteValue } from '../../helpers/user';
@@ -35,7 +34,7 @@ class StoryFooter extends React.Component {
     onEditClick: PropTypes.func,
 		handlePostPopoverMenuClick: PropTypes.func,
     onTransferClick: PropTypes.func,
-    // handleOpenTransfer: PropTypes.func,
+    onPromoteClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -53,7 +52,7 @@ class StoryFooter extends React.Component {
     onEditClick: () => {},
     handlePostPopoverMenuClick: () => {},
     onTransferClick: () => {},
-    //  handleOpenTransfer: () => {},
+    onPromoteClick: () => {},
   };
 
   state = {
@@ -117,6 +116,10 @@ class StoryFooter extends React.Component {
       this.props.onTransferClick(this.props.post);
   }
 
+  handlePromoteClick =() => {
+    this.props.onPromoteClick(this.props.post);
+}
+
   handleShareClick = () => this.props.onShareClick(this.props.post);
 
   handleEditClick = () => this.props.onEditClick(this.props.post);
@@ -174,6 +177,7 @@ class StoryFooter extends React.Component {
               onShareClick={this.handleShareClick}
               onEditClick={this.handleEditClick}
               onTransferClick={this.handleTransferClick}
+              onPromoteClick={this.handlePromoteClick}
 							handlePostPopoverMenuClick={handlePostPopoverMenuClick}
             />
           )}

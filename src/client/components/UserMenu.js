@@ -50,7 +50,7 @@ class UserMenu extends React.Component {
             universal
             autoHide
             renderView={({ style, ...props }) => (
-              <div style={{ ...style, marginBottom: '-20px' }} {...props} />
+              <div style={{ ...style, marginBottom: '-20px', marginRight: '-17px' }} {...props} />
             )}
             style={{ width: '100%', height: 46 }}
           >

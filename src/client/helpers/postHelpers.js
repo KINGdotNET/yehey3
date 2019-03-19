@@ -66,7 +66,7 @@ export function getContentImages(content, parsed = false) {
   );
 }
 
-export function createPostMetadata(body, tags, oldMetadata = {}) {
+export function createPostMetadata(body, board, tags, oldMetadata = {}) {
   let metaData = {
     community: 'weyoume',
     app: `alpha.weyoume/${appVersion}`,
@@ -93,8 +93,9 @@ export function createPostMetadata(body, tags, oldMetadata = {}) {
 
   const images = getContentImages(parsedBody, true);
   const links = extractLinks(parsedBody);
+  const boardWithTags = [board, ...tags];
 
-  metaData.tags = tags;
+  metaData.tags = boardWithTags;
   metaData.users = users;
   metaData.links = links.slice(0, 10);
   metaData.image = images;

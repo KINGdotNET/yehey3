@@ -16,6 +16,7 @@ import { showPostModal } from '../app/appActions';
 import EmptyUserProfile from '../statics/EmptyUserProfile';
 import EmptyUserOwnProfile from '../statics/EmptyUserOwnProfile';
 import PostModal from '../post/PostModalContainer';
+import user from '../helpers/user';
 
 @withRouter
 @connect(
@@ -54,8 +55,8 @@ export default class UserProfile extends React.Component {
     const { name } = match.params;
 
     this.props.getFeedContent({
-      sortBy: 'blog',
-      category: name,
+      sortBy: ['blog','blog'],
+      category: [name, name],
       limit,
     });
   }
@@ -70,8 +71,8 @@ export default class UserProfile extends React.Component {
     const hasMore = getFeedHasMoreFromState('blog', username, feed);
     const loadMoreContentAction = () =>
       this.props.getMoreFeedContent({
-        sortBy: 'blog',
-        category: username,
+        sortBy: ['blog','blog'],
+        category: [username, username],
         limit,
       });
 

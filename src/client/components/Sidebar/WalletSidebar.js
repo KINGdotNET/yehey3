@@ -49,7 +49,8 @@ class WalletSidebar extends React.Component {
     this.transfer = {
       to: username,
       amount: 0,
-      memo: '',
+      memo: " ",
+      currency: 'TME',
     };
     this.props.openTransfer(this.transfer);
   };

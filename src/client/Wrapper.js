@@ -20,7 +20,7 @@ import {
   getNightmode,
 } from './reducers';
 import { login, logout, busyLogin } from './auth/authActions';
-import { getFollowing, getNotifications } from './user/userActions';
+import { getFollowing, getNotifications, getNetworkUserList } from './user/userActions';
 import {
   getRate,
   getRewardFund,
@@ -50,6 +50,7 @@ import BBackTop from './components/BBackTop';
   {
     login,
     logout,
+    getNetworkUserList,
     getFollowing,
     getNotifications,
     getRate,
@@ -72,6 +73,7 @@ export default class Wrapper extends React.PureComponent {
     login: PropTypes.func,
     logout: PropTypes.func,
     getFollowing: PropTypes.func,
+    getNetworkUserList: PropTypes.func,
     getRewardFund: PropTypes.func,
     getRebloggedList: PropTypes.func,
     getRate: PropTypes.func,
@@ -89,6 +91,7 @@ export default class Wrapper extends React.PureComponent {
     login: () => {},
     logout: () => {},
     getFollowing: () => {},
+    getNetworkUserList: () => {},
     getRewardFund: () => {},
     getRebloggedList: () => {},
     getRate: () => {},
@@ -138,6 +141,7 @@ export default class Wrapper extends React.PureComponent {
   componentDidMount() {
     this.props.login().then(() => {
       this.props.getFollowing();
+      this.props.getNetworkUserList();
       this.props.getNotifications();
       this.props.busyLogin();
     });
@@ -196,19 +200,25 @@ export default class Wrapper extends React.PureComponent {
         this.props.history.push('/settings');
         break;
 			case 'feed':
-        this.props.history.push('/feed');
+        this.props.history.push(`/feed-${this.props.username}/feed-${this.props.username}`);
         break;
 			case 'hot':
-        this.props.history.push('/hot');
-        break;
-			case 'news':
-        this.props.history.push('/trending');
+        this.props.history.push('/hot-all/hot-all');
         break;
 			case 'trending':
-        this.props.history.push('/trending');
+        this.props.history.push('/trending-all/trending-all');
+        break;
+      case 'boards':
+        this.props.history.push('/boards');
+        break;
+      case 'discover':
+        this.props.history.push('/discover');
         break;
 			case 'wallet':
         this.props.history.push('/wallet');
+        break;
+      case 'network':
+        this.props.history.push('/network');
         break;
 			case 'edit-profile':
         this.props.history.push('/edit-profile');

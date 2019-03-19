@@ -21,7 +21,6 @@ import withAuthActions from '../../auth/withAuthActions';
 import { getProxyImageURL } from '../../helpers/image';
 import Popover from '../Popover';
 import BTooltip from '../BTooltip';
-import ReputationTag from '../ReputationTag';
 import { getHtml } from './Body';
 import BodyContainer from '../../containers/Story/BodyContainer';
 import StoryDeleted from './StoryDeleted';
@@ -60,7 +59,8 @@ class StoryFull extends React.Component {
     onLikeClick: PropTypes.func,
     onShareClick: PropTypes.func,
     onEditClick: PropTypes.func,
-    onTransferClick: PropTypes.func
+    onTransferClick: PropTypes.func,
+    onPromoteClick: PropTypes.func,
   };
 
   static defaultProps = {
@@ -81,6 +81,7 @@ class StoryFull extends React.Component {
     onShareClick: () => {},
     onEditClick: () => {},
     onTransferClick: () => {},
+    onPromoteClick: () => {},
     postState: {},
   };
 
@@ -205,6 +206,7 @@ class StoryFull extends React.Component {
       onShareClick,
       onEditClick,
       onTransferClick,
+      onPromoteClick,
     } = this.props;
     const { isReported } = postState;
 
@@ -502,6 +504,7 @@ class StoryFull extends React.Component {
           onShareClick={onShareClick}
           onEditClick={onEditClick}
           onTransferClick={onTransferClick}
+          onPromoteClick={onPromoteClick}
         />
       </div>
     );

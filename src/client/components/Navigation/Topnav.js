@@ -247,6 +247,9 @@ class Topnav extends React.Component {
                   <PopoverMenuItem key="my-profile">
                     <FormattedMessage id="my_profile" defaultMessage="My profile" />
                   </PopoverMenuItem>
+                  <PopoverMenuItem key="wallet">
+                    <FormattedMessage id="wallet" defaultMessage="Wallet" />
+                  </PopoverMenuItem>
                   <PopoverMenuItem key="trending">
                     <FormattedMessage id="trending" defaultMessage="Trending" />
                   </PopoverMenuItem>
@@ -254,13 +257,13 @@ class Topnav extends React.Component {
                     <FormattedMessage id="hot" defaultMessage="Hot" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="feed">
-                    <FormattedMessage id="feed" defaultMessage="Feed" />
+                    <FormattedMessage id="feed" defaultMessage="My Feed" />
                   </PopoverMenuItem>
-                  <PopoverMenuItem key="replies">
-                    <FormattedMessage id="replies" defaultMessage="Replies" />
+                  <PopoverMenuItem key="boards">
+                    <FormattedMessage id="boards" defaultMessage="Boards" />
                   </PopoverMenuItem>
-                  <PopoverMenuItem key="wallet">
-                    <FormattedMessage id="wallet" defaultMessage="Wallet" />
+                  <PopoverMenuItem key="discover">
+                    <FormattedMessage id="discover" defaultMessage="Discover" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="activity">
                     <FormattedMessage id="activity" defaultMessage="Activity" />
@@ -270,6 +273,9 @@ class Topnav extends React.Component {
                   </PopoverMenuItem>
                   <PopoverMenuItem key="drafts">
                     <FormattedMessage id="drafts" defaultMessage="Drafts" />
+                  </PopoverMenuItem>
+                  <PopoverMenuItem key="network">
+                    <FormattedMessage id="network" defaultMessage="Network" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="settings">
                     <FormattedMessage id="settings" defaultMessage="Settings" />
@@ -382,23 +388,9 @@ class Topnav extends React.Component {
       <div className="Topnav">
         <div className="topnav-layout">
           <div className={classNames('left', { 'Topnav__mobile-hidden': searchBarActive })}>
-            <Link className="Topnav__brand" to="/">
-							<img src="/images/logo.png" className="Topnav__brand__logo"></img>
-              {/* <i className="iconfont native-icons-WeYouMe Topnav__brand-icon" /> */}
-              {/* <div className="Topnav__brandname">
-								<span className="We">
-									We
-								</span>
-								<span className="You">
-									You
-								</span>
-								<span className="Me">
-									Me
-								</span>
-
-              </div> */}
-              <div className="Topnav__name">WeYouMe</div>
-							<div className="Topnav__version">alpha</div>
+            <Link className="Topnav__brand" to="/trending-all/hot-all">
+							<img src="/images/logo" className="Topnav__brand__logo"></img>
+              <img src="/images/logo-icon.png" className="Topnav__brand__logo-mobile"></img>
             </Link>
           </div>
           <div className={classNames('center', { mobileVisible: searchBarActive })}>

@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import { getIsAuthenticated, getAuthenticatedUserName } from '../reducers';
-import { getAllFollowing } from '../helpers/apiHelpers';
+import { getAllFollowing, getNetworkUserListFromAPI } from '../helpers/apiHelpers';
 import { createAsyncActionType } from '../helpers/stateHelpers';
 
 export const FOLLOW_USER = '@user/FOLLOW_USER';
@@ -91,6 +91,17 @@ export const getNotifications = username => (dispatch, getState, { blockchainLit
     meta: targetUsername,
     payload: {
       promise: blockchainLiteAPI.callAsync('get_notifications', [targetUsername]),
+    },
+  });
+};
+
+export const GET_NETWORK_USER_LIST = createAsyncActionType('@user/GET_NETWORK_USER_LIST');
+
+export const getNetworkUserList = () => (dispatch) => {
+  return dispatch({
+    type: GET_NETWORK_USER_LIST.ACTION,
+    payload: {
+      promise: getNetworkUserListFromAPI(),
     },
   });
 };

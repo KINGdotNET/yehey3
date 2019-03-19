@@ -16,10 +16,10 @@ import {
   getTransferTo,
   getTransferAmount,
   getTransferMemo,
+  getTransferCurrency,
   getCryptosPriceHistory,
 } from '../reducers';
 import './Transfer.less';
-import { getMoreUserComments } from '../feed/feedActions';
 
 const InputGroup = Input.Group;
 
@@ -30,6 +30,7 @@ const InputGroup = Input.Group;
     to: getTransferTo(state),
     amount: getTransferAmount(state),
     memo: getTransferMemo(state),
+    currency: getTransferCurrency(state),
     authenticated: getIsAuthenticated(state),
     user: getAuthenticatedUser(state),
     cryptosPriceHistory: getCryptosPriceHistory(state),
@@ -47,6 +48,7 @@ export default class Transfer extends React.Component {
     to: PropTypes.string,
     amount: PropTypes.number,
     memo: PropTypes.string,
+    currency: PropTypes.string,
     authenticated: PropTypes.bool.isRequired,
     user: PropTypes.shape().isRequired,
     form: PropTypes.shape().isRequired,
@@ -59,6 +61,7 @@ export default class Transfer extends React.Component {
     to: '',
     amount: 0,
     memo: '',
+    currency: 'TME',
     visible: false,
     closeTransfer: () => {},
   };
@@ -67,16 +70,14 @@ export default class Transfer extends React.Component {
 
   static minAccountLength = 3;
   static maxAccountLength = 16;
-  static exchangeRegex = /^(bittrex|blocktrades|poloniex|changelly|openledge|shapeshiftio|deepcrypto8)$/;
+  static exchangeRegex = /^(bittrex|blocktrades|poloniex|changelly|openledger|shapeshiftio|deepcrypto8)$/;
   static CURRENCIES = {
-    STEEM: 'STEEM',
     TME: 'TME',
-    SCORE: 'SCORE',
     TSD: 'TSD',
   };
 
   state = {
-    currency: Transfer.CURRENCIES.TME,
+    currency: this.props.currency,
     oldAmount: undefined,
   };
 
@@ -95,16 +96,16 @@ export default class Transfer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { form, to, amount, memo } = nextProps;
+    const { form, to, amount, memo, currency } = nextProps;
     if (this.props.to !== to) {
       form.setFieldsValue({
         to,
         amount,
-        currency: TME.symbol,
+        currency,
         memo,
       });
       this.setState({
-        currency: TME.symbol,
+        currency,
       });
     }
   }

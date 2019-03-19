@@ -13,7 +13,7 @@ const Feed = ({ content, isFetching, hasMore, loadMoreContent, showPostModal }) 
     loadingMore={isFetching}
     hasMore={hasMore}
     elementIsScrollable={false}
-    threshold={1500}
+    threshold={2000}
   >
     {content.map(id => <StoryContainer key={id} id={id} showPostModal={showPostModal} />)}
   </ReduxInfiniteScroll>

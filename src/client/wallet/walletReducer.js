@@ -8,16 +8,81 @@ const initialState = {
   transferTo: '',
   transferAmount: 0,
   transferMemo: '',
+  transferCurrency: 'TME',
   powerUpOrDownVisible: false,
   powerDown: false,
   totalSCORE: '',
   SCOREbackingTMEfundBalance: '',
+  headBlockID: '',
+  headBlockNumber: 0,
+  pendingRewards: '',
+  block: {
+    block_id: "Loading block id",
+    extensions: [],
+    previous: "Loadind previous block id",
+    signing_key: "Loading signing key",
+    timestamp: "Loading Time",
+    transaction_ids: [],
+    transaction_merkle_root: "Loading Merkle Root",
+    transactions: [],
+    witness: "Loading Witness",
+    witness_signature: "Loading Signature",
+  },
+  txnBlock: {
+    block_id: "Loading block id",
+    extensions: [],
+    previous: "Loadind previous block id",
+    signing_key: "Loading signing key",
+    timestamp: "Loading Time",
+    transaction_ids: [],
+    transaction_merkle_root: "Loading Merkle Root",
+    transactions: [],
+    witness: "Loading Witness",
+    witness_signature: "Loading Signature",
+  },
+  blocks: [],
+  gProps: {
+    TSD_interest_rate: 1000,
+    TSD_print_rate: 0,
+    average_block_size: 121,
+    confidential_TSD_supply: "0.000 TSD",
+    confidential_supply: "0.000 TME",
+    current_TSD_supply: "Loading TSD",
+    current_aslot: 4079735,
+    current_reserve_ratio: 200000000,
+    current_supply: "Loading TME",
+    current_witness: "Loading",
+    head_block_id: "Loading",
+    head_block_number: 1,
+    id: 0,
+    last_irreversible_block_num: 1,
+    max_virtual_bandwidth: "1585446912000000000000",
+    maximum_block_size: 131072,
+    num_pow_witnesses: 0,
+    participation_count: 128,
+    pending_rewarded_SCORE: "Loading SCORE",
+    pending_rewarded_SCOREvalueInTME: "Loading TME",
+    recent_slots_filled: "340282366920938463463374607431768211455",
+    time: "Loading Time",
+    totalSCORE: "Loading SCORE",
+    totalSCOREreward2: "0",
+    totalTMEfundForSCORE: "Loading TME",
+    total_pow: "18446744073709551615",
+    total_reward_fund_TME: "Loading TME",
+    virtual_supply: "Loading TME",
+    vote_power_reserve_rate: 10,
+    },
+  transaction: {},
+  loadingTransaction: true,
+  loadingBlock: false,
+  loadingTxnBlock: false,
   usersTransactions: {},
   usersAccountHistory: {},
   usersEstAccountsValues: {},
   usersAccountHistoryLoading: true,
   loadingEstAccountValue: true,
   loadingGlobalProperties: true,
+  loadingHeadBlocks: true,
   loadingMoreUsersAccountHistory: false,
   accountHistoryFilter: [],
   currentDisplayedActions: [],
@@ -33,6 +98,7 @@ export default function walletReducer(state = initialState, action) {
         transferTo: action.payload.to,
         transferAmount: action.payload.amount,
         transferMemo: action.payload.memo,
+        transferCurrency: action.payload.currency,
       };
     case walletActions.CLOSE_TRANSFER:
       return {
@@ -58,9 +124,89 @@ export default function walletReducer(state = initialState, action) {
     case walletActions.GET_GLOBAL_PROPERTIES.SUCCESS: {
       return {
         ...state,
+        gProps: action.payload,
         SCOREbackingTMEfundBalance: action.payload.totalTMEfundForSCORE,
         totalSCORE: action.payload.totalSCORE,
+        headBlockID: action.payload.head_block_id,
+        headBlockNumber: action.payload.head_block_number,
+        pendingRewards: action.payload.pending_rewarded_SCOREvalueInTME,
         loadingGlobalProperties: false,
+      };
+    }
+    case walletActions.GET_TRANSACTION.START: {
+      return {
+        ...state,
+        loadingTransaction: true,
+      };
+    }
+    case walletActions.GET_TRANSACTION.SUCCESS: {
+      return {
+        ...state,
+        transaction: action.payload,
+        loadingTransaction: false,
+      };
+    }
+    case walletActions.GET_TRANSACTION.ERROR: {
+      return {
+        ...state,
+        loadingTransaction: false,
+      };
+    }
+    case walletActions.GET_BLOCK.START: {
+      return {
+        ...state,
+        loadingBlock: true,
+      };
+    }
+    case walletActions.GET_BLOCK.SUCCESS: {
+      return {
+        ...state,
+        block: action.payload,
+        loadingBlock: false,
+      };
+    }
+    case walletActions.GET_BLOCK.ERROR: {
+      return {
+        ...state,
+        loadingBlock: false,
+      };
+    }
+    case walletActions.GET_TXN_BLOCK.START: {
+      return {
+        ...state,
+        loadingTxnBlock: true,
+      };
+    }
+    case walletActions.GET_TXN_BLOCK.SUCCESS: {
+      return {
+        ...state,
+        txnBlock: action.payload,
+        loadingTxnBlock: false,
+      };
+    }
+    case walletActions.GET_TXN_BLOCK.ERROR: {
+      return {
+        ...state,
+        loadingTxnBlock: false,
+      };
+    }
+    case walletActions.GET_HEAD_BLOCKS.START: {
+      return {
+        ...state,
+        loadingHeadBlocks: true,
+      };
+    }
+    case walletActions.GET_HEAD_BLOCKS.SUCCESS: {
+      return {
+        ...state,
+        blocks: action.payload,
+        loadingHeadBlocks: false,
+      };
+    }
+    case walletActions.GET_HEAD_BLOCKS.ERROR: {
+      return {
+        ...state,
+        loadingHeadBlocks: false,
       };
     }
     case walletActions.GET_GLOBAL_PROPERTIES.ERROR: {
@@ -198,9 +344,23 @@ export const getIsTransferVisible = state => state.transferVisible;
 export const getTransferTo = state => state.transferTo;
 export const getTransferAmount = state => state.transferAmount;
 export const getTransferMemo = state => state.transferMemo;
+export const getTransferCurrency = state => state.transferCurrency;
+
 export const getIsPowerUpOrDownVisible = state => state.powerUpOrDownVisible;
 export const getIsPowerDown = state => state.powerDown;
+export const getGlobalProperties = state => state.gProps;
 export const gettotalSCORE = state => state.totalSCORE;
+export const getTransaction = state => state.transaction;
+export const getLoadingTransaction = state => state.loadingTransaction;
+export const getBlock = state => state.block;
+export const getLoadingBlock = state => state.loadingBlock;
+export const getTxnBlock = state => state.txnBlock;
+export const getLoadingTxnBlock = state => state.loadingTxnBlock;
+export const getHeadBlocks = state => state.blocks;
+export const getLoadingHeadBlocks = state => state.loadingHeadBlocks;
+export const getHeadBlockID = state => state.headBlockID;
+export const getHeadBlockNumber = state => state.headBlockNumber;
+export const getPendingRewards = state => state.pendingRewards;
 export const getSCOREbackingTMEfundBalance = state => state.SCOREbackingTMEfundBalance;
 export const getUsersTransactions = state => state.usersTransactions;
 export const getUsersEstAccountsValues = state => state.usersEstAccountsValues;

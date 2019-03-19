@@ -16,6 +16,7 @@ import {
   getRewriteLinks,
   getUseBeta,
   getUpvoteSetting,
+  getBoardSetting,
   getExitPageSetting,
 } from '../reducers';
 import { saveSettings } from './settingsActions';
@@ -31,6 +32,7 @@ import LANGUAGES from '../translations/languages';
 import { getLanguageText } from '../translations';
 import './Settings.less';
 import packageJson from '../../../package.json';
+import { boardValues } from '../../common/constants/boards';
 
 @requiresLogin
 @injectIntl
@@ -47,6 +49,7 @@ import packageJson from '../../../package.json';
     useBeta: getUseBeta(state),
     loading: getIsSettingsLoading(state),
     upvoteSetting: getUpvoteSetting(state),
+    boardSetting: getBoardSetting(state),
     exitPageSetting: getExitPageSetting(state),
   }),
   { reload, saveSettings, notify },
@@ -57,6 +60,7 @@ export default class Settings extends React.Component {
     reloading: PropTypes.bool,
     locale: PropTypes.string,
     votingPower: PropTypes.string,
+    boardSetting: PropTypes.string,
     votePercent: PropTypes.number,
     loading: PropTypes.bool,
     showNSFWPosts: PropTypes.bool,
@@ -74,7 +78,8 @@ export default class Settings extends React.Component {
   static defaultProps = {
     reloading: false,
     locale: 'auto',
-    votingPower: false,
+    votingPower: 'off',
+    boardSetting: boardValues.random,
     votePercent: 10000,
     loading: false,
     showNSFWPosts: false,
@@ -96,12 +101,13 @@ export default class Settings extends React.Component {
 
   state = {
     locale: 'auto',
-    votingPower: false,
+    votingPower: 'off',
     votePercent: 10000,
     showNSFWPosts: false,
     showImagesOnly: false,
     nightmode: false,
     rewriteLinks: false,
+    boardSetting: boardValues.random,
     exitPageSetting: false,
   };
 
@@ -112,6 +118,7 @@ export default class Settings extends React.Component {
       votePercent: this.props.votePercent / 100,
       showNSFWPosts: this.props.showNSFWPosts,
       showImagesOnly: this.props.showImagesOnly,
+      boardSetting: this.props.boardSetting,
       nightmode: this.props.nightmode,
       rewriteLinks: this.props.rewriteLinks,
       useBeta: this.props.useBeta,
@@ -161,6 +168,10 @@ export default class Settings extends React.Component {
       this.setState({ upvoteSetting: nextProps.upvoteSetting });
     }
 
+    if (nextProps.boardSetting !== this.props.boardSetting) {
+      this.setState({ boardSetting: nextProps.boardSetting });
+    }
+
     if (nextProps.exitPageSetting !== this.props.exitPageSetting) {
       this.setState({ exitPageSetting: nextProps.exitPageSetting });
     }
@@ -178,6 +189,7 @@ export default class Settings extends React.Component {
         rewriteLinks: this.state.rewriteLinks,
         useBeta: this.state.useBeta,
         upvoteSetting: this.state.upvoteSetting,
+        boardSetting: this.state.boardSetting,
         exitPageSetting: this.state.exitPageSetting,
       })
       .then(() =>
@@ -190,6 +202,7 @@ export default class Settings extends React.Component {
 
   handleLocaleChange = locale => this.setState({ locale });
   handleVotingPowerChange = event => this.setState({ votingPower: event.target.value });
+  handleBoardChange = boardSetting => this.setState({ boardSetting });
   handleVotePercentChange = value => this.setState({ votePercent: value });
   handleShowNSFWPosts = event => this.setState({ showNSFWPosts: event.target.checked });
   handleShowImagesOnly = event => this.setState({ showImagesOnly: event.target.checked });
@@ -208,6 +221,7 @@ export default class Settings extends React.Component {
       reloading,
       locale: initialLocale,
       votingPower: initialVotingPower,
+      boardSetting: initialBoardSetting,
       showNSFWPosts: initialShowNSFWPosts,
       showImagesOnly: initialShowImagesOnly,
       nightmode: initialNightmode,
@@ -216,6 +230,7 @@ export default class Settings extends React.Component {
     const {
       votingPower,
       locale,
+      boardSetting,
       showNSFWPosts,
       showImagesOnly,
       nightmode,
@@ -262,6 +277,60 @@ export default class Settings extends React.Component {
               <Loading center={false} />
             ) : (
               <div className="Settings">
+              <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="boards" defaultMessage="Board Selection" />
+                  </h3>
+                  <p>
+                    <FormattedMessage
+                      id="board_info"
+                      defaultMessage="Which board do you want to post to by default?"
+                    />
+                  </p>
+                  <Select
+                    defaultValue={initialBoardSetting}
+                    value={boardSetting}
+                    style={{ width: '100%', maxWidth: 240 }}
+                    onChange={this.handleBoardChange}
+                  >
+                    <Select.Option value={boardValues.pics}>
+                      <FormattedMessage id="board_pics" defaultMessage="Pictures" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.vids}>
+                      <FormattedMessage id="board_vids" defaultMessage="Videos" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.news}>
+                      <FormattedMessage id="board_news" defaultMessage="News" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.music}>
+                      <FormattedMessage id="board_music" defaultMessage="Music" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.tech}>
+                      <FormattedMessage id="board_tech" defaultMessage="Technology" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.politics}>
+                      <FormattedMessage id="board_politics" defaultMessage="Politics" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.crypto}>
+                      <FormattedMessage id="board_crypto" defaultMessage="Crypto" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.intro}>
+                      <FormattedMessage id="board_intro" defaultMessage="Introductions" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.games}>
+                      <FormattedMessage id="board_games" defaultMessage="Games" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.text}>
+                      <FormattedMessage id="board_text" defaultMessage="Text" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.links}>
+                      <FormattedMessage id="board_links" defaultMessage="Links" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.random}>
+                      <FormattedMessage id="board_random" defaultMessage="Random" />
+                    </Select.Option>
+                  </Select>
+                </div>
                 <div className="Settings__section">
                   <h3>
                     <FormattedMessage id="voting_power" defaultMessage="Voting Power" />
@@ -410,22 +479,6 @@ export default class Settings extends React.Component {
                     </Checkbox>
                   </div>
                 </div>
-                {/* <div className="Settings__section">
-                  <h3>
-                    <FormattedMessage id="use_beta" defaultMessage="Use WeYouMe beta" />
-                  </h3>
-                  <p>
-                    <FormattedMessage
-                      id="use_beta_details"
-                      defaultMessage="You can enable this option to use WeYouMe beta by default."
-                    />
-                  </p>
-                  <div className="Settings__section__checkbox">
-                    <Checkbox name="use_beta" checked={useBeta} onChange={this.handleUseBetaChange}>
-                      <FormattedMessage id="use_beta" defaultMessage="Use WeYouMe beta" />
-                    </Checkbox>
-                  </div>
-                </div> */}
                 <div className="Settings__section">
                   <h3>
                     <FormattedMessage id="upvote_setting" defaultMessage="Like my posts" />

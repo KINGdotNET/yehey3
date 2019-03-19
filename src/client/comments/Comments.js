@@ -151,6 +151,7 @@ export default class Comments extends React.Component {
       to: comment.author,
       amount: 1,
       memo: "Tip for comment: " + ellipsis(comment.body, 50, { ellipsis: '…' }),
+      currency: 'TME',
     };
     this.props.openTransfer(this.transfer);
   }

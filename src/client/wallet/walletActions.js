@@ -7,6 +7,9 @@ import {
   getDynamicGlobalProperties,
   isWalletTransaction,
   defaultAccountLimit,
+  getTransactionByID,
+  getBlockFromNumber,
+  getHeadBlocksArray,
 } from '../helpers/apiHelpers';
 import { ACTIONS_DISPLAY_LIMIT, actionsFilter } from '../helpers/accountHistoryHelper';
 
@@ -15,6 +18,10 @@ export const CLOSE_TRANSFER = '@wallet/CLOSE_TRANSFER';
 export const OPEN_POWER_UP_OR_DOWN = '@wallet/OPEN_POWER_UP_OR_DOWN';
 export const CLOSE_POWER_UP_OR_DOWN = '@wallet/CLOSE_POWER_UP_OR_DOWN';
 export const GET_GLOBAL_PROPERTIES = createAsyncActionType('@wallet/GET_GLOBAL_PROPERTIES');
+export const GET_TRANSACTION = createAsyncActionType('@wallet/GET_TRANSACTION');
+export const GET_BLOCK = createAsyncActionType('@wallet/GET_BLOCK');
+export const GET_TXN_BLOCK = createAsyncActionType('@wallet/GET_TXN_BLOCK');
+export const GET_HEAD_BLOCKS = createAsyncActionType('@wallet/GET_HEAD_BLOCKS');
 export const GET_USER_ACCOUNT_HISTORY = createAsyncActionType('@users/GET_USER_ACCOUNT_HISTORY');
 export const GET_MORE_USER_ACCOUNT_HISTORY = createAsyncActionType(
   '@users/GET_MORE_USER_ACCOUNT_HISTORY',
@@ -65,6 +72,38 @@ export const getGlobalProperties = () => dispatch =>
     type: GET_GLOBAL_PROPERTIES.ACTION,
     payload: {
       promise: getDynamicGlobalProperties(),
+    },
+  });
+
+export const getTransaction = (txid) => dispatch =>
+  dispatch({
+    type: GET_TRANSACTION.ACTION,
+    payload: {
+      promise: getTransactionByID(txid),
+    },
+  });
+
+export const getBlock = (block_num) => dispatch =>
+  dispatch({
+    type: GET_BLOCK.ACTION,
+    payload: {
+      promise: getBlockFromNumber(block_num),
+    },
+  });
+
+export const getTxnBlock = (block_num) => dispatch =>
+  dispatch({
+    type: GET_TXN_BLOCK.ACTION,
+    payload: {
+      promise: getBlockFromNumber(block_num),
+    },
+  });
+
+export const getHeadBlocks = () => dispatch =>
+  dispatch({
+    type: GET_HEAD_BLOCKS.ACTION,
+    payload: {
+      promise: getHeadBlocksArray(),
     },
   });
 

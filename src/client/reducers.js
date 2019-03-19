@@ -92,8 +92,10 @@ export const getRebloggedList = state => fromReblog.getRebloggedList(state.reblo
 export const getPendingReblogs = state => fromReblog.getPendingReblogs(state.reblog);
 
 export const getFollowingList = state => fromUser.getFollowingList(state.user);
+export const getNetworkUserList = state => fromUser.getNetworkUserList(state.user);
 export const getPendingFollows = state => fromUser.getPendingFollows(state.user);
 export const getIsFetchingFollowingList = state => fromUser.getIsFetchingFollowingList(state.user);
+export const getIsFetchingNetworkUserList = state => fromUser.getIsFetchingNetworkUserList(state.user);
 export const getRecommendations = state => fromUser.getRecommendations(state.user);
 export const getFollowingFetched = state => fromUser.getFollowingFetched(state.user);
 export const getNotifications = state => fromUser.getNotifications(state.user);
@@ -115,6 +117,7 @@ export const getIsTransferVisible = state => fromWallet.getIsTransferVisible(sta
 export const getTransferTo = state => fromWallet.getTransferTo(state.wallet);
 export const getTransferAmount = state => fromWallet.getTransferAmount(state.wallet);
 export const getTransferMemo = state => fromWallet.getTransferMemo(state.wallet);
+export const getTransferCurrency = state => fromWallet.getTransferCurrency(state.wallet);
 export const getIsPowerUpOrDownVisible = state =>
   fromWallet.getIsPowerUpOrDownVisible(state.wallet);
 export const getIsPowerDown = state => fromWallet.getIsPowerDown(state.wallet);
@@ -130,10 +133,27 @@ export const getRewriteLinks = state => fromSettings.getRewriteLinks(state.setti
 export const getUpvoteSetting = state => fromSettings.getUpvoteSetting(state.settings);
 export const getExitPageSetting = state => fromSettings.getExitPageSetting(state.settings);
 export const getRewardSetting = state => fromSettings.getRewardSetting(state.settings);
+export const getBoardSetting = state => fromSettings.getBoardSetting(state.settings);
 export const getUseBeta = state => fromSettings.getUseBeta(state.settings);
 
 export const gettotalSCORE = state => fromWallet.gettotalSCORE(state.wallet);
 export const getSCOREbackingTMEfundBalance = state => fromWallet.getSCOREbackingTMEfundBalance(state.wallet);
+export const getHeadBlockID = state => fromWallet.getHeadBlockID(state.wallet);
+export const getHeadBlockNumber = state => fromWallet.getHeadBlockNumber(state.wallet);
+export const getPendingRewards = state => fromWallet.getPendingRewards(state.wallet);
+export const getGlobalPropertiesObject = state => fromWallet.getGlobalProperties(state.wallet);
+
+
+export const getTransactionByID = (state, txid) => fromWallet.getTransaction(state.wallet, txid);
+export const getLoadingTransactionByID = (state) => fromWallet.getLoadingTransaction(state.wallet);
+export const getBlockByNumber = (state, block_num) => fromWallet.getBlock(state.wallet, block_num);
+export const getTxnBlockByNumber = (state, block_num) => fromWallet.getTxnBlock(state.wallet, block_num);
+export const getBlocksByHead = (state) => fromWallet.getHeadBlocks(state.wallet);
+export const getLoadingBlocksByHead = (state) => fromWallet.getLoadingHeadBlocks(state.wallet);
+export const getLoadingBlockByNumber = (state) => fromWallet.getLoadingBlock(state.wallet);
+export const getLoadingTxnBlockByNumber = (state) => fromWallet.getLoadingTxnBlock(state.wallet);
+
+
 export const getUsersTransactions = state => fromWallet.getUsersTransactions(state.wallet);
 export const getUsersAccountHistory = state => fromWallet.getUsersAccountHistory(state.wallet);
 export const getUsersAccountHistoryLoading = state =>

@@ -66,7 +66,7 @@ function getContext(post, body, appUrl) {
       name: 'alpha.weyoume.io',
       logo: {
         '@type': 'ImageObject',
-        url: `${appUrl}/images/logo-brand.png`,
+        url: `${appUrl}/images/logo-icon.png`,
         height: 32,
         width: 32,
       },
@@ -75,7 +75,7 @@ function getContext(post, body, appUrl) {
     headline: post.title,
     datePublished,
     dateModified,
-    image: images[0] || `${appUrl}/images/logo.png`,
+    image: images[0] || `${appUrl}/images/logo-icon.png`,
   };
 
   const context = {

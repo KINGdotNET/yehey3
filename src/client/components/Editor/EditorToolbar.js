@@ -5,6 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, Menu, Dropdown, Icon } from 'antd';
 import BTooltip from '../BTooltip';
 import './EditorToolbar.less';
+import HiddenCommentMessage from '../Comments/HiddenCommentMessage';
 
 const tooltip = (description, shortcut) => (
   <span>
@@ -56,7 +57,7 @@ const EditorToolbar = ({ intl, onSelect }) => {
       universal
       autoHide
       renderView={({ style, ...props }) => (
-        <div style={{ ...style }} {...props} className="EditorToolbar__container" />
+        <div style={{ overflow: 'hidden' , ...style }} {  ...props} className="EditorToolbar__container" />
       )}
     >
       <div className="EditorToolbar">
@@ -97,16 +98,6 @@ const EditorToolbar = ({ intl, onSelect }) => {
         >
           <Button className="EditorToolbar__button" onClick={() => onSelect('link')}>
             <i className="iconfont icon-link" />
-          </Button>
-        </BTooltip>
-        <BTooltip
-          title={tooltip(
-            intl.formatMessage({ id: 'image', defaultMessage: 'Add image' }),
-            'Ctrl+m',
-          )}
-        >
-          <Button className="EditorToolbar__button" onClick={() => onSelect('image')}>
-            <i className="iconfont icon-picture" />
           </Button>
         </BTooltip>
       </div>

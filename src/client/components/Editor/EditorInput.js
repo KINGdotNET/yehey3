@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
-import { Icon, Input } from 'antd';
+import { Icon, Input, Button  } from 'antd';
 import Dropzone from 'react-dropzone';
 import { HotKeys } from 'react-hotkeys';
 import { MAXIMUM_UPLOAD_SIZE, isValidImage } from '../../helpers/image';
@@ -159,10 +159,7 @@ class EditorInput extends React.Component {
         this.insertAtCursor('> ', '', 2, 2);
         break;
       case 'link':
-        this.insertAtCursor('[', '](url)', 1, 1);
-        break;
-      case 'image':
-        this.insertAtCursor('![', '](url)', 2, 2);
+        this.insertAtCursor('[LINK TITLE HERE](',')', 18, 18);
         break;
       default:
         break;
@@ -189,7 +186,6 @@ class EditorInput extends React.Component {
       e.preventDefault();
       this.insertCode('link');
     },
-    image: () => this.insertCode('image'),
   };
 
   handlePastedImage(e) {
@@ -301,7 +297,29 @@ class EditorInput extends React.Component {
 
     return (
       <React.Fragment>
-        <EditorToolbar onSelect={this.insertCode} />
+        <p className="EditorInput__imagebox">
+        <Button type="danger" size="large">
+          <input
+            type="file"
+            id={this.props.inputId || 'inputfile'}
+            accept="image/*"
+            onChange={this.handleImageChange}
+          />
+          <label htmlFor={this.props.inputId || 'inputfile'}>
+            {this.state.imageUploading ? (
+              <Icon type="loading" />
+            ) : (
+              <i className="iconfont icon-picture" />
+            )}
+            {this.state.imageUploading ? (
+              <FormattedMessage id="image_uploading" defaultMessage="Uploading your image..." />
+            ) : (
+              <FormattedMessage id="select_or_paste_image" defaultMessage="Select Image" />
+            )}
+          </label>
+          </Button>
+        </p>
+
         <div className="EditorInput__dropzone-base">
           <Dropzone
             disableClick
@@ -321,6 +339,7 @@ class EditorInput extends React.Component {
                 </div>
               </div>
             )}
+            <EditorToolbar onSelect={this.insertCode} />
             <HotKeys keyMap={this.constructor.hotkeys} handlers={this.handlers}>
               <Input.TextArea
                 {...restProps}
@@ -331,32 +350,7 @@ class EditorInput extends React.Component {
             </HotKeys>
           </Dropzone>
         </div>
-        <p className="EditorInput__imagebox">
-          <input
-            type="file"
-            id={this.props.inputId || 'inputfile'}
-            accept="image/*"
-            onChange={this.handleImageChange}
-          />
-          <label htmlFor={this.props.inputId || 'inputfile'}>
-            {this.state.imageUploading ? (
-              <Icon type="loading" />
-            ) : (
-              <i className="iconfont icon-picture" />
-            )}
-            {this.state.imageUploading ? (
-              <FormattedMessage id="image_uploading" defaultMessage="Uploading your image..." />
-            ) : (
-              <FormattedMessage
-                id="select_or_past_image"
-                defaultMessage="Select image or paste it from the clipboard."
-              />
-            )}
-          </label>
-          <label htmlFor="reading_time" className="EditorInput__addon">
-            {addon}
-          </label>
-        </p>
+        
       </React.Fragment>
     );
   }

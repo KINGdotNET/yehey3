@@ -112,7 +112,8 @@ export default class User extends React.Component {
     this.transfer = {
       to: this.props.match.params.name,
       amount: 0,
-      memo: '',
+      memo: " ",
+      currency: 'TME',
     };
     this.props.openTransfer(this.transfer);
   };
@@ -127,7 +128,7 @@ export default class User extends React.Component {
     const { profile = {} } = user.json || {};
     const busyHost = global.postOrigin || 'https://busy.org';
     const desc = profile.about || `Posts by ${username}`;
-    const image = getAvatarURL(username) || '/images/logo.png';
+    const image = getAvatarURL(username) || '/images/logo-icon.png';
     const canonicalUrl = `${busyHost}/@${username}`;
     const url = `${busyHost}/@${username}`;
     const displayedUsername = profile.name || username || '';
@@ -164,6 +165,7 @@ export default class User extends React.Component {
           <UserHero
             authenticated={authenticated}
             user={user}
+            ownName={authenticatedUser.name}
             username={displayedUsername}
             isSameUser={isSameUser}
             coverImage={profile.cover_image}

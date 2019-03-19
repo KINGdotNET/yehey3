@@ -1,0 +1,23 @@
+{
+    "name": "WeYouMe",
+    "short_name": "WeYouMe",
+    "description": "WeYouMe is a decentralized blockchain social network",
+    "theme_color": "#4757b2",
+    "background_color": "#fcfcff",
+    "display": "standalone",
+    "Scope": "/",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+    
+}
