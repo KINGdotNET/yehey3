@@ -8,6 +8,7 @@ import _ from 'lodash';
 import readingTime from 'reading-time';
 import { Checkbox, Form, Input, Select, Button } from 'antd';
 import { rewardsValues } from '../../../common/constants/rewards';
+import { boardValues } from '../../../common/constants/boards';
 import Action from '../Button/Action';
 import requiresLogin from '../../auth/requiresLogin';
 import withEditor from './withEditor';
@@ -26,6 +27,7 @@ class Editor extends React.Component {
     form: PropTypes.shape().isRequired,
     title: PropTypes.string,
     topics: PropTypes.arrayOf(PropTypes.string),
+    board: PropTypes.string,
     body: PropTypes.string,
     reward: PropTypes.string,
     upvote: PropTypes.bool,
@@ -44,6 +46,7 @@ class Editor extends React.Component {
   static defaultProps = {
     title: '',
     topics: [],
+    board: '',
     body: '',
     reward: rewardsValues.half,
     upvote: true,
@@ -92,12 +95,13 @@ class Editor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { title, topics, body, reward, upvote, draftId } = this.props;
+    const { title, topics, board, body, reward, upvote, draftId } = this.props;
     if (
       title !== nextProps.title ||
       !_.isEqual(topics, nextProps.topics) ||
       body !== nextProps.body ||
       reward !== nextProps.reward ||
+      board !== nextProps.board ||
       upvote !== nextProps.upvote ||
       (draftId && nextProps.draftId === null)
     ) {
@@ -123,6 +127,7 @@ class Editor extends React.Component {
 
     this.props.form.setFieldsValue({
       title: post.title,
+      board: post.board,
       topics: post.topics,
       body: post.body,
       reward,
@@ -140,11 +145,11 @@ class Editor extends React.Component {
   }
 
   checkTopics = intl => (rule, value, callback) => {
-    if (!value || value.length < 1 || value.length > 5) {
+    if (!value || value.length < 0 || value.length > 10) {
       callback(
         intl.formatMessage({
           id: 'topics_error_count',
-          defaultMessage: 'You have to add 1 to 5 topics.',
+          defaultMessage: 'You can only add up to 10 topics.',
         }),
       );
     }
@@ -249,6 +254,58 @@ class Editor extends React.Component {
           )}
         </Form.Item>
         <Form.Item
+          className={classNames({ Editor__hidden: isUpdating })}
+          label={
+            <span className="Editor__label">
+              <FormattedMessage id="board" defaultMessage="Board" />
+            </span>
+          }
+        >
+          {getFieldDecorator('board')(
+            <Select onChange={this.onUpdate} disabled={isUpdating}>
+              <Select.Option value={boardValues.intro}>
+                <FormattedMessage id="board_intro" defaultMessage="Introductions" />
+              </Select.Option>
+              <Select.Option value={boardValues.pics}>
+                <FormattedMessage id="board_pics" defaultMessage="Pictures" />
+              </Select.Option>
+              <Select.Option value={boardValues.vids}>
+                <FormattedMessage id="board_vids" defaultMessage="Videos" />
+              </Select.Option>
+              <Select.Option value={boardValues.news}>
+                <FormattedMessage id="board_news" defaultMessage="News" />
+              </Select.Option>
+              <Select.Option value={boardValues.blog}>
+                <FormattedMessage id="board_blog" defaultMessage="Blog" />
+              </Select.Option>
+              <Select.Option value={boardValues.music}>
+                <FormattedMessage id="board_music" defaultMessage="Music" />
+              </Select.Option>
+              <Select.Option value={boardValues.tech}>
+                <FormattedMessage id="board_tech" defaultMessage="Technology" />
+              </Select.Option>
+              <Select.Option value={boardValues.science}>
+                <FormattedMessage id="board_science" defaultMessage="Science" />
+              </Select.Option>
+              <Select.Option value={boardValues.politics}>
+                <FormattedMessage id="board_politics" defaultMessage="Politics" />
+              </Select.Option>
+              <Select.Option value={boardValues.blockchain}>
+                <FormattedMessage id="board_blockchain" defaultMessage="Blockchain" />
+              </Select.Option>
+              <Select.Option value={boardValues.games}>
+                <FormattedMessage id="board_games" defaultMessage="Games" />
+              </Select.Option>
+              <Select.Option value={boardValues.links}>
+                <FormattedMessage id="board_links" defaultMessage="Links" />
+              </Select.Option>
+              <Select.Option value={boardValues.random}>
+                <FormattedMessage id="board_random" defaultMessage="Random" />
+              </Select.Option>
+            </Select>,
+          )}
+        </Form.Item>
+        <Form.Item
           label={
             <span className="Editor__label">
               <FormattedMessage id="topics" defaultMessage="Select Topics:" />
@@ -264,7 +321,7 @@ class Editor extends React.Component {
             initialValue: [],
             rules: [
               {
-                required: true,
+                required: false,
                 message: intl.formatMessage({
                   id: 'topics_error_empty',
                   defaultMessage: 'Please enter topics',
@@ -303,17 +360,7 @@ class Editor extends React.Component {
             ],
           })(
             <EditorInput
-              rows={20}
-              addon={
-                <FormattedMessage
-                  id="reading_time"
-                  defaultMessage={'{words} words / {min} min read'}
-                  values={{
-                    words,
-                    min: Math.ceil(minutes),
-                  }}
-                />
-              }
+              rows={10}
               onChange={this.onUpdate}
               onImageUpload={this.props.onImageUpload}
               onImageInvalid={this.props.onImageInvalid}
@@ -339,6 +386,11 @@ class Editor extends React.Component {
               <FormattedMessage id="reward" defaultMessage="Reward" />
             </span>
           }
+          extra={intl.formatMessage({
+            id: 'rewards_extra',
+            defaultMessage:
+              'Choose between 100% POWER or 50% POWER and 50% TSD for your reward payout. POWER increases your voting strength, TSD allows post promotion.',
+          })}
         >
           {getFieldDecorator('reward')(
             <Select onChange={this.onUpdate} disabled={isUpdating}>

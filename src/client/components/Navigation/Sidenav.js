@@ -19,13 +19,13 @@ const isBoards = (match, location) => location.pathname.match(/boards/);
 const Sidenav = ({ username }) =>
 	<ul className="Sidenav">
 		<li>
-			<NavLink to="/trending" activeClassName="Sidenav__item--active" exact isActive={isTrending}>
+			<NavLink to="/trending-all/trending-all" activeClassName="Sidenav__item--active" exact isActive={isTrending}>
 				<i className="iconfont icon-headlines" />
 				<FormattedMessage id="trending" defaultMessage="Trending" />
 			</NavLink>
 		</li>
 		<li>
-			<NavLink to="/hot" activeClassName="Sidenav__item--active" exact isActive={isHot}>
+			<NavLink to="/hot-all/hot-all" activeClassName="Sidenav__item--active" exact isActive={isHot}>
 				<i className="iconfont icon-collection_fill" />
 				<FormattedMessage id="hot" defaultMessage="Hot" />
 			</NavLink>
@@ -33,20 +33,20 @@ const Sidenav = ({ username }) =>
 
 		{ username ? (
 		<li>
-			<NavLink to="/feed" activeClassName="Sidenav__item--active" exact isActive={isFeed}>
+			<NavLink to={`/feed-${username}/feed-${username}`} activeClassName="Sidenav__item--active" exact isActive={isFeed}>
 				<i className="iconfont icon-homepage" />
 				<FormattedMessage id="home" defaultMessage="Feed" />
 			</NavLink>
 		</li>
 		) : null}
 		<li>
-			<NavLink to="/created" activeClassName="Sidenav__item--active" exact isActive={isNew}>
+			<NavLink to="/created-all/created-all" activeClassName="Sidenav__item--active" exact isActive={isNew}>
 				<i className="iconfont icon-clock" />
 				<FormattedMessage id="new" defaultMessage="New" />
 			</NavLink>
 		</li>
 		<li>
-			<NavLink to="/active" activeClassName="Sidenav__item--active" exact isActive={is_Active}>
+			<NavLink to="/active-all/active-all" activeClassName="Sidenav__item--active" exact isActive={is_Active}>
 				<i className="iconfont icon-flashlight" />
 				<FormattedMessage id="active" defaultMessage="Active" />
 			</NavLink>
@@ -111,6 +111,18 @@ const Sidenav = ({ username }) =>
 			</a>
 		</li>
 		<li>
+			<NavLink to="/network" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
+				<i className="iconfont icon-share" />
+				<FormattedMessage id="network" defaultMessage="Network" />
+			</NavLink>
+		</li>
+		<li>
+			<NavLink to="/about" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
+				<i className="iconfont icon-feedback" />
+				<FormattedMessage id="about" defaultMessage="About" />
+			</NavLink>
+		</li>
+		<li>
 			<div className="floating-label-container">
 				<div className="floating-label-positioner">
 					<div className="floating-label">
@@ -137,19 +149,7 @@ const Sidenav = ({ username }) =>
 			</NavLink>
 		</li>
 		
-		<li>
-			<div className="floating-label-container">
-				<div className="floating-label-positioner">
-					<div className="floating-label">
-						<span>soon</span>
-					</div>
-				</div>
-			</div>
-			<NavLink to="/network" activeClassName="Sidenav__item--active" isActive={function(){return false}}>
-				<i className="iconfont icon-share" />
-				<FormattedMessage id="network" defaultMessage="Network" />
-			</NavLink>
-		</li>
+		
 	</ul>
 		;
 

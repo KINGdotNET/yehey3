@@ -6,7 +6,6 @@ import { Helmet } from 'react-helmet';
 import { getFeedContent } from './feedActions';
 import { getIsLoaded, getIsAuthenticated } from '../reducers';
 import SubFeed from './SubFeed';
-// import HeroBannerContainer from './HeroBannerContainer';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import RightSidebar from '../app/Sidebar/RightSidebar';
 import TopicSelector from '../components/TopicSelector';
@@ -15,8 +14,7 @@ import Affix from '../components/Utils/Affix';
 import ScrollToTop from '../components/Utils/ScrollToTop';
 import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount';
 import QuickPostEditor from '../components/QuickPostEditor/QuickPostEditor';
-import UserWallet from '../user/UserWallet';
-// import Chin from '../components/Chin/Chin'
+
 @connect(state => ({
   authenticated: getIsAuthenticated(state),
   loaded: getIsLoaded(state),
@@ -31,27 +29,34 @@ class Page extends React.Component {
   };
 
   static fetchData({ store, match }) {
-		const { sortBy, category } = match.params;
-		// if(sortBy=='new') sortBy = 'created'
-    return store.dispatch(getFeedContent({ sortBy, category, limit: 10 }));
-  }
+    const { sortBy1, sortBy2, category1, category2 } = match.params;
+    return Promise.all([
+      store.dispatch(getFeedContent({sortBy: [sortBy1, sortBy2], category: [category1, category2], limit: 20 })),
+    ]);
+  };
 
-  handleSortChange = key => {
-		// if(key=='new') key = 'created'
-    const { category } = this.props.match.params;
-    if (category) {
-      this.props.history.push(`/${key}/${category}`);
+  handleSortChange1 = key => {
+    const { category1, category2, sortBy2 } = this.props.match.params;
+    if (category1 && category2) {
+      this.props.history.push(`/${key}-${category1}/${sortBy2}-${category2}`);
     } else {
-      this.props.history.push(`/${key}`);
+      this.props.history.push(`/${key}-/${sortBy2}-`);
+    }
+  };
+  handleSortChange2 = key => {
+    const { category1, category2, sortBy1 } = this.props.match.params;
+    if (category1 && category2) {
+      this.props.history.push(`/${sortBy1}-${category1}/${key}-${category2}`);
+    } else {
+      this.props.history.push(`/${sortBy1}-/${key}-`);
     }
   };
 
-  handleTopicClose = () => this.props.history.push('/trending');
+  handleTopicClose = () => this.props.history.push('/trending-all/hot-all');
 
   render() {
     const { authenticated, loaded, location, match } = this.props;
-    const { category, sortBy } = match.params;
-		// if(sortBy=='new') sortBy = 'created'
+    const { category1, category2, sortBy1, sortBy2 } = match.params;
     const shouldDisplaySelector = location.pathname !== '/' || (!authenticated && loaded);
     const displayTopicSelector = location.pathname === '/trending';
 
@@ -65,8 +70,6 @@ class Page extends React.Component {
         </Helmet>
         <ScrollToTop />
         <ScrollToTopOnMount />
-				{/* <HeroBannerContainer /> */}
-				
         <div className="shifted">
           <div className="feed-layout container">
             <Affix className="leftContainer" stickPosition={77}>
@@ -75,37 +78,31 @@ class Page extends React.Component {
               </div>
             </Affix>
             <div className="center">
-              {/* {displayTopicSelector && <TrendingTagsMenu />} */}
-              {/* {shouldDisplaySelector && (
-								<TopicSelector
-								isSingle={false}
-								sort={sortBy}
-								topics={category ? [category] : []}
-								onSortChange={this.handleSortChange}
-								onTopicClose={this.handleTopicClose}
-                />
-							)} */}
-							
               {authenticated && <QuickPostEditor />}
               <TopicSelector
-                  isSingle={false}
-                  sort={sortBy}
-                  topics={category ? [category] : []}
-                  onSortChange={this.handleSortChange}
+                  isSingle={true}
+                  sort={sortBy1}
+                  topics={category1 ? [category1] : []}
+                  onSortChange={this.handleSortChange1}
                   onTopicClose={this.handleTopicClose}
               />
-              
+              <TopicSelector
+                  isSingle={true}
+                  sort={sortBy2}
+                  topics={category2 ? [category2] : []}
+                  onSortChange={this.handleSortChange2}
+                  onTopicClose={this.handleTopicClose}
+              />
               <SubFeed />
-							{/* <UserWallet isCurrentUser className="userWalletPage"></UserWallet> */}
             </div>
 						<Affix className="rightContainer" stickPosition={77}>
 							<div className="right">
 								<RightSidebar />
+                <TrendingTagsMenu />
 							</div>
 						</Affix>
           </div>
         </div>
-				{/* <Chin/> */}
       </div>
     );
   }

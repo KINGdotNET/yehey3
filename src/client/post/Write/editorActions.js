@@ -5,6 +5,7 @@ import { createAction } from 'redux-actions';
 import { addDraftMetadata, deleteDraftMetadata } from '../../helpers/metadata';
 import { jsonParse } from '../../helpers/formatter';
 import { rewardsValues } from '../../../common/constants/rewards';
+import { boardValues } from '../../../common/constants/boards';
 import { createPermlink, getBodyPatchIfSmaller } from '../../vendor/blockchainProtocolHelpers';
 import { saveSettings } from '../../settings/settingsActions';
 import { notify } from '../../app/Notification/notificationActions';
@@ -170,6 +171,7 @@ export function createPost(postData) {
       body,
       json,
       reward,
+      board,
       upvote,
       draftId,
       isUpdating,
@@ -181,7 +183,7 @@ export function createPost(postData) {
     const authUser = state.auth.user;
     const newBody = isUpdating ? getBodyPatchIfSmaller(postData.originalBody, body) : body;
 
-    dispatch(saveSettings({ upvoteSetting: upvote, rewardSetting: reward }));
+    dispatch(saveSettings({ upvoteSetting: upvote, rewardSetting: reward, boardSetting: board }));
 
     let referral;
     if (Cookie.get('referral')) {

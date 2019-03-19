@@ -1,0 +1,36 @@
+@import (reference) '../styles/custom.less';
+@import (reference) '../styles/modules/variables';
+
+.Transaction {
+  display: inline-block;
+  width: 100%;
+  
+
+  @media @medium {
+    width: 80%;
+  }
+
+  &__title {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    text-align: left;
+    font-size: 28px;
+  }
+
+  &__content{
+    border: @base-border;
+    border-radius: 10px; 
+    background-color: @white;
+  }
+  &__block {
+    margin: 10px;
+    
+    
+  }
+}
+
+.Transaction__user:last-child {
+  .Transaction__user__divider {
+    height: 0;
+  }
+}

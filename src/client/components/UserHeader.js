@@ -21,6 +21,7 @@ const UserHeader = ({
   isFollowing,
   onTransferClick,
   isActive,
+  ownName,
 }) => {
   const style = hasCover
     ? { backgroundImage: `url("https://steemitimages.com/2048x512/${coverImage}")` }
@@ -33,7 +34,6 @@ const UserHeader = ({
           <div className="UserHeader__user__details">
             <h2 className="UserHeader__user__username">
               {username}
-              {/* <ReputationTag reputation={userReputation} /> */}
             </h2>
 						<div className="UserHeader__row UserHeader__handle">
 							@{handle}
@@ -45,45 +45,31 @@ const UserHeader = ({
 						)}
           </div>
 					<div className="UserHeader__row UserHeader__user__buttons">
-						{!isSameUser && 
-							<div
-								className={classNames('UserHeader__user__button', {
-									'UserHeader__user__button-follows-you': isFollowing && !isSameUser,
-								})}
-							>
-								{/*  (
-									<Link className="edit-profile" to="/edit-profile">
-										<Action>
-											<FormattedMessage id="edit_profile" defaultMessage="Edit profile" />
-										</Action>
-									</Link>
-									) : (
-									) */}
-								{!isSameUser && <FollowButton username={handle} /> }
-							</div>
-						}
 						{!isSameUser && (
 							<div
 								className={classNames('UserHeader__user__button', {
 									'UserHeader__user__button-follows-you': isFollowing && !isSameUser,
 								})}
 							>
+								{!isSameUser && <FollowButton username={handle} /> }
+            </div> )}
+						{!isSameUser && (
+							<div className='UserHeader__user__button'>
 								<Action className="send-money" onClick={onTransferClick}>
 									<FormattedMessage id="send" defaultMessage="Send" />
-									<img src="/images/dollar.png" className="send-dollar on-right"/>
+									<img src="/images/dollar.png" className="button-icon on-right"/>
 								</Action>
-							</div>
-						)}
+              </div>)}
+            {!isSameUser && ownName && (
+              <div className='UserHeader__user__button'>
+                <Link to={`/feed-${ownName}/feed-${handle}`}>
+                <Action className="shared-feed">
+									<FormattedMessage id="shared_feed" defaultMessage="Shared Feed" />
+									<i className="iconfont button-icon icon-group"/>
+								</Action>
+                </Link> 
+							</div> )}
 					</div>
-          {/* <div className="UserHeader__handle-rank-container">
-            </div>
-            <div className="UserHeader__rank">
-              <i className="iconfont icon-ranking" />
-              <FormattedMessage
-                id={getUserRankKey(SCORE)}
-                defaultMessage={getUserRank(SCORE)}
-              />
-          </div> */}
         </div>
       </div>
     </div>
@@ -92,6 +78,7 @@ const UserHeader = ({
 
 UserHeader.propTypes = {
   username: PropTypes.string,
+  ownName: PropTypes.string,
   handle: PropTypes.string,
   userReputation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   SCORE: PropTypes.number,
@@ -105,6 +92,7 @@ UserHeader.propTypes = {
 
 UserHeader.defaultProps = {
   username: '',
+  ownName: '',
   handle: '',
   userReputation: '0',
   SCORE: 0,

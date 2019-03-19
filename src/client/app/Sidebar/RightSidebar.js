@@ -8,7 +8,9 @@ import {
   getIsAuthFetching,
   getRecommendations,
   getFollowingList,
+  getNetworkUserList,
   getIsFetchingFollowingList,
+  getIsFetchingNetworkUserList,
 } from '../../reducers';
 import { updateRecommendations } from '../../user/userActions';
 import InterestingPeople from '../../components/Sidebar/InterestingPeople';
@@ -29,8 +31,10 @@ import FeedSidebar from '../../components/Sidebar/FeedSidebar';
     recommendations: getRecommendations(state),
     followingList: getFollowingList(state),
     isFetchingFollowingList: getIsFetchingFollowingList(state),
+    isFetchingNetworkUserList: getIsFetchingNetworkUserList(state),
   }),
   {
+    getNetworkUserList,
     updateRecommendations,
   },
 )
@@ -44,6 +48,7 @@ export default class RightSidebar extends React.Component {
     updateRecommendations: PropTypes.func,
     followingList: PropTypes.arrayOf(PropTypes.string).isRequired,
     isFetchingFollowingList: PropTypes.bool.isRequired,
+    isFetchingNetworkUserList: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -61,6 +66,7 @@ export default class RightSidebar extends React.Component {
       isAuthFetching,
       followingList,
       isFetchingFollowingList,
+      isFetchingNetworkUserList
     } = this.props;
 
     if (isAuthFetching) {
@@ -74,12 +80,9 @@ export default class RightSidebar extends React.Component {
           <Route path="/activity" component={UserActivitySearch} />
           <Route path="/@:name/activity" component={UserActivitySearch} />
           <Route path="/@:name/transfers" render={() => <WalletSidebar />} />
-          <Route path="/trending/:tag" component={FeedSidebar} />
-          <Route path="/created/:tag" component={FeedSidebar} />
-          <Route path="/active/:tag" component={FeedSidebar} />
-          <Route path="/hot/:tag" component={FeedSidebar} />
-          <Route path="/promoted/:tag" component={FeedSidebar} />
-          {/* <Route
+          <Route path="/:sortBy1-:category1/:sortBy2-:category2" component={FeedSidebar} />
+          
+           <Route
             path="/@:name"
             render={() =>
               authenticated && (
@@ -90,8 +93,8 @@ export default class RightSidebar extends React.Component {
                 />
               )
             }
-          /> */}
-          {/* <Route
+          />
+           <Route
             path="/"
             render={() => (
               <div>
@@ -101,13 +104,14 @@ export default class RightSidebar extends React.Component {
                   <InterestingPeople
                     users={this.props.recommendations}
                     onRefresh={this.handleInterestingPeopleRefresh}
+                    isFetchingNetworkUserList={isFetchingNetworkUserList}
                   />
                 ) : (
                   <div/>
                 )}
               </div>
             )}
-          /> */}
+          /> 
         </Switch>
         {showPostRecommendation && <PostRecommendation isAuthFetching={isAuthFetching} />}
       </div>

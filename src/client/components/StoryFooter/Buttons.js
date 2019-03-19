@@ -16,7 +16,6 @@ import PopoverMenu, { PopoverMenuItem } from '../PopoverMenu/PopoverMenu';
 import ReactionsModal from '../Reactions/ReactionsModal';
 import USDDisplay from '../Utils/USDDisplay';
 import './Buttons.less';
-import Action from '../Button/Action';
 
 @injectIntl
 @withAuthActions
@@ -37,9 +36,8 @@ export default class Buttons extends React.Component {
     onDislikeClick: PropTypes.func,
     onShareClick: PropTypes.func,
     onTransferClick: PropTypes.func,
-    handlePostPopoverMenuClick: PropTypes.func,
-    // handleOpenTransfer: PropTypes.func,
-  };
+    onPromoteClick: PropTypes.func,
+    handlePostPopoverMenuClick: PropTypes.func, };
 
   static defaultProps = {
     ownPost: false,
@@ -53,7 +51,7 @@ export default class Buttons extends React.Component {
     onShareClick: () => {},
     handlePostPopoverMenuClick: () => {},
     onTransferClick: () => {},
-    // handleOpenTransfer: () => {},
+    onPromoteClick: () => {},
   };
 
   static handleCommentClick() {
@@ -85,6 +83,7 @@ export default class Buttons extends React.Component {
     this.handleShowReactions = this.handleShowReactions.bind(this);
     this.handleCloseReactions = this.handleCloseReactions.bind(this);
     this.handleTransferClick = this.handleTransferClick.bind(this);
+    this.handlePromoteClick = this.handlePromoteClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -106,6 +105,9 @@ export default class Buttons extends React.Component {
   }
   handleTransferClick() {
     this.props.onActionInitiated(this.props.onTransferClick);
+  }
+  handlePromoteClick() {
+    this.props.onActionInitiated(this.props.onPromoteClick);
   }
 
   shareClick() {
@@ -156,8 +158,6 @@ export default class Buttons extends React.Component {
       post,
       handlePostPopoverMenuClick,
       ownPost,
-      //handleOpenTransfer,
-			// handleTransferClick
     } = this.props;
     const { isReported } = postState;
 
@@ -184,7 +184,6 @@ export default class Buttons extends React.Component {
         { username: post.author },
       );
     }
-		//let sendToAuthor = `Send to ${post.author}`;
 
     let popoverMenu = [
 			<PopoverMenuItem key="storyTopics">
@@ -340,6 +339,7 @@ export default class Buttons extends React.Component {
     const dislikeClass = classNames({ active: postState.isDisliked || (!pendingLike && pendingDislike), Buttons__link: true });
     const rebloggedClass = classNames({ active: postState.isReblogged, Buttons__link: true });
     const sendClass = classNames({ active: false, Buttons__link: true});
+    const promoteClass = classNames({ active: false, Buttons__link: true});
 
     const commentsLink =
       post.url.indexOf('#') !== -1 ? post.url : { pathname: post.url, hash: '#comments' };
@@ -488,15 +488,20 @@ export default class Buttons extends React.Component {
 						</BTooltip>
 					</div>
         )}
-        
         <div className="button__group">
-          <BTooltip title= "Send">
+          <BTooltip title= "Send Tip">
 				    <a role ="presentation" className={sendClass} onClick={this.handleTransferClick}>
 					    <i className="iconfont icon-Dollar"/>
 				    </a>
           </BTooltip>
 			  </div>
-
+        <div className="button__group">
+          <BTooltip title= "Promote Post">
+				    <a role ="presentation" className={promoteClass} onClick={this.handlePromoteClick}>
+					    <i className="iconfont icon-ranking"/>
+				    </a>
+          </BTooltip>
+			  </div>
 				{this.renderPostPopoverMenu()}
 				{/* <div className="button__group">
 				</div> */}

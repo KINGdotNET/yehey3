@@ -3,6 +3,7 @@ import settingsReducer, { getIsLoading, getLocale, getVotingPower } from '../set
 import * as settingsTypes from '../settingsActions';
 import * as authTypes from '../../auth/authActions';
 import { rewardsValues } from '../../../common/constants/rewards';
+import { boardValues } from '../../../common/constants/boards';
 
 describe('settingsReducer', () => {
   const initialState = {
@@ -17,6 +18,7 @@ describe('settingsReducer', () => {
     upvoteSetting: false,
     exitPageSetting: true,
     rewardSetting: rewardsValues.half,
+    boardSetting: boardValues.random,
     useBeta: false,
   };
 
@@ -94,6 +96,7 @@ describe('settingsReducer', () => {
         upvoteSetting: false,
         exitPageSetting: true,
         rewardSetting: rewardsValues.half,
+        boardSetting: boardValues.random,
       },
     };
 
@@ -108,6 +111,7 @@ describe('settingsReducer', () => {
       votingPower: 'off',
       upvoteSetting: false,
       rewardSetting: rewardsValues.half,
+      boardSetting: boardValues.random,
     };
     const action = {
       type: authTypes.LOGIN_SUCCESS,
@@ -118,6 +122,7 @@ describe('settingsReducer', () => {
             votingPower: 'off',
             upvoteSetting: false,
             rewardSetting: rewardsValues.half,
+            boardSetting: boardValues.random,
           },
         },
       },
@@ -134,6 +139,7 @@ describe('settingsReducer', () => {
       votingPower: 'off',
       upvoteSetting: false,
       rewardSetting: rewardsValues.none,
+      boardSetting: boardValues.random,
     };
     const action = {
       type: authTypes.LOGIN_SUCCESS,
@@ -144,6 +150,7 @@ describe('settingsReducer', () => {
             votingPower: 'off',
             upvoteSetting: false,
             rewardSetting: rewardsValues.none,
+            boardSetting: boardValues.random,
           },
         },
       },
@@ -184,6 +191,7 @@ describe('settingsReducer', () => {
             votingPower: 'off',
             upvoteSetting: false,
             rewardSetting: rewardsValues.half,
+            boardSetting: boardValues.random,
           },
         },
       },
@@ -200,6 +208,7 @@ describe('settingsReducer', () => {
       votingPower: 'off',
       upvoteSetting: false,
       rewardSetting: rewardsValues.all,
+      boardSetting: boardValues.random,
     };
     const action = {
       type: authTypes.RELOAD_SUCCESS,
@@ -210,6 +219,7 @@ describe('settingsReducer', () => {
             votingPower: 'off',
             upvoteSetting: false,
             rewardSetting: rewardsValues.all,
+            boardSetting: boardValues.random,
           },
         },
       },

@@ -59,14 +59,16 @@
   &__brand {
     font-size: 24px;
     font-weight: 700;
-		// letter-spacing: 0.5px;
 		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: row;
-		z-index: 1;
-		margin-top: -1px;
+    z-index: 1;
+    @media @large {
+      margin-left:20px;
+    }
+    
 		&name {
 			font-size: 26px;
 			display: none;
@@ -79,12 +81,30 @@
       margin-right: 4px;
       font-size: 16px !important;
       // vertical-align: 2px;
-		}
+    }
+    
+    &__logo-mobile {
+      height: 40px;
+      margin-right: 5px;
+      @media @small {
+        display: initial;
+      }
+      @media (min-width: @small-bp){
+        display: none;
+        // padding-left: 0;
+      }
+    }
 		
 		&__logo {
-			width: 36px;
-			height: 36px;
-			margin-right: 5px;
+			height: 40px;
+      margin-right: 5px;
+      @media @small {
+        display: initial;
+      }
+      @media (max-width: @small-bp){
+        display: none;
+        // padding-left: 0;
+      }
 		}
 		.Me {
 			margin-left: 2px;

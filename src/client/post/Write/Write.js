@@ -10,6 +10,7 @@ import uuidv4 from 'uuid/v4';
 import improve from '../../helpers/improve';
 import { createPostMetadata } from '../../helpers/postHelpers';
 import { rewardsValues } from '../../../common/constants/rewards';
+import { boardValues } from '../../../common/constants/boards';
 import LastDraftsContainer from './LastDraftsContainer';
 import DeleteDraftModal from './DeleteDraftModal';
 
@@ -20,6 +21,7 @@ import {
   getIsEditorSaving,
   getUpvoteSetting,
   getRewardSetting,
+  getBoardSetting,
 } from '../../reducers';
 
 import { createPost, saveDraft, newPost } from './editorActions';
@@ -37,6 +39,7 @@ import Affix from '../../components/Utils/Affix';
     draftId: new URLSearchParams(props.location.search).get('draft'),
     upvoteSetting: getUpvoteSetting(state),
     rewardSetting: getRewardSetting(state),
+    boardSetting: getBoardSetting(state),
   }),
   {
     createPost,
@@ -55,6 +58,7 @@ class Write extends React.Component {
     draftId: PropTypes.string,
     upvoteSetting: PropTypes.bool,
     rewardSetting: PropTypes.string,
+    boardSetting: PropTypes.string,
     newPost: PropTypes.func,
     createPost: PropTypes.func,
     saveDraft: PropTypes.func,
@@ -66,6 +70,7 @@ class Write extends React.Component {
     draftId: null,
     upvoteSetting: false,
     rewardSetting: rewardsValues.half,
+    boardSetting: boardValues.random,
     newPost: () => {},
     createPost: () => {},
     saveDraft: () => {},
@@ -78,6 +83,7 @@ class Write extends React.Component {
     this.state = {
       initialTitle: '',
       initialTopics: [],
+      initialBoard: this.props.boardSetting,
       initialBody: '',
       initialReward: this.props.rewardSetting,
       initialUpvote: this.props.upvoteSetting,
@@ -109,6 +115,7 @@ class Write extends React.Component {
       // eslint-disable-next-line
       this.setState({
         initialTitle: draftPost.title || '',
+        initialBoard: draftPost.board || '',
         initialTopics: tags || [],
         initialBody: draftPost.body || '',
         initialReward: draftPost.reward,
@@ -132,6 +139,7 @@ class Write extends React.Component {
       this.draftId = uuidv4();
       this.setState({
         initialTitle: '',
+        initialBoard: nextProps.boardSetting,
         initialTopics: [],
         initialBody: '',
         initialReward: rewardsValues.half,
@@ -144,6 +152,7 @@ class Write extends React.Component {
       const { draftPosts, draftId } = nextProps;
       const draftPost = _.get(draftPosts, draftId, {});
       const initialTitle = _.get(draftPost, 'title', '');
+      const initialBoard = _.get(draftPost, 'board', '');
       const initialBody = _.get(draftPost, 'body', '');
       const initialTopics = _.get(draftPost, 'json.tags', []);
       this.draftId = draftId;
@@ -151,6 +160,7 @@ class Write extends React.Component {
         initialTitle,
         initialBody,
         initialTopics,
+        initialBoard,
       });
     }
   }
@@ -180,6 +190,7 @@ class Write extends React.Component {
       title: form.title,
       reward: form.reward,
       upvote: form.upvote,
+      board: form.board,
       lastUpdated: Date.now(),
     };
 
@@ -197,8 +208,8 @@ class Write extends React.Component {
     const oldMetadata =
       this.props.draftPosts[this.draftId] && this.props.draftPosts[this.draftId].json;
 
-    data.parentPermlink = form.topics.length ? form.topics[0] : 'general';
-    data.json = createPostMetadata(data.body, form.topics, oldMetadata);
+    data.parentPermlink = form.board.length ? form.board : 'general';
+    data.json = createPostMetadata(data.body, form.board, form.topics, oldMetadata);
 
     if (this.originalBody) {
       data.originalBody = this.originalBody;
@@ -226,7 +237,7 @@ class Write extends React.Component {
   }, 2000);
 
   render() {
-    const { initialTitle, initialTopics, initialBody, initialReward, initialUpvote } = this.state;
+    const { initialTitle, initialBoard, initialTopics, initialBody, initialReward, initialUpvote } = this.state;
     const { loading, saving, draftId } = this.props;
 
     return (
@@ -242,6 +253,7 @@ class Write extends React.Component {
               ref={this.setForm}
               saving={saving}
               title={initialTitle}
+              board={initialBoard}
               topics={initialTopics}
               body={initialBody}
               reward={initialReward}

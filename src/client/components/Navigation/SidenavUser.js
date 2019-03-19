@@ -29,12 +29,12 @@ const SidenavUser = () => (
         <FormattedMessage id="edit_profile" defaultMessage="Edit profile" />
       </NavLink>
     </li>
-    <li>
+    {/* <li>
       <NavLink to="/invite" activeClassName="Sidenav__item--active">
         <i className="iconfont icon-share" />
         <FormattedMessage id="invite" defaultMessage="Invite" />
       </NavLink>
-    </li>
+    </li> */}
     <li>
       <NavLink to="/settings" activeClassName="Sidenav__item--active">
         <i className="iconfont icon-setup" />

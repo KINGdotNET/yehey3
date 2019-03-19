@@ -20,7 +20,6 @@ import {
 } from '../../helpers/postHelpers';
 import withAuthActions from '../../auth/withAuthActions';
 import BTooltip from '../BTooltip';
-import ReputationTag from '../ReputationTag';
 import StoryPreview from './StoryPreview';
 import StoryFooter from '../StoryFooter/StoryFooter';
 import Avatar from '../Avatar';
@@ -110,6 +109,7 @@ class Story extends React.Component {
     this.handleFollowClick = this.handleFollowClick.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleTransferClick = this.handleTransferClick.bind(this);
+    this.handlePromoteClick = this.handlePromoteClick.bind(this);
     this.onFollowClick = this.onFollowClick.bind(this);
     //this.getName = this.getName.bind(this);
 	}
@@ -125,6 +125,17 @@ class Story extends React.Component {
       to: post.author,
       amount: 1,
       memo: "Tip for post: " + post.title,
+      currency: 'TME',
+    };
+    this.props.openTransfer(this.transfer);
+  }
+
+  handlePromoteClick(post) {
+    this.transfer = {
+      to: "null",
+      amount: 1,
+      memo: "@"+post.author+"/"+post.permlink,
+      currency: 'TSD',
     };
     this.props.openTransfer(this.transfer);
   }
@@ -299,22 +310,6 @@ class Story extends React.Component {
     );
 	}
 	
-	// getName = (author) => {
-	// 	let help = (window && window.wehelpjs) ? window.wehelpjs : (global && global.wehelpjs) ? global.wehelpjs : undefined
-	// 	if(help){
-	// 		help.api.getAccountsAsync([author]).then(res=>{
-	// 			let name = (res[0] && res[0].json && JSON.stringify(res[0].json)['profile']) ? JSON.stringify(res[0].json)['profile']['name'] : author
-	// 			this.setState({
-	// 				accountName: name
-	// 			})
-	// 			this.forceUpdate()
-	// 		})
-	// 		.catch(err=>{console.error('err', err)})
-	// 	} else {
-	// 		// return author
-	// 	}
-	// }
-
   render() {
     const {
       user,
@@ -494,6 +489,7 @@ class Story extends React.Component {
               onDislikeClick={this.handleDislikeClick}
               onShareClick={this.handleShareClick}
               onTransferClick={this.handleTransferClick}
+              onPromoteClick={this.handlePromoteClick}
               onEditClick={this.handleEditClick}
               pendingFollow={pendingFollow}
               pendingBookmark={pendingBookmark}

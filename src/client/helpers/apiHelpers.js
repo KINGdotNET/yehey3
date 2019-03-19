@@ -1,6 +1,9 @@
 import BlockchainAPI from '../blockchainAPI';
 import { jsonParse } from '../helpers/formatter';
+import _ from 'lodash';
 import * as accountHistoryConstants from '../../common/constants/accountHistory';
+import { array } from 'prop-types';
+import { combineArrays } from './arrayHelpers';
 
 /** *
  * Get the path from URL and the API object and return the correct API call based on path
@@ -19,14 +22,70 @@ export function getDiscussionsFromAPI(sortBy, query, blockchainAPI) {
     case 'trending':
     case 'blog':
     case 'comments':
-		case 'promoted':
+    case 'promoted':
+      // console.log("getDiscussionsFromApi", sortBy);
 			var ret = blockchainAPI.sendAsync(`get_discussions_by_${sortBy}`, [query])
-			.catch(err=>{console.error('err', err)});
+      .catch(err=>{console.error('err', err)});
 			return ret
     default:
-      throw new Error('There is not API endpoint defined for this sorting');
+      throw new Error('There is not API endpoint defined for this sorting', sortBy);
   }
-}
+};
+
+
+/**
+ * Returns a concatenated array of a series of payloads for getDiscussionsFromApi.
+ * @param {array} callParams - An array of sortby and category values.
+ * @param {number} limit - Amount of posts to retrieve per sortBy value.
+ * @param {object} blockchainAPI - the blockchain API object.
+ */
+export const getMultiDiscussionsFromAPI = (callParams, limit, blockchainAPI) =>
+  new Promise(async resolve => {
+    const payloadArray = callParams.reduce(async (payloadListP, value) => {
+      const payloadList = await payloadListP;
+      // console.log("get multi discussions from API", value);
+      const sortBy = value[0];
+      const category = (value[1] === 'all') ? ((sortBy === 'feed') ? 'weyoume': '') : value[1];
+      const nextPayloadData = await getDiscussionsFromAPI(
+        sortBy, 
+        {tag: category, limit: limit}, 
+        blockchainAPI);
+      return payloadList.concat([nextPayloadData]);
+    }, []);
+    const payloadSet = await payloadArray;
+    // console.log("Payloadset:", payloadSet);
+    const APIpayload = payloadSet.concat(_.uniq([combineArrays(payloadSet)]));
+    resolve(APIpayload);
+    // console.log("MultiDiscussions: APIpayload", APIpayload);
+  });
+
+ /**
+ * Returns a concatenated array of a series of payloads for getDiscussionsFromApi.
+ * @param {array} callParams - An array of the sortby, catagory, start_author, and start_permlink values.
+ * @param {number} limit - Amount of posts to retrieve per sortBy value.
+ * @param {object} blockchainAPI - the blockchain API object.
+ */
+export const getMoreMultiDiscussionsFromAPI = (callParams, limit, blockchainAPI) => 
+    new Promise(async resolve => {
+      // console.log("Getting more multi discussions:_call params", callParams);
+      const payloadArray = callParams.reduce(async (payloadListP, value) => {
+        const payloadList = await payloadListP;
+        const sortBy = value[0];
+        const category = (value[1] === 'all') ? ((sortBy === 'feed') ? 'weyoume': '') : value[1];
+        const startAuthor = value[2];
+        const startPermlink = value[3];
+        const nextPayloadData = await getDiscussionsFromAPI(
+          sortBy, 
+          {tag: category, limit: limit, start_author: startAuthor, start_permlink: startPermlink}, 
+          blockchainAPI);
+        return payloadList.concat([nextPayloadData]);
+      }, []);
+      const payloadSet = await payloadArray;
+      const APIpayload = payloadSet.concat(_.uniq([combineArrays(payloadSet)]));
+      resolve(APIpayload);
+      // console.log("moreMultiDiscussions: APIpayload:", APIpayload);
+    });
+
 
 export const getAccount = username =>
   BlockchainAPI.sendAsync('get_accounts', [[username]]).then(result => {
@@ -36,6 +95,16 @@ export const getAccount = username =>
       return userAccount;
     }
     throw new Error('User Not Found');
+  }).catch(err=>{console.error('err', err)});
+
+export const getNetworkUserListFromAPI = () =>
+  BlockchainAPI.sendAsync('lookup_accounts',['0', 1000]).then(result => {
+    // console.log("Got NetworkUserList:", result);
+    if (result.length) {
+      const networkUserList = result.filter(name => !name.match(/(webuilder|null|temp|builders)/));
+      return networkUserList;
+    }
+    throw new Error('Lookup Accounts Failed');
   }).catch(err=>{console.error('err', err)});
 
 export const getFollowingCount = username =>
@@ -86,6 +155,25 @@ export const getAccountHistory = (account, from = -1, limit = defaultAccountLimi
 
 export const getDynamicGlobalProperties = () =>
   BlockchainAPI.sendAsync('get_dynamic_global_properties', []).catch(err=>{console.error('err', err)});
+
+export const getTransactionByID = (txid) =>
+  BlockchainAPI.sendAsync('get_transaction', [txid]).catch(err=>{console.error('err', err)});
+
+export const getBlockFromNumber = (block_num) =>
+  BlockchainAPI.sendAsync('get_block', [block_num]).catch(err=>{console.error('err', err)});
+
+export const getHeadBlocksArray = () =>
+  new Promise(async resolve => {
+    const gprops = await getDynamicGlobalProperties();
+    const head_block_number = gprops.head_block_number;
+    const rangeArray = _.range(head_block_number, head_block_number - 10, -1);
+    const blockArray = rangeArray.reduce(async (blockListP, value) =>{
+      const blockList = await blockListP;
+      const nextBlockData = await getBlockFromNumber(value);
+      return blockList.concat({num: value, data: nextBlockData});
+    }, []);
+    resolve(blockArray);
+  });
 
 export const isWalletTransaction = actionType =>
   actionType === accountHistoryConstants.TRANSFER ||

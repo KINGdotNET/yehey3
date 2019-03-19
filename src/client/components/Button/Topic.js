@@ -49,7 +49,7 @@ class Topic extends React.Component {
           'Topic--favorite': favorite,
           'Topic--closing': this.state.closing,
         })}
-        to={`/trending/${name}`}
+        to={`/trending-${name}/hot-${name}`}
       >
         {name}
         {closable && (

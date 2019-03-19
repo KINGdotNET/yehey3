@@ -9,7 +9,6 @@ import { NavLink } from 'react-router-dom';
 import _ from 'lodash';
 
 import './Boards.less';
-import { H2 } from 'glamorous';
 
 class Boards extends React.Component {
 
@@ -26,54 +25,85 @@ class Boards extends React.Component {
       <div className = "center">
         <div className="Boards">
         <ul className = "BoardList">
+				<li>
+			      <NavLink to="/trending-intro/hot-intro" >
+				      <i className="iconfont icon-addressbook" />
+				      <FormattedMessage id="introductions" defaultMessage="Introductions" />
+			      </NavLink>
+		      </li>
           <li>
-			      <NavLink to="/trending/pics" >
+			      <NavLink to="/trending-pics/hot-pics" >
 				      <i className="iconfont icon-picture" />
 				      <FormattedMessage id="pictures" defaultMessage="Pictures" />
 			      </NavLink>
 		      </li>
           <li>
-			      <NavLink to="/trending/news" >
+			      <NavLink to="/trending-news/hot-news" >
 				      <i className="iconfont icon-headlines" />
 				      <FormattedMessage id="news" defaultMessage="News" />
 			      </NavLink>
 		      </li>
+					<li>
+			      <NavLink to="/trending-blog/hot-blog" >
+				      <i className="iconfont icon-document" />
+				      <FormattedMessage id="blog" defaultMessage="Blog" />
+			      </NavLink>
+		      </li>
+					<li>
+			      <NavLink to="/trending-links/hot-links" >
+				      <i className="iconfont icon-link" />
+				      <FormattedMessage id="links" defaultMessage="Links" />
+			      </NavLink>
+		      </li>
           <li>
-			      <NavLink to="/trending/music" >
+			      <NavLink to="/trending-music/hot-music" >
 				      <i className="iconfont icon-systemprompt" />
 				      <FormattedMessage id="music" defaultMessage="Music" />
 			      </NavLink>
 		      </li>
           <li>
-			      <NavLink to="/trending/vids" >
+			      <NavLink to="/trending-vids/hot-vids" >
 				      <i className="iconfont icon-playon" />
 				      <FormattedMessage id="videos" defaultMessage="Videos" />
 			      </NavLink>
 		      </li>
           <li>
-			      <NavLink to="/trending/tech" >
+			      <NavLink to="/trending-tech/hot-tech" >
 				      <i className="iconfont icon-computer" />
 				      <FormattedMessage id="tech" defaultMessage="Tech" />
 			      </NavLink>
 		      </li>
           <li>
-			      <NavLink to="/trending/science" >
+			      <NavLink to="/trending-science/hot-science" >
 				      <i className="iconfont icon-manage" />
 				      <FormattedMessage id="science" defaultMessage="Science" />
 			      </NavLink>
 		      </li>
           <li>
-			      <NavLink to="/trending/politics" >
+			      <NavLink to="/trending-politics/hot-politics" >
 				      <i className="iconfont icon-order" />
 				      <FormattedMessage id="politics" defaultMessage="Politics" />
 			      </NavLink>
 		      </li>
           <li>
-			      <NavLink to="/trending/crypto" >
+			      <NavLink to="/trending-blockchain/hot-blockchain" >
 				      <i className="iconfont icon-bitcoin" />
-				      <FormattedMessage id="crypto" defaultMessage="Crypto" />
+				      <FormattedMessage id="crypto" defaultMessage="Blockchain" />
 			      </NavLink>
 		      </li>
+					<li>
+			      <NavLink to="/trending-games/hot-games" >
+				      <i className="iconfont icon-select" />
+				      <FormattedMessage id="games" defaultMessage="Games" />
+			      </NavLink>
+		      </li>
+					<li>
+			      <NavLink to="/trending-random/hot-random" >
+				      <i className="iconfont icon-emoji" />
+				      <FormattedMessage id="random" defaultMessage="Random" />
+			      </NavLink>
+		      </li>
+					
         </ul>
         </div>
       </div>

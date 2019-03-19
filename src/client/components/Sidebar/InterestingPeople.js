@@ -6,17 +6,17 @@ import User from './User';
 import './InterestingPeople.less';
 import './SidebarContentBlock.less';
 
-const InterestingPeople = ({ users, onRefresh }) => (
+const InterestingPeople = ({ users, onRefresh, isFetchingNetworkUserList }) => (
   <div className="InterestingPeople SidebarContentBlock">
     <h4 className="SidebarContentBlock__title">
       <i className="iconfont icon-group SidebarContentBlock__icon" />{' '}
-      <FormattedMessage id="interesting_people" defaultMessage="Popular" />
+      <FormattedMessage id="interesting_people" defaultMessage="Discover" />
       <button onClick={onRefresh} className="InterestingPeople__button-refresh">
         <i className="iconfont icon-refresh" />
       </button>
     </h4>
     <div className="SidebarContentBlock__content">
-      {users && users.map(user => <User key={user.name} user={user} />)}
+      {!isFetchingNetworkUserList && users && users.map(user => <User key={user.name} user={user} />)}
       <h4 className="InterestingPeople__more">
         <Link to={'/discover'}>
           <FormattedMessage id="discover_more_people" defaultMessage="Discover More People" />

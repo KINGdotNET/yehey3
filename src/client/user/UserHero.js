@@ -48,6 +48,7 @@ const isUserActive = user =>
 const UserHero = ({
   authenticated,
   user,
+  ownName,
   username,
   isSameUser,
   coverImage,
@@ -67,6 +68,7 @@ const UserHero = ({
               <UserHeader
                 username={username}
                 handle={user.name}
+                ownName={ownName}
                 userReputation={user.reputation}
                 SCORE={parseFloat(user.SCORE)}
                 isSameUser={isSameUser}
@@ -90,6 +92,7 @@ UserHero.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   user: PropTypes.shape().isRequired,
   username: PropTypes.string.isRequired,
+  ownName: PropTypes.string,
   isSameUser: PropTypes.bool,
   coverImage: PropTypes.string,
   hasCover: PropTypes.bool,

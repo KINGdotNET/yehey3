@@ -4,14 +4,12 @@
 .Story {
   background-color: white;
   color: #353535;
-  
+  border-top: @border-width-base @border-style-base @border-color-base;
+
+  @media (min-width: @small-bp){
     border-left: @border-width-base @border-style-base @border-color-base;
     border-right: @border-width-base @border-style-base @border-color-base;
-    border-top: @border-width-base @border-style-base @border-color-base;
-  @media @small {
-    border-top: @border-width-base @border-style-base @border-color-base;
   }
-
   &__content {
     position: relative;
   }

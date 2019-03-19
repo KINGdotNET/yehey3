@@ -1,9 +1,10 @@
-import { getDiscussionsFromAPI } from '../helpers/apiHelpers';
+import { getMultiDiscussionsFromAPI, getMoreMultiDiscussionsFromAPI } from '../helpers/apiHelpers';
 import {
   createAsyncActionType,
   getFeedFromState,
   getFeedLoadingFromState,
 } from '../helpers/stateHelpers';
+
 import {
   getAuthenticatedUserName,
   getFeed,
@@ -22,59 +23,73 @@ export const GET_MORE_REPLIES = createAsyncActionType('@user/GET_MORE_REPLIES');
 
 export const GET_BOOKMARKS = createAsyncActionType('@bookmarks/GET_BOOKMARKS');
 
+import _ from 'lodash';
+
 export const getFeedContent = ({ sortBy, category, limit = 20 }) => (
   dispatch,
   getState,
   { blockchainAPI },
-) =>
+) => {
+  // console.log("GET FEED CONTENT: sortBy", sortBy, "category", category);
+  const fetchParams = _.zip(sortBy, category);
+
   dispatch({
 		type: GET_FEED_CONTENT.ACTION,
-    payload: getDiscussionsFromAPI(sortBy, { tag: category, limit }, blockchainAPI),
+    payload: getMultiDiscussionsFromAPI(fetchParams, limit, blockchainAPI)
+    .then(postsData => postsData),
     meta: {
-      sortBy,
-      category: category || 'all',
-      limit,
+      sortBy: sortBy,
+      category: category.concat(category.join('-')),
+      limit: limit,
     },
   });
+};
 
 export const getMoreFeedContent = ({ sortBy, category, limit = 20 }) => (
   dispatch,
   getState,
   { blockchainAPI },
 ) => {
+  // console.log("GET MORE FEED CONTENT: sortBy", sortBy, "category", category);
   const state = getState();
   const feed = getFeed(state);
   const posts = getPosts(state);
-  const feedContent = getFeedFromState(sortBy, category, feed);
+  
 
-  if (!feedContent.length) return Promise.resolve(null);
+  const sortByCat = _.zip(sortBy, category);
 
-  const lastPost = posts[feedContent[feedContent.length - 1]];
+  const feedContent = sortByCat.reduce((feedListP, value) => {
+    const feedList = feedListP;
+    const nextStateData = getFeedFromState(value[0], value[1], feed);
+    //console.log("reducing feed content", nextStateData);
+    return feedList.concat([nextStateData]);
+  }, []);
+  
+  // console.log("Getting More feed content:", sortBy, feedContent);
 
-  const startAuthor = lastPost.author;
-  const startPermlink = lastPost.permlink;
+  if (feedContent[0].length < 1) return Promise.resolve(null);
+  if (feedContent[1].length < 1) return Promise.resolve(null);
+
+  // creates transposed array of content fetching paramters for each sortby value passed
+  const lastPosts = feedContent.map(feed => posts[feed[feed.length - 1]]);
+  const startAuthors = lastPosts.map(post => post.author);
+  const startPermlinks = lastPosts.map(post => post.permlink);
+  const fetchParams = _.zip(sortBy, category, startAuthors, startPermlinks);
+  // console.log("FetchParams:",  fetchParams);
 
   return dispatch({
     type: GET_MORE_FEED_CONTENT.ACTION,
-    payload: getDiscussionsFromAPI(
-      sortBy,
-      {
-        tag: category,
-        limit: limit + 1,
-        start_author: startAuthor,
-        start_permlink: startPermlink,
-      },
-      blockchainAPI,
-    ).then(postsData => postsData.slice(1)),
+    payload: getMoreMultiDiscussionsFromAPI(fetchParams, limit, blockchainAPI)
+    .then(postsData => postsData),
     meta: {
-      sortBy,
-      category: category || 'all',
+      sortBy: sortBy,
+      category: category.concat(category.join('-')),
       limit,
     },
   });
 };
 
-export const getUserComments = ({ username, limit = 20 }) => (dispatch, getState, { blockchainAPI }) =>
+export const getUserComments = ({ username, limit = 10 }) => (dispatch, getState, { blockchainAPI }) =>
   dispatch({
     type: GET_USER_COMMENTS.ACTION,
     payload: blockchainAPI
@@ -92,7 +107,7 @@ export const getMoreUserComments = ({ username, limit = 20 }) => (
   const feed = getFeed(state);
   const posts = getPosts(state);
 
-  const feedContent = getFeedFromState('comments', username, feed);
+  const feedContent = getFeedFromState(['comments'], username, feed);
   const isLoading = getFeedLoadingFromState('comments', username, feed);
 
   if (!feedContent.length || isLoading) {

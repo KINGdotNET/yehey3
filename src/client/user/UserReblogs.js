@@ -48,9 +48,9 @@ export default class UserReblogs extends React.Component {
 
   componentDidMount() {
     this.props.getFeedContent({
-      sortBy: 'blog',
-      category: this.props.match.params.name,
-      limit: this.props.limit,
+      sortBy: ['blog', 'blog'],
+      category: [this.props.match.params.name, this.props.match.params.name],
+      limit: this.props.limit,e
     });
   }
 
@@ -63,8 +63,8 @@ export default class UserReblogs extends React.Component {
     const hasMore = getFeedHasMoreFromState('blog', username, feed);
     const loadMoreContentAction = () =>
       this.props.getMoreFeedContent({
-        sortBy: 'blog',
-        category: username,
+        sortBy: ['blog','blog'],
+        category: [username, username],
         limit,
       });
 

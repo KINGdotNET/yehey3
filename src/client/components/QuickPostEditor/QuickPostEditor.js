@@ -76,9 +76,10 @@ class QuickPostEditor extends React.Component {
   };
 
   getQuickPostData = () => {
-    const currentPaths = this.props.location.pathname.split('/');
+    const currentPaths = this.props.location.pathname.split(/[/-]/);
     const nativeTag = 'weyoume';
-    const tag = currentPaths[2];
+    const tag1 = currentPaths[2];
+    const tag2 = currentPaths[4];
     const tags = [];
     const images = _.map(this.state.currentImages, image => image.src);
     const postBody = _.reduce(
@@ -110,15 +111,22 @@ class QuickPostEditor extends React.Component {
       metaData.image = images;
     }
 
-    if (!_.isEmpty(tag)) {
-      tags.push(tag);
-    } else {
+    if (!_.isEmpty(tag1)) {
+      tags.push(tag1);
+    } 
+  
+    if (!_.isEmpty(tag2)) {
+      if (tag1 !== tag2) {
+      tags.push(tag2);
+      }
+    } 
+    if (_.isEmpty(tag1) && _.isEmpty(tag2)) {
       tags.push(nativeTag);
     }
 
     metaData.tags = tags;
 
-    data.parentPermlink = _.isEmpty(tag) ? nativeTag : tag;
+    data.parentPermlink = _.isEmpty(tags) ? nativeTag : tag1;
     data.permlink = _.kebabCase(postTitle);
     data.json = metaData;
 

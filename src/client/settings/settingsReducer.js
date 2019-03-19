@@ -1,19 +1,21 @@
 import * as settingsTypes from './settingsActions';
 import * as authTypes from '../auth/authActions';
 import { rewardsValues } from '../../common/constants/rewards';
+import { boardValues } from '../../common/constants/boards';
 
 const initialState = {
   locale: 'auto',
-  votingPower: 'auto',
+  votingPower: 'off',
   votePercent: 10000,
   showNSFWPosts: false,
   showImagesOnly: false,
   nightmode: false,
   rewriteLinks: false,
   loading: false,
-  upvoteSetting: false,
-  exitPageSetting: true,
+  upvoteSetting: true,
+  exitPageSetting: false,
   rewardSetting: rewardsValues.half,
+  boardSetting: boardValues.random,
   useBeta: false,
 };
 
@@ -34,6 +36,7 @@ const settings = (state = initialState, action) => {
           upvoteSetting,
           exitPageSetting,
           rewardSetting,
+          boardSetting,
           useBeta,
         } = action.payload.user_metadata.settings;
         return {
@@ -51,6 +54,7 @@ const settings = (state = initialState, action) => {
           exitPageSetting:
             typeof exitPageSetting === 'boolean' ? exitPageSetting : initialState.exitPageSetting,
           rewardSetting: rewardSetting || initialState.rewardSetting,
+          boardSetting: boardSetting || initialState.boardSetting,
           useBeta: typeof useBeta === 'boolean' ? useBeta : initialState.useBeta,
         };
       }
@@ -74,6 +78,7 @@ const settings = (state = initialState, action) => {
         upvoteSetting: action.payload.upvoteSetting,
         exitPageSetting: action.payload.exitPageSetting,
         rewardSetting: action.payload.rewardSetting,
+        boardSetting: action.payload.boardSetting,
         useBeta: !!action.payload.useBeta,
       };
     case settingsTypes.SAVE_SETTINGS_ERROR:
@@ -104,4 +109,5 @@ export const getRewriteLinks = state => !!state.rewriteLinks;
 export const getUpvoteSetting = state => state.upvoteSetting;
 export const getExitPageSetting = state => state.exitPageSetting;
 export const getRewardSetting = state => state.rewardSetting;
+export const getBoardSetting = state => state.boardSetting;
 export const getUseBeta = state => state.useBeta;

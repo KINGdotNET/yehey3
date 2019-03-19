@@ -5,6 +5,7 @@ import Drafts from '../client/post/Write/Drafts';
 import Replies from '../client/replies/Replies';
 import Activity from '../client/activity/Activity';
 import Wallet from '../client/wallet/Wallet';
+import Transaction from '../client/wallet/Transaction';
 import Editor from '../client/post/Write/Write';
 import Settings from '../client/settings/Settings';
 import ProfileSettings from '../client/settings/ProfileSettings';
@@ -25,6 +26,9 @@ import Notifications from '../client/notifications/Notifications';
 import Error404 from '../client/statics/Error404';
 import ExitPage from '../client/statics/ExitPage';
 import Boards from '../client/discover/Boards';
+import Network from '../client/discover/Network';
+import About from '../client/discover/About';
+import BlockPage from '../client/discover/BlockPage';
 
 const routes = [
   {
@@ -133,6 +137,16 @@ const routes = [
         component: Boards,
       },
       {
+        path: '/network',
+        exact: true,
+        component: Network,
+      },
+      {
+        path: '/about',
+        exact: true,
+        component: About,
+      },
+      {
         path: '/:category?/@:author/:permlink',
         component: Post,
       },
@@ -141,11 +155,29 @@ const routes = [
         component: Search,
       },
       {
+        path: '/tx/:txid',
+        exact: true,
+        component: Transaction,
+      },
+      {
+        path: '/block/:num',
+        exact: true,
+        component: BlockPage,
+      },
+      {
         path: '/exit',
         component: ExitPage,
       },
       {
-        path: '/:sortBy(created|active|trending|hot|promoted|feed)?/:category?',
+        path: '/:sortBy1(created|active|trending|hot|promoted|feed)?-:category1?/:sortBy2(created|active|trending|hot|promoted|feed)?-:category2?',
+        component: Page,
+      },
+      {
+        path: '/feed',
+        component: Page,
+      },
+      {
+        path: '/',
         component: Page,
       },
       {

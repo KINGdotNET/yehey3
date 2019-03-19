@@ -43,9 +43,41 @@ const posts = (state = initialState, action) => {
     }
     case feedTypes.GET_FEED_CONTENT.SUCCESS:
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
+    {
+      const list = {
+        ...state.list,
+      };
+      const postsStates = {
+        ...state.postsStates,
+      };
+
+      _.each(action.payload[0], post => {
+        list[post.id] = post;
+        postsStates[`${post.author}/${post.permlink}}`] = {
+          fetching: false,
+          loaded: true,
+          failed: false,
+        };
+      });
+
+      _.each(action.payload[1], post => {
+        list[post.id] = post;
+        postsStates[`${post.author}/${post.permlink}}`] = {
+          fetching: false,
+          loaded: true,
+          failed: false,
+        };
+      });
+
+      return {
+        ...state,
+        list,
+        postsStates,
+      };
+    }
     case feedTypes.GET_REPLIES.SUCCESS:
     case feedTypes.GET_MORE_REPLIES.SUCCESS:
-    case feedTypes.GET_BOOKMARKS.SUCCESS: {
+    {
       const list = {
         ...state.list,
       };
@@ -68,6 +100,7 @@ const posts = (state = initialState, action) => {
         postsStates,
       };
     }
+
     case postsActions.GET_CONTENT.START:
       if (action.meta.afterLike) return state;
       return {

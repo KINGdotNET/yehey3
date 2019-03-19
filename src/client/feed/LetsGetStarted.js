@@ -118,7 +118,8 @@ class LetsGetStarted extends React.Component {
       <div className="LetsGetStarted">
         <h4 className="LetsGetStarted__title">
           <span className="LetsGetStarted__title__text">
-            <FormattedMessage id="lets_get_started" defaultMessage="Let's get started" />
+            <FormattedMessage id="lets_get_started" defaultMessage="Let's get started:" />
+            <Link to="/about"> What is WeYouMe? </Link>
           </span>
           <HorizontalBarChart current={currentSelected} total={totalOptions} />
           <span className="LetsGetStarted__title__description">
@@ -172,7 +173,7 @@ class LetsGetStarted extends React.Component {
               isLoading={isAuthFetching}
               iconClassName="icon-praise"
             />
-            <Link to="/trending">
+            <Link to="/trending-all/hot-all">
               <span
                 className={classNames('LetsGetStarted__action__text', {
                   LetsGetStarted__action__completed: hasVoted,

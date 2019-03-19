@@ -151,9 +151,20 @@ class PostContent extends React.Component {
       to: post.author,
       amount: 1,
       memo: "Tip for post: " + post.title,
+      currency: 'TME',
     };
     this.props.openTransfer(this.transfer);
   };
+
+  handlePromoteClick = post => {
+    this.transfer = {
+      to: "null",
+      amount: 1,
+      memo: "@"+post.author+"/"+post.permlink,
+      currency: 'TSD',
+    };
+    this.props.openTransfer(this.transfer);
+  }
   
   handleSaveClick = post => this.props.toggleBookmark(post.id, post.author, post.permlink);
 
@@ -237,7 +248,7 @@ class PostContent extends React.Component {
     const htmlBody = getHtml(body, {}, 'text');
     const bodyText = sanitize(htmlBody, { allowedTags: [] });
     const desc = `${_.truncate(bodyText, { length: 143 })} by ${author}`;
-    const image = postMetaImage || getAvatarURL(author) || '/images/logo.png';
+    const image = postMetaImage || getAvatarURL(author) || '/images/logo-icon.png';
     const canonicalUrl = `${canonicalHost}${dropCategory(content.url)}`;
     const url = `${nativeHost}${dropCategory(content.url)}`;
     const ampUrl = `${url}/amp`;
@@ -287,6 +298,7 @@ class PostContent extends React.Component {
           onFollowClick={this.handleFollowClick}
           onEditClick={this.handleEditClick}
           onTransferClick={this.handleTransferClick}
+          onPromoteClick={this.handlePromoteClick}
         />
       </div>
     );
