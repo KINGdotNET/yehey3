@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import Avatar from '../../Avatar';
 import { epochToUTC, jsonParse } from '../../../helpers/formatter';
 import './Notification.less';
-import { createEventHandler } from 'recompose';
 import { Checkbox, Form, Input, Select, Button } from 'antd';
 
 
