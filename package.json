@@ -34,8 +34,6 @@
     "hooks": {}
   },
   "dependencies": {
-    "@material-ui/core": "^3.6.1",
-    "@material-ui/icons": "^3.0.1",
     "antd": "^3.4.4",
     "babel-core": "^6.25.0",
     "babel-eslint": "^8.0.1",
@@ -53,7 +51,6 @@
     "babel-register": "^6.24.1",
     "babel-runtime": "^6.18.0",
     "bs58": "^4.0.0",
-    "canvasjs": "^1.8.1",
     "cheerio": "^1.0.0-rc.2",
     "classnames": "^2.2.5",
     "coingecko-api": "^1.0.3",

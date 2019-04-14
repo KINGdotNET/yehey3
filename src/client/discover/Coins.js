@@ -7,9 +7,6 @@ import Affix from '../components/Utils/Affix';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import './Coins.less';
-var CryptoJS = require("crypto-js");
-import wehelpjs from 'wehelpjs';
-//const CanvasJS = require('canvasjs');
 
 class Coins extends React.Component {
     state = {
