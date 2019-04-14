@@ -25,8 +25,8 @@ a:focus {
 }
 
 .shifted {
-  margin-top: 21px;
   background: #e6ecf0;
+  margin-bottom: 100px;
 }
 
 .text-icon {
@@ -48,6 +48,13 @@ a:focus {
 .ant-layout-header {
 	z-index: @ant-layout-header-z-index !important;
 	max-height: @nav-height;
+}
+
+.ant-layout-footer {
+  z-index: @ant-layout-header-z-index !important;
+  padding: 0px;
+  max-height: @nav-height;
+  bottom: 0%;
 }
 
 textarea.ant-input {

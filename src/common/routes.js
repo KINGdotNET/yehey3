@@ -20,7 +20,6 @@ import UserWallet from '../client/user/UserWallet';
 import UserActivity from '../client/activity/UserActivity';
 import Post from '../client/post/Post';
 import Page from '../client/feed/Page';
-import Discover from '../client/discover/Discover';
 import Search from '../client/search/Search';
 import Notifications from '../client/notifications/Notifications';
 import Error404 from '../client/statics/Error404';
@@ -29,6 +28,13 @@ import Boards from '../client/discover/Boards';
 import Network from '../client/discover/Network';
 import About from '../client/discover/About';
 import BlockPage from '../client/discover/BlockPage';
+import DiscoverPage from '../client/discover/DiscoverPage';
+import DiscoverRecommended from '../client/discover/DiscoverRecommended';
+import DiscoverFollowers from '../client/discover/DiscoverFollowers';
+import DiscoverPower from '../client/discover/DiscoverPower';
+import DiscoverPosts from '../client/discover/DiscoverPosts';
+import DiscoverRandom from '../client/discover/DiscoverRandom';
+import Coins from '../client/discover/Coins';
 
 const routes = [
   {
@@ -127,9 +133,36 @@ const routes = [
         ],
       },
       {
-        path: '/discover',
+        path: '/discover/(followers|power|posts|random)?',
         exact: true,
-        component: Discover,
+        component: DiscoverPage,
+        routes: [
+          {
+            path: '/discover',
+            exact: true,
+            component: DiscoverRecommended,
+          },
+          {
+            path: '/discover/followers',
+            exact: true,
+            component: DiscoverFollowers,
+          },
+          {
+            path: '/discover/power',
+            exact: true,
+            component: DiscoverPower,
+          },
+          {
+            path: '/discover/posts',
+            exact: true,
+            component: DiscoverPosts,
+          },
+          {
+            path: '/discover/random',
+            exact: true,
+            component: DiscoverRandom,
+          },
+        ],
       },
       {
         path: '/boards',
@@ -175,6 +208,11 @@ const routes = [
       {
         path: '/feed',
         component: Page,
+      },
+      {
+        path: '/coins',
+        exact: true,
+        component: Coins,
       },
       {
         path: '/',

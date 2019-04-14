@@ -9,6 +9,9 @@ import { boardValues } from '../../../common/constants/boards';
 import { createPermlink, getBodyPatchIfSmaller } from '../../vendor/blockchainProtocolHelpers';
 import { saveSettings } from '../../settings/settingsActions';
 import { notify } from '../../app/Notification/notificationActions';
+import { getEncryptedPost } from '../../helpers/apiHelpers';
+import BodyShort from '../../components/Story/BodyShort';
+import _ from 'lodash';
 
 export const CREATE_POST = '@editor/CREATE_POST';
 export const CREATE_POST_START = '@editor/CREATE_POST_START';
@@ -45,7 +48,7 @@ export const saveDraft = (post, redirect, intl) => dispatch =>
           id: isLoggedOut ? 'draft_save_auth_error' : 'draft_save_error',
           defaultMessage: isLoggedOut
             ? "Couldn't save this draft, because you are logged out. Please backup your post and log in again."
-            : "Couldn't save this draft. Make sure you are connected to the internet and don't have too much drafts already",
+            : "Couldn't save this draft. Make sure you are connected to the internet and don't have too many drafts already",
         });
 
         dispatch(notify(errorMessage, 'error'));
@@ -97,6 +100,8 @@ const broadcastComment = (
   referral,
   authUsername,
 ) => {
+
+  //console.log("Comment Json:", json, Object.keys(json));
   const operations = [];
   const commentOp = [
     'comment',
@@ -110,6 +115,7 @@ const broadcastComment = (
       json: JSON.stringify(json),
     },
   ];
+  //console.log("commentOp", commentOp);
   operations.push(commentOp);
 
   const commentOptionsConfig = {
@@ -126,7 +132,7 @@ const broadcastComment = (
   } else if (reward === rewardsValues.all) {
     commentOptionsConfig.percent_TSD = 0;
   }
-
+  //console.log("referral:", referral);
   if (referral && referral !== authUsername) {
     commentOptionsConfig.extensions = [
       [
@@ -153,7 +159,7 @@ const broadcastComment = (
       },
     ]);
   }
-
+  //console.log("Broadcast Operations:", operations);
   return weauthjsInstance.broadcast(operations);
 };
 
@@ -162,13 +168,18 @@ export function createPost(postData) {
     assert(postData[field] != null, `Developer Error: Missing required field ${field}`);
   });
 
+  //console.log("postData:", postData);
+
   return (dispatch, getState, { weauthjsInstance }) => {
+    //console.log("createpost:", postData);
     const {
       parentAuthor,
       parentPermlink,
       author,
       title,
       body,
+      access,
+      accessList,
       json,
       reward,
       board,
@@ -176,20 +187,25 @@ export function createPost(postData) {
       draftId,
       isUpdating,
     } = postData;
+    const newBody = isUpdating ? getBodyPatchIfSmaller(postData.originalBody, body) : body;
+
     const getPermLink = isUpdating
       ? Promise.resolve(postData.permlink)
       : createPermlink(title, author, parentAuthor, parentPermlink);
+    const encryptPost = (permlink) => (access == 'private')
+      ? getEncryptedPost(author, newBody, json, accessList, permlink)
+      : Promise.resolve({body: postData.body, json: postData.json, permlink});
+        
     const state = getState();
     const authUser = state.auth.user;
-    const newBody = isUpdating ? getBodyPatchIfSmaller(postData.originalBody, body) : body;
 
-    dispatch(saveSettings({ upvoteSetting: upvote, rewardSetting: reward, boardSetting: board }));
+    dispatch(saveSettings({ upvoteSetting: upvote, rewardSetting: reward, boardSetting: board, accessList: accessList }));
 
     let referral;
     if (Cookie.get('referral')) {
       const accountCreatedDaysAgo =
         (new Date().getTime() - new Date(`${authUser.created}Z`).getTime()) / 1000 / 60 / 60 / 24;
-      if (accountCreatedDaysAgo < 30) {
+      if ((accountCreatedDaysAgo < 30) && !isUpdating) {
         referral = Cookie.get('referral');
       }
     }
@@ -197,42 +213,42 @@ export function createPost(postData) {
     dispatch({
       type: CREATE_POST,
       payload: {
-        promise: getPermLink.then(permlink =>
-          broadcastComment(
-            weauthjsInstance,
-            parentAuthor,
-            parentPermlink,
-            author,
-            title,
-            newBody,
-            json,
-            !isUpdating && reward,
-            !isUpdating && upvote,
-            permlink,
-            referral,
-            authUser.name,
-          ).then(result => {
-            if (draftId) {
-              dispatch(deleteDraft(draftId));
-              dispatch(addEditedPost(permlink));
-            }
-            dispatch(push(`/@${author}/${permlink}`));
-
-            if (window.analytics) {
-              window.analytics.track('Post', {
-                category: 'post',
-                label: 'submit',
-                value: 10,
-              });
-            }
-            return result;
-          })
-					// .catch(err=>{
-					// 	console.error('err', err)
-					// 	return err
-					// }),
-        ),
-      },
+        promise: getPermLink.then(permlink => {
+          //console.log("creating permlink:", permlink),
+            encryptPost(permlink).then(post => {
+              //console.log("creating encrypted post:", post.permlink, post.body, post.json), 
+              broadcastComment(
+                weauthjsInstance,
+                parentAuthor,
+                parentPermlink,
+                author,
+                title,
+                post.body,
+                post.json,
+                !isUpdating && reward,
+                !isUpdating && upvote,
+                post.permlink,
+                referral,
+                authUser.name,
+                  ).then(result => {
+                    if (draftId) {
+                      dispatch(deleteDraft(draftId));
+                      dispatch(addEditedPost(permlink));
+                    }
+                    dispatch(push(`/@${author}/${permlink}`));
+                    if (window.analytics) {
+                      window.analytics.track('Post', {
+                        category: 'post',
+                        label: 'submit',
+                        value: 10,
+                      });
+                    }
+                    return result;})
+                    .catch(err=>{
+                    console.error('err', err);
+                    return err;});
+                    })
+                    })},
     });
   };
 }

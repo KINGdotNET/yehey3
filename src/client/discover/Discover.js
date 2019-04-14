@@ -4,9 +4,9 @@ import Helmet from 'react-helmet';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import RightSidebar from '../app/Sidebar/RightSidebar';
-import DiscoverContent from './DiscoverContent';
+import DiscoverContent from './DiscoverRecommended';
 import Affix from '../components/Utils/Affix';
-import './Discover.less';
+import './DiscoverPage.less';
 
 const Discover = ({ intl }) => (
   <div className="shifted">
@@ -35,10 +35,10 @@ const Discover = ({ intl }) => (
         </div>
       </div>
       <Affix className="rightContainer" stickPosition={77}>
-							<div className="right">
-								<RightSidebar />
-							</div>
-						</Affix>
+				<div className="right">
+					<RightSidebar />
+				</div>
+			</Affix>
     </div>
   </div>
 );

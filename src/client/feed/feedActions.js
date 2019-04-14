@@ -25,7 +25,7 @@ export const GET_BOOKMARKS = createAsyncActionType('@bookmarks/GET_BOOKMARKS');
 
 import _ from 'lodash';
 
-export const getFeedContent = ({ sortBy, category, limit = 20 }) => (
+export const getFeedContent = ({ sortBy, category, limit = 9 }) => (
   dispatch,
   getState,
   { blockchainAPI },
@@ -35,7 +35,7 @@ export const getFeedContent = ({ sortBy, category, limit = 20 }) => (
 
   dispatch({
 		type: GET_FEED_CONTENT.ACTION,
-    payload: getMultiDiscussionsFromAPI(fetchParams, limit, blockchainAPI)
+    payload: getMultiDiscussionsFromAPI(fetchParams, limit, 9, blockchainAPI)
     .then(postsData => postsData),
     meta: {
       sortBy: sortBy,
@@ -45,18 +45,22 @@ export const getFeedContent = ({ sortBy, category, limit = 20 }) => (
   });
 };
 
-export const getMoreFeedContent = ({ sortBy, category, limit = 20 }) => (
+export const getMoreFeedContent = ({ sortBy, category, limit = 9 }) => (
   dispatch,
   getState,
   { blockchainAPI },
 ) => {
-  // console.log("GET MORE FEED CONTENT: sortBy", sortBy, "category", category);
+  //console.log("GET MORE FEED CONTENT: sortBy", sortBy, "category", category);
   const state = getState();
   const feed = getFeed(state);
   const posts = getPosts(state);
+  const sortByP = sortBy.concat('promoted');
+  const categoryP = category.concat('promoted');
   
 
-  const sortByCat = _.zip(sortBy, category);
+  const sortByCat = _.zip(sortBy.concat(sortBy.join('-')), categoryP);
+
+  //console.log("sortbycat:", sortByCat);
 
   const feedContent = sortByCat.reduce((feedListP, value) => {
     const feedList = feedListP;
@@ -65,21 +69,22 @@ export const getMoreFeedContent = ({ sortBy, category, limit = 20 }) => (
     return feedList.concat([nextStateData]);
   }, []);
   
-  // console.log("Getting More feed content:", sortBy, feedContent);
+  //console.log("Getting More feed content:", sortBy, feedContent);
 
   if (feedContent[0].length < 1) return Promise.resolve(null);
   if (feedContent[1].length < 1) return Promise.resolve(null);
+  if (feedContent[2].length < 1) return Promise.resolve(null);
 
   // creates transposed array of content fetching paramters for each sortby value passed
   const lastPosts = feedContent.map(feed => posts[feed[feed.length - 1]]);
   const startAuthors = lastPosts.map(post => post.author);
   const startPermlinks = lastPosts.map(post => post.permlink);
-  const fetchParams = _.zip(sortBy, category, startAuthors, startPermlinks);
-  // console.log("FetchParams:",  fetchParams);
+  const fetchParams = _.zip(sortByP, categoryP, startAuthors, startPermlinks);
+  //console.log("FetchParams:",  fetchParams);
 
   return dispatch({
     type: GET_MORE_FEED_CONTENT.ACTION,
-    payload: getMoreMultiDiscussionsFromAPI(fetchParams, limit, blockchainAPI)
+    payload: getMoreMultiDiscussionsFromAPI(fetchParams, limit, 9, blockchainAPI)
     .then(postsData => postsData),
     meta: {
       sortBy: sortBy,
@@ -115,7 +120,6 @@ export const getMoreUserComments = ({ username, limit = 20 }) => (
   }
 
   const lastPost = posts[feedContent[feedContent.length - 1]];
-
   const startAuthor = lastPost.author;
   const startPermlink = lastPost.permlink;
 
@@ -176,7 +180,7 @@ export const getMoreReplies = () => (dispatch, getState, { blockchainAPI }) => {
 /**
  * Use async await to load all the posts of bookmarked from blockchainAPI and returns a Promise
  *
- * @param bookmarks from localStorage only contain author and permlink
+ * @param bookmarks from Auth storage - contains author and permlink
  * @param blockchainAPI
  * @returns Promise - bookmarksData
  */

@@ -22,6 +22,9 @@ import {
   getUpvoteSetting,
   getRewardSetting,
   getBoardSetting,
+  getLanguageSetting,
+  getAccessListSetting,
+  getAccessSetting,
 } from '../../reducers';
 
 import { createPost, saveDraft, newPost } from './editorActions';
@@ -40,6 +43,9 @@ import Affix from '../../components/Utils/Affix';
     upvoteSetting: getUpvoteSetting(state),
     rewardSetting: getRewardSetting(state),
     boardSetting: getBoardSetting(state),
+    languageSetting: getLanguageSetting(state),
+    accessList: getAccessListSetting(state),
+    access: getAccessSetting(state),
   }),
   {
     createPost,
@@ -57,8 +63,12 @@ class Write extends React.Component {
     saving: PropTypes.bool,
     draftId: PropTypes.string,
     upvoteSetting: PropTypes.bool,
+    nsfwtag: PropTypes.bool,
     rewardSetting: PropTypes.string,
     boardSetting: PropTypes.string,
+    languageSetting: PropTypes.string,
+    accessList: PropTypes.array,
+    access: PropTypes.string,
     newPost: PropTypes.func,
     createPost: PropTypes.func,
     saveDraft: PropTypes.func,
@@ -69,8 +79,12 @@ class Write extends React.Component {
     saving: false,
     draftId: null,
     upvoteSetting: false,
+    nsfwtag: false,
     rewardSetting: rewardsValues.half,
     boardSetting: boardValues.random,
+    languageSetting: "en",
+    access: 'public',
+    accessList: [],
     newPost: () => {},
     createPost: () => {},
     saveDraft: () => {},
@@ -85,8 +99,13 @@ class Write extends React.Component {
       initialTopics: [],
       initialBoard: this.props.boardSetting,
       initialBody: '',
+      initialLink: '',
+      initialCommentPrice: '0',
       initialReward: this.props.rewardSetting,
       initialUpvote: this.props.upvoteSetting,
+      initialAccessList: this.props.accessList,
+      initialAccess: this.props.access,
+      initialNSFWtag: false,
       initialUpdatedDate: Date.now(),
       isUpdating: false,
       showModalDelete: false,
@@ -107,9 +126,18 @@ class Write extends React.Component {
       if (draftPost.permlink) {
         this.permlink = draftPost.permlink;
       }
+      if (draftPost.parentPermlink) {
+        this.parentPermlink = draftPost.json.board || draftPost.json.tags[0];
+      }
+      //console.log("Permlink", this.permlink);
+      //console.log("parentPermlink", this.parentPermlink);
 
       if (draftPost.originalBody) {
         this.originalBody = draftPost.originalBody;
+      }
+
+      if (draftPost.originalLink) {
+        this.originalLink = draftPost.originalLink;
       }
 
       // eslint-disable-next-line
@@ -118,8 +146,13 @@ class Write extends React.Component {
         initialBoard: draftPost.board || '',
         initialTopics: tags || [],
         initialBody: draftPost.body || '',
+        initialLink: draftPost.link || '',
+        initialCommentPrice: draftPost.commentPrice || '0',
         initialReward: draftPost.reward,
         initialUpvote: draftPost.upvote,
+        initialNSFWtag: draftPost.nsfwtag,
+        initialAccessList: draftPost.accessList || this.state.initialAccessList,
+        initialAccess: draftPost.access || this.state.initialAccess,
         initialUpdatedDate: draftPost.lastUpdated || Date.now(),
         isUpdating: draftPost.isUpdating || false,
       });
@@ -142,8 +175,13 @@ class Write extends React.Component {
         initialBoard: nextProps.boardSetting,
         initialTopics: [],
         initialBody: '',
-        initialReward: rewardsValues.half,
+        initialLink: '',
+        initialCommentPrice: '0',
+        initialAccessList: nextProps.accessList,
+        initialAccess: nextProps.access,
+        initialReward: nextProps.reward,
         initialUpvote: nextProps.upvoteSetting,
+        initialNSFWtag: false,
         initialUpdatedDate: Date.now(),
         isUpdating: false,
         showModalDelete: false,
@@ -152,13 +190,21 @@ class Write extends React.Component {
       const { draftPosts, draftId } = nextProps;
       const draftPost = _.get(draftPosts, draftId, {});
       const initialTitle = _.get(draftPost, 'title', '');
-      const initialBoard = _.get(draftPost, 'board', '');
+      const initialBoard = _.get(draftPost, 'json.tags[0]', '');
       const initialBody = _.get(draftPost, 'body', '');
+      const initialLink = _.get(draftPost, 'json.link', '');
+      const initialAccess = _.get(draftPost, 'access', this.state.access);
+      const initialCommentPrice = _.get(draftPost, 'json.commentPrice', '0');
       const initialTopics = _.get(draftPost, 'json.tags', []);
+      const initialAccessList = _.get(draftPost, 'accessList', this.state.initialAccessList);
       this.draftId = draftId;
       this.setState({
         initialTitle,
         initialBody,
+        initialAccessList,
+        initialAccess,
+        initialLink,
+        initialCommentPrice,
         initialTopics,
         initialBoard,
       });
@@ -186,11 +232,16 @@ class Write extends React.Component {
 
   getNewPostData = form => {
     const data = {
-      body: form.body,
+      body:form.body, 
+      accessList: form.accessList || this.props.accessList,
+      access: form.access || this.state.access,
       title: form.title,
       reward: form.reward,
       upvote: form.upvote,
-      board: form.board,
+      nsfwtag: form.nsfwtag,
+      board: form.board || form.topics[0],
+      link: form.link,
+      commentPrice: form.commentPrice,
       lastUpdated: Date.now(),
     };
 
@@ -202,19 +253,24 @@ class Write extends React.Component {
     } else {
       data.permlink = this.permlink;
     }
-
+    
     if (this.state.isUpdating) data.isUpdating = this.state.isUpdating;
 
     const oldMetadata =
       this.props.draftPosts[this.draftId] && this.props.draftPosts[this.draftId].json;
 
-    data.parentPermlink = form.board.length ? form.board : 'general';
-    data.json = createPostMetadata(data.body, form.board, form.topics, oldMetadata);
+    data.parentPermlink = form.board.length ? form.board : form.topics[0];
+    data.json = createPostMetadata(data.body, form.board, form.topics, form.link, form.commentPrice, form.nsfwtag, form.access, this.props.languageSetting, oldMetadata);
 
     if (this.originalBody) {
       data.originalBody = this.originalBody;
     }
 
+    if (this.originalLink) {
+      data.originalLink = this.originalLink;
+    }
+    //console.log("FormPermlink:", data.permlink);
+    //console.log("FormParentPermlink:", data.parentPermlink);
     return data;
   };
 
@@ -228,7 +284,6 @@ class Write extends React.Component {
     const id = this.props.draftId;
     // Remove zero width space
     const isBodyEmpty = postBody.replace(/[\u200B-\u200D\uFEFF]/g, '').trim().length === 0;
-
     if (isBodyEmpty) return;
 
     const redirect = id !== this.draftId;
@@ -237,7 +292,18 @@ class Write extends React.Component {
   }, 2000);
 
   render() {
-    const { initialTitle, initialBoard, initialTopics, initialBody, initialReward, initialUpvote } = this.state;
+    const { 
+      initialTitle, 
+      initialBoard, 
+      initialTopics, 
+      initialBody, 
+      initialAccessList,
+      initialAccess, 
+      initialLink, 
+      initialCommentPrice, 
+      initialReward, 
+      initialNSFWtag, 
+      initialUpvote } = this.state;
     const { loading, saving, draftId } = this.props;
 
     return (
@@ -250,14 +316,20 @@ class Write extends React.Component {
           </Affix>
           <div className="center">
             <Editor
+              user={this.user}
               ref={this.setForm}
               saving={saving}
               title={initialTitle}
               board={initialBoard}
               topics={initialTopics}
               body={initialBody}
+              accessList={initialAccessList}
+              access={initialAccess}
+              link={initialLink}
+              commentPrice={initialCommentPrice}
               reward={initialReward}
               upvote={initialUpvote}
+              nsfwtag={initialNSFWtag}
               draftId={draftId}
               loading={loading}
               isUpdating={this.state.isUpdating}

@@ -5,6 +5,7 @@ import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import RightSidebar from '../app/Sidebar/RightSidebar';
 import Affix from '../components/Utils/Affix';
 import { NavLink } from 'react-router-dom';
+import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount';
 
 import _ from 'lodash';
 
@@ -16,12 +17,13 @@ class Boards extends React.Component {
     return(
 
   <div className="shifted">
+		<ScrollToTopOnMount />
     <div className="feed-layout container">
-            <Affix className="leftContainer" stickPosition={77}>
-              <div className="left">
-                <LeftSidebar />
-              </div>
-            </Affix>
+			<Affix className="leftContainer" stickPosition={77}>
+				<div className="left">
+					<LeftSidebar />
+				</div>
+			</Affix>
       <div className = "center">
         <div className="Boards">
         <ul className = "BoardList">
@@ -95,6 +97,18 @@ class Boards extends React.Component {
 			      <NavLink to="/trending-games/hot-games" >
 				      <i className="iconfont icon-select" />
 				      <FormattedMessage id="games" defaultMessage="Games" />
+			      </NavLink>
+		      </li>
+					<li>
+			      <NavLink to="/trending-sport/hot-sport" >
+				      <i className="iconfont icon-activity" />
+				      <FormattedMessage id="sport" defaultMessage="Sport" />
+			      </NavLink>
+		      </li>
+					<li>
+			      <NavLink to="/trending-nsfw/hot-nsfw" >
+				      <i className="iconfont icon-like" />
+				      <FormattedMessage id="nsfw" defaultMessage="NSFW" />
 			      </NavLink>
 		      </li>
 					<li>

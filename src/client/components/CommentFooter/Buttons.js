@@ -36,6 +36,7 @@ class Buttons extends React.Component {
     onReplyClick: PropTypes.func,
     onEditClick: PropTypes.func,
     onTransferClick: PropTypes.func,
+    commentsActive: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -98,6 +99,7 @@ class Buttons extends React.Component {
       editable,
       editing,
       replying,
+      commentsActive,
     } = this.props;
 
     const pendingVote = find(pendingVotes, { id: comment.id });
@@ -262,7 +264,7 @@ class Buttons extends React.Component {
             </span>
           </React.Fragment>
         )} */}
-        {user.name && (
+        {user.name && commentsActive && (
           <span>
             <span className="CommentFooter__bullet" />
             <a

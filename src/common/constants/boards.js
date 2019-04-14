@@ -11,6 +11,8 @@ export const boardValues = {
   intro: 'intro',
   games: 'games',
   links: 'links',
+  sport: 'sport',
+  nsfw: 'nsfw',
   random: 'random',
 };
 

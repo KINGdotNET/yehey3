@@ -18,9 +18,11 @@ import {
   getTranslations,
   getUseBeta,
   getNightmode,
+  getShowNSFWPosts,
+  getAllAccountsList
 } from './reducers';
 import { login, logout, busyLogin } from './auth/authActions';
-import { getFollowing, getNotifications, getNetworkUserList } from './user/userActions';
+import { getFollowing, getNotifications, getNetworkUsers, getAllAccounts } from './user/userActions';
 import {
   getRate,
   getRewardFund,
@@ -32,6 +34,7 @@ import * as reblogActions from './app/Reblog/reblogActions';
 import Redirect from './components/Utils/Redirect';
 import NotificationPopup from './notifications/NotificationPopup';
 import Topnav from './components/Navigation/Topnav';
+import Botnav from './components/Navigation/Botnav';
 import Transfer from './wallet/Transfer';
 import PowerUpOrDown from './wallet/PowerUpOrDown';
 import BBackTop from './components/BBackTop';
@@ -46,11 +49,13 @@ import BBackTop from './components/BBackTop';
     translations: getTranslations(state),
     locale: getLocale(state),
     nightmode: getNightmode(state),
+    showNSFWposts: getShowNSFWPosts(state),
+    allAccounts: getAllAccountsList(state),
   }),
   {
     login,
     logout,
-    getNetworkUserList,
+    getNetworkUsers,
     getFollowing,
     getNotifications,
     getRate,
@@ -59,6 +64,7 @@ import BBackTop from './components/BBackTop';
     busyLogin,
     getRebloggedList: reblogActions.getRebloggedList,
     setUsedLocale,
+    getAllAccounts,
   },
 )
 export default class Wrapper extends React.PureComponent {
@@ -70,10 +76,12 @@ export default class Wrapper extends React.PureComponent {
     usedLocale: PropTypes.string,
     translations: PropTypes.shape(),
     username: PropTypes.string,
+    allAccounts: PropTypes.array.isRequired,
     login: PropTypes.func,
     logout: PropTypes.func,
     getFollowing: PropTypes.func,
-    getNetworkUserList: PropTypes.func,
+    getNetworkUsers: PropTypes.func,
+    getAllAccounts: PropTypes.func,
     getRewardFund: PropTypes.func,
     getRebloggedList: PropTypes.func,
     getRate: PropTypes.func,
@@ -82,16 +90,18 @@ export default class Wrapper extends React.PureComponent {
     setUsedLocale: PropTypes.func,
     busyLogin: PropTypes.func,
     nightmode: PropTypes.bool,
+    showNSFWposts: PropTypes.bool,
   };
 
   static defaultProps = {
     usedLocale: null,
     translations: {},
     username: '',
+    showNSFWposts: false,
     login: () => {},
     logout: () => {},
     getFollowing: () => {},
-    getNetworkUserList: () => {},
+    getNetworkUsers: () => {},
     getRewardFund: () => {},
     getRebloggedList: () => {},
     getRate: () => {},
@@ -139,13 +149,13 @@ export default class Wrapper extends React.PureComponent {
   }
 
   componentDidMount() {
+    const { showNSFWposts } = this.props;
     this.props.login().then(() => {
       this.props.getFollowing();
-      this.props.getNetworkUserList();
       this.props.getNotifications();
       this.props.busyLogin();
     });
-
+    this.props.getNetworkUsers(showNSFWposts);
     this.props.getRewardFund();
     this.props.getRebloggedList();
     this.props.getRate();
@@ -205,6 +215,9 @@ export default class Wrapper extends React.PureComponent {
 			case 'hot':
         this.props.history.push('/hot-all/hot-all');
         break;
+      case 'new':
+        this.props.history.push('/created-all/created-all');
+        break;
 			case 'trending':
         this.props.history.push('/trending-all/trending-all');
         break;
@@ -212,13 +225,16 @@ export default class Wrapper extends React.PureComponent {
         this.props.history.push('/boards');
         break;
       case 'discover':
-        this.props.history.push('/discover');
+        this.props.history.push('/discover/');
         break;
 			case 'wallet':
         this.props.history.push('/wallet');
         break;
       case 'network':
         this.props.history.push('/network');
+        break;
+      case 'about':
+        this.props.history.push('/about');
         break;
 			case 'edit-profile':
         this.props.history.push('/edit-profile');
@@ -249,9 +265,12 @@ export default class Wrapper extends React.PureComponent {
               <Transfer />
               <PowerUpOrDown />
               <NotificationPopup />
-              {/* <BBackTop className="primary-modal" /> */}
             </div>
+            <Layout.Footer style={{ position: 'fixed', width: '100%', zIndex: 1050, bottom: '0%', padding: 0 }}>
+              <Botnav username={user.name} onMenuItemClick={this.handleMenuItemClick} />
+            </Layout.Footer>
           </Layout>
+
         </LocaleProvider>
       </IntlProvider>
     );

@@ -9,6 +9,7 @@ import Affix from '../components/Utils/Affix';
 import * as notificationConstants from '../../common/constants/notifications';
 import { getUpdatedSCUserMetadata } from '../auth/authActions';
 import { getNotifications } from '../user/userActions';
+import { saveNotificationsLastTimestamp } from '../helpers/metadata';
 import {
   getAuthenticatedUserSCMetaData,
   getNotifications as getNotificationsState,
@@ -24,7 +25,9 @@ import NotificationReblog from '../components/Navigation/Notifications/Notificat
 import NotificationTransfer from '../components/Navigation/Notifications/NotificationTransfer';
 import NotificationVoteWitness from '../components/Navigation/Notifications/NotificationVoteWitness';
 import Loading from '../components/Icon/Loading';
+import weauthjsInstance from '../weauthjsInstance';
 import './Notifications.less';
+import { jsonParse } from '../helpers/formatter';
 
 class Notifications extends React.Component {
   static propTypes = {
@@ -34,6 +37,7 @@ class Notifications extends React.Component {
     notifications: PropTypes.arrayOf(PropTypes.shape()),
     currentAuthUsername: PropTypes.string,
     userSCMetaData: PropTypes.shape(),
+    onActionInitiated: PropTypes.func,
   };
 
   static defaultProps = {
@@ -42,17 +46,53 @@ class Notifications extends React.Component {
     userSCMetaData: {},
   };
 
-  componentDidMount() {
-    const { userSCMetaData, notifications } = this.props;
+  constructor(props) {
+    super(props);
 
-    if (_.isEmpty(userSCMetaData)) {
-      this.props.getUpdatedSCUserMetadata();
+    this.state = {
+      reactionsModalVisible: false,
+    };
+
+    this.handleRequestPayment = this.handleRequestPayment.bind(this);
+  }
+
+  componentDidMount() {
+    const { userSCMetaData, notifications} = this.props;
+    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp');
+    const latestNotification = _.get(notifications, 0);
+    const timestamp = _.get(latestNotification, 'timestamp');
+    this.props.getUpdatedSCUserMetadata();
+    this.props.getNotifications();
+
+    if (timestamp > lastSeenTimestamp) {
+      saveNotificationsLastTimestamp(timestamp).then(() => this.props.getUpdatedSCUserMetadata());
     }
 
-    if (_.isEmpty(notifications)) {
-      this.props.getNotifications();
+    //console.log("userSCMetaData:", userSCMetaData);
+    //console.log("notifications::", notifications);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    
+    const differentNotifications = !_.isEqual(
+      _.size(this.props.notifications),
+      _.size(nextProps.notifications),
+    );
+    if (differentNotifications){
+    const latestNotification = _.get(nextProps.notifications, 0);
+    const timestamp = _.get(latestNotification, 'timestamp');
+
+    if (timestamp > nextProps.lastSeenTimestamp) {
+      saveNotificationsLastTimestamp(timestamp).then(() => this.props.getUpdatedSCUserMetadata());
+      }
     }
   }
+
+  handleRequestPayment(e, transferQuery) {
+    e.preventDefault();
+    const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
+    win.focus();
+  };
 
   render() {
     const { notifications, currentAuthUsername, userSCMetaData, loadingNotifications } = this.props;
@@ -121,7 +161,11 @@ class Notifications extends React.Component {
                     );
                   case notificationConstants.TRANSFER:
                     return (
-                      <NotificationTransfer key={key} notification={notification} read={read} />
+                      <NotificationTransfer 
+                        key={key} 
+                        notification={notification} 
+                        read={read} 
+                        onRequestClick={this.handleRequestPayment} />
                     );
                   case notificationConstants.WITNESS_VOTE:
                     return (

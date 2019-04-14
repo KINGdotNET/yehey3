@@ -57,6 +57,9 @@ class Page extends React.Component {
   render() {
     const { authenticated, loaded, location, match } = this.props;
     const { category1, category2, sortBy1, sortBy2 } = match.params;
+    if (!category1 && !category2 && !sortBy1 && !sortBy2) {
+      this.props.history.push(`/trending-all/hot-all`);
+    }
     const shouldDisplaySelector = location.pathname !== '/' || (!authenticated && loaded);
     const displayTopicSelector = location.pathname === '/trending';
 

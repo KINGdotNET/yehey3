@@ -1,6 +1,6 @@
 import { createClient } from 'weliterpcjs';
 
-const client = createClient(process.env.API_URL, {timeout: 15000});
+const client = createClient(process.env.API_URL, {timeout: 30000});
 
 if(typeof window !== 'undefined'){
 	window.blockchainClient = client

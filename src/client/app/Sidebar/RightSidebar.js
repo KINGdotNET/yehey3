@@ -66,13 +66,13 @@ export default class RightSidebar extends React.Component {
       isAuthFetching,
       followingList,
       isFetchingFollowingList,
-      isFetchingNetworkUserList
+      isFetchingNetworkUserList,
     } = this.props;
 
     if (isAuthFetching) {
       return <Loading />;
     }
-
+    
     return (
       <div>
         {!authenticated && <SignUp />}

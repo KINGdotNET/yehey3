@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 export const getFeedFromState = (sortBy, category = 'all', state) => {
-  // console.log("GetFeedFromState:", sortBy, category, state);   
+  //console.log("GetFeedFromState:", sortBy, category, state);   
   if (!state[sortBy]) return [];
   if (!state[sortBy][category]) return [];
   if (!state[sortBy][category].list) return [];

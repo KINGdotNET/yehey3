@@ -44,7 +44,7 @@ const getCommentsChildrenLists = apiRes => {
  * Fetches comments from blockchain.
  * @param {number} postId Id of post to fetch comments from
  * @param {boolean} reload If set to true isFetching won't be set to true
- * preventing loading icon to be dispalyed
+ * preventing loading icon to be displayed
  * @param {object} focusedComment Object with author and permlink to which focus after loading
  */
 export const getComments = (postId, reload = false, focusedComment = undefined) => (
@@ -56,7 +56,9 @@ export const getComments = (postId, reload = false, focusedComment = undefined) 
 
   const content = posts.list[postId] || comments.comments[postId];
 
-  const { category, author, permlink } = content;
+  const { category, author, permlink, json } = content;
+
+  const metaData = jsonParse(json);
 
   dispatch({
     type: GET_COMMENTS,

@@ -11,12 +11,13 @@ import {
   FormattedTime,
   FormattedNumber,
 } from 'react-intl';
+import { jsonParse } from '../../helpers/formatter';
 import { Link } from 'react-router-dom';
 import { Icon } from 'antd';
 import Lightbox from 'react-image-lightbox';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { getFromMetadata, extractImageTags } from '../../helpers/parser';
-import { isPostDeleted, dropCategory } from '../../helpers/postHelpers';
+import { isPostDeleted, isPostTaggedPrivate, dropCategory } from '../../helpers/postHelpers';
 import withAuthActions from '../../auth/withAuthActions';
 import { getProxyImageURL } from '../../helpers/image';
 import Popover from '../Popover';
@@ -24,12 +25,14 @@ import BTooltip from '../BTooltip';
 import { getHtml } from './Body';
 import BodyContainer from '../../containers/Story/BodyContainer';
 import StoryDeleted from './StoryDeleted';
+import StoryPrivate from './StoryPrivate';
 import StoryFooter from '../StoryFooter/StoryFooter';
 import Avatar from '../Avatar';
 import Topic from '../Button/Topic';
 import PopoverMenu, { PopoverMenuItem } from '../PopoverMenu/PopoverMenu';
 import PostFeedEmbed from './PostFeedEmbed';
 import PostedFrom from './PostedFrom';
+import { decryptWithMemoKeypair, decryptAES } from '../../helpers/apiHelpers';
 import './StoryFull.less';
 
 @injectIntl
@@ -212,9 +215,28 @@ class StoryFull extends React.Component {
 
     const { open, index } = this.state.lightbox;
 
-    let signedBody = post.body;
+    let json = jsonParse(post.json);
+    //console.log("json Storyfull:", json);
+    let accessList = {};
+    let userAccess = false;
+    let decryptionKey = '';
+    let image = json.image;
+    let body = post.body;
+
+    if (json && json.accessList && json.accessList[user.name]) {
+      userAccess = true;
+      accessList = json.accessList;
+      decryptionKey = decryptWithMemoKeypair(user.name, accessList[user.name]);
+      body = decryptAES(post.body, decryptionKey);
+      image = decryptAES(json.image, decryptionKey).split(',');
+      //console.log("useraccess:", userAccess, body);
+    };
+
+    json.image = image;
+
+    let signedBody = body;
     if (signature) {
-      signedBody = `${post.body}<hr>${signature}`;
+      signedBody = `${body}<hr>${signature}`;
     }
 
     const parsedBody = getHtml(signedBody, {}, 'text');
@@ -334,7 +356,9 @@ class StoryFull extends React.Component {
     let content = null;
     if (isPostDeleted(post)) {
       content = <StoryDeleted />;
-    } else {
+    } else if(isPostTaggedPrivate(post) && !userAccess) {
+      content = <StoryPrivate />;
+    } {
       content = (
         <div
           role="presentation"
@@ -348,7 +372,7 @@ class StoryFull extends React.Component {
             full
             rewriteLinks={rewriteLinks}
             body={signedBody}
-            json={post.json}
+            json={json}
           />
         </div>
       );
@@ -382,7 +406,6 @@ class StoryFull extends React.Component {
           <div className="StoryFull__header__text">
             <Link to={`/@${post.author}`}>
               <span className="username">{post.author}</span>
-              {/* <ReputationTag reputation={post.author_reputation} /> */}
             </Link>
             <BTooltip
               title={
@@ -399,30 +422,6 @@ class StoryFull extends React.Component {
             <span className="StoryFull__posted_from">
               <PostedFrom post={post} />
             </span>
-            {Math.ceil(readingTime(post.body).minutes) > 1 && (
-              <span>
-                <span className="StoryFull__bullet" />
-                <BTooltip
-                  title={
-                    <span>
-                      <FormattedMessage
-                        id="words_tooltip"
-                        defaultMessage={'{words} words'}
-                        values={{ words: readingTime(post.body).words }}
-                      />
-                    </span>
-                  }
-                >
-                  <span className="StoryFull__header__reading__time">
-                    <FormattedMessage
-                      id="reading_time_post"
-                      defaultMessage={'{min} min read'}
-                      values={{ min: Math.ceil(readingTime(post.body).minutes) }}
-                    />
-                  </span>
-                </BTooltip>
-              </span>
-            )}
           </div>
           <Popover
             placement="bottomRight"

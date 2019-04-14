@@ -9,6 +9,7 @@ const initialState = {
   transferAmount: 0,
   transferMemo: '',
   transferCurrency: 'TME',
+  transferType: 'transfer',
   powerUpOrDownVisible: false,
   powerDown: false,
   totalSCORE: '',
@@ -99,6 +100,7 @@ export default function walletReducer(state = initialState, action) {
         transferAmount: action.payload.amount,
         transferMemo: action.payload.memo,
         transferCurrency: action.payload.currency,
+        transferType: action.payload.type,
       };
     case walletActions.CLOSE_TRANSFER:
       return {
@@ -216,11 +218,13 @@ export default function walletReducer(state = initialState, action) {
       };
     }
     case walletActions.GET_USER_ACCOUNT_HISTORY.START:
+    //console.log("Getting Account History init");
       return {
         ...state,
         usersAccountHistoryLoading: true,
       };
     case walletActions.GET_USER_ACCOUNT_HISTORY.SUCCESS:
+    //console.log("Getting Account History success");
       return {
         ...state,
         usersTransactions: {
@@ -345,6 +349,7 @@ export const getTransferTo = state => state.transferTo;
 export const getTransferAmount = state => state.transferAmount;
 export const getTransferMemo = state => state.transferMemo;
 export const getTransferCurrency = state => state.transferCurrency;
+export const getTransferType = state => state.transferType;
 
 export const getIsPowerUpOrDownVisible = state => state.powerUpOrDownVisible;
 export const getIsPowerDown = state => state.powerDown;

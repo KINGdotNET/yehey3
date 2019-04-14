@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import { getIsAuthenticated, getAuthenticatedUserName } from '../reducers';
-import { getAllFollowing, getNetworkUserListFromAPI } from '../helpers/apiHelpers';
+import { getAllFollowing, getNetworkUserListFromAPI, getTopFollowedListFromAPI, getAllAccountsFromAPI} from '../helpers/apiHelpers';
 import { createAsyncActionType } from '../helpers/stateHelpers';
 
 export const FOLLOW_USER = '@user/FOLLOW_USER';
@@ -97,11 +97,36 @@ export const getNotifications = username => (dispatch, getState, { blockchainLit
 
 export const GET_NETWORK_USER_LIST = createAsyncActionType('@user/GET_NETWORK_USER_LIST');
 
-export const getNetworkUserList = () => (dispatch) => {
+export const getNetworkUsers = (nsfw) => (dispatch) => {
   return dispatch({
     type: GET_NETWORK_USER_LIST.ACTION,
+    meta: {
+      nsfw,
+    },
     payload: {
       promise: getNetworkUserListFromAPI(),
+    },
+  });
+};
+
+export const GET_TOP_FOLLOWED_LIST = createAsyncActionType('@user/GET_TOP_FOLLOWED_LIST');
+
+export const getTopFollowed = () => (dispatch) => {
+  return dispatch({
+    type: GET_TOP_FOLLOWED_LIST.ACTION,
+    payload: {
+      promise: getTopFollowedListFromAPI(),
+    },
+  });
+};
+
+export const GET_ALL_ACCOUNTS = createAsyncActionType('@user/GET_ALL_ACCOUNTS');
+
+export const getAllAccounts = () => (dispatch) => {
+  return dispatch({
+    type: GET_ALL_ACCOUNTS.ACTION,
+    payload: {
+      promise: getAllAccountsFromAPI(),
     },
   });
 };

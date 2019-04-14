@@ -69,6 +69,15 @@ const posts = (state = initialState, action) => {
         };
       });
 
+      _.each(action.payload[2], post => {
+        list[post.id] = post;
+        postsStates[`${post.author}/${post.permlink}}`] = {
+          fetching: false,
+          loaded: true,
+          failed: false,
+        };
+      });
+
       return {
         ...state,
         list,

@@ -114,6 +114,7 @@ export default class User extends React.Component {
       amount: 0,
       memo: " ",
       currency: 'TME',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   };
@@ -126,7 +127,7 @@ export default class User extends React.Component {
     const username = this.props.match.params.name;
     const { user } = this.props;
     const { profile = {} } = user.json || {};
-    const busyHost = global.postOrigin || 'https://busy.org';
+    const busyHost = global.postOrigin || 'https://alpha.weyoume.io';
     const desc = profile.about || `Posts by ${username}`;
     const image = getAvatarURL(username) || '/images/logo-icon.png';
     const canonicalUrl = `${busyHost}/@${username}`;

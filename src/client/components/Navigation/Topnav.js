@@ -76,14 +76,9 @@ class Topnav extends React.Component {
       searchBarActive: false,
       popoverVisible: false,
       searchBarValue: '',
-      notificationsPopoverVisible: false,
     };
     this.handleMoreMenuSelect = this.handleMoreMenuSelect.bind(this);
     this.handleMoreMenuVisibleChange = this.handleMoreMenuVisibleChange.bind(this);
-    this.handleNotificationsPopoverVisibleChange = this.handleNotificationsPopoverVisibleChange.bind(
-      this,
-    );
-    this.handleCloseNotificationsPopover = this.handleCloseNotificationsPopover.bind(this);
     this.handleSelectOnAutoCompleteDropdown = this.handleSelectOnAutoCompleteDropdown.bind(this);
     this.handleAutoCompleteSearch = this.handleAutoCompleteSearch.bind(this);
     this.handleSearchForInput = this.handleSearchForInput.bind(this);
@@ -101,24 +96,6 @@ class Topnav extends React.Component {
     this.setState({ popoverVisible: visible });
   }
 
-  handleNotificationsPopoverVisibleChange(visible) {
-    if (visible) {
-      this.setState({ notificationsPopoverVisible: visible });
-    } else {
-      this.handleCloseNotificationsPopover();
-    }
-  }
-
-  handleCloseNotificationsPopover() {
-    this.setState({
-      notificationsPopoverVisible: false,
-    });
-  }
-
-  notificationButton = () => {
-
-  }
-
   menuForLoggedOut = () => {
     const { location } = this.props;
     const { searchBarActive } = this.state;
@@ -132,29 +109,34 @@ class Topnav extends React.Component {
       >
         <Menu className="Topnav__menu-container__menu" mode="horizontal">
           <Menu.Item key="signup">
+            <Action primary>
             <a target="_blank" rel="noopener noreferrer" href={process.env.SIGNUP_URL}>
-              <FormattedMessage id="signup" defaultMessage="Sign up" />
+            <div className="Topnav__menu__link">
+                <FormattedMessage id="signup" defaultMessage="Sign up" />
+            </div>
             </a>
+            </Action>
           </Menu.Item>
           <Menu.Item key="divider" disabled>
             |
           </Menu.Item>
           <Menu.Item key="login">
-            <a href={weauthjsInstance.getLoginURL(next)}>
-              <FormattedMessage id="login" defaultMessage="Log in" />
+          <Action primary>
+            <a href={weauthjsInstance.getLoginURL(next)} className="Topnav__menu__link">
+            <div className="Topnav__menu__link"> 
+                <FormattedMessage id="login" defaultMessage="Log in" />
+            </div>
             </a>
+          </Action>
           </Menu.Item>
-          {/* <Menu.Item key="language">
-            <LanguageSettings />
-          </Menu.Item> */}
         </Menu>
       </div>
     );
   };
 
   menuForLoggedIn = () => {
-    const { intl, username, notifications, userSCMetaData, loadingNotifications } = this.props;
-    const { searchBarActive, notificationsPopoverVisible, popoverVisible } = this.state;
+    const { intl, username, notifications, userSCMetaData } = this.props;
+    const { searchBarActive, popoverVisible } = this.state;
     const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp');
     const notificationsCount = _.isUndefined(lastSeenTimestamp)
       ? _.size(notifications)
@@ -175,63 +157,48 @@ class Topnav extends React.Component {
         })}
       >
         <Menu selectedKeys={[]} className="Topnav__menu-container__menu" mode="horizontal">
-          <Menu.Item key="write" className="Topnav__link Topnav__link--action">
-            <BTooltip
-              placement="bottom"
-              title={intl.formatMessage({ id: 'write_post', defaultMessage: 'Write post' })}
-              mouseEnterDelay={1}
-            >  
-              <Link to="/editor">
-                <div className="Topnav__link Topnav__link--action">
-                  <Action primary className="Topnav__postButton">
-                    <div>
-                      <i className="iconfont icon-brush" />
-                      New Post
-                    </div>
-                  </Action>
-                </div>
-              </Link>
-            </BTooltip>
+
+          <Menu.Item key="home" className="Topnav__item--badge">
+            <Link to={`/trending-all/feed-${username}`} className="Topnav__link Topnav__link--light Topnav__link--action">
+                <i className="iconfont icon-homepage" />
+                <FormattedMessage id="nav_home" defaultMessage="Home" />
+            </Link>
           </Menu.Item>
+
+          <Menu.Item key="search" className="Topnav__item--badge">
+            <Link to="/search" className="Topnav__link Topnav__link--light Topnav__link--action">
+                <i className="iconfont icon-search" />
+                <FormattedMessage id="nav_search" defaultMessage="Search" />
+            </Link>
+          </Menu.Item>
+          
+          <Menu.Item key="write" className="Topnav__item--badge">
+            <Link to="/editor" className="Topnav__link Topnav__link--light Topnav__link--action">
+                <i className="iconfont icon-addition" />
+                <FormattedMessage id="nav_post" defaultMessage="New Post" />
+            </Link>
+          </Menu.Item>
+
           <Menu.Item key="notifications" className="Topnav__item--badge">
-            <BTooltip
-              placement="bottom"
-              title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
-              overlayClassName="Topnav__notifications-tooltip"
-              mouseEnterDelay={1}
-            >
-              <Popover
-                placement="bottomRight"
-                trigger="click"
-                content={
-                  <Notifications
-                    notifications={notifications}
-                    onNotificationClick={this.handleCloseNotificationsPopover}
-                    currentAuthUsername={username}
-                    lastSeenTimestamp={lastSeenTimestamp}
-                    loadingNotifications={loadingNotifications}
-                    getUpdatedSCUserMetadata={this.props.getUpdatedSCUserMetadata}
-                  />
-                }
-                visible={notificationsPopoverVisible}
-                onVisibleChange={this.handleNotificationsPopoverVisibleChange}
-                overlayClassName="Notifications__popover-overlay"
-                title={intl.formatMessage({ id: 'notifications', defaultMessage: 'Notifications' })}
-              >
-                <a className="Topnav__link Topnav__link--light Topnav__link--action">
-                <i className="iconfont icon-remind" />
-                  {displayBadge ? (
-                    <div className="Topnav__notifications-count">{notificationsCountDisplay}</div>
+                <Link to="/notifications" className="Topnav__link Topnav__link--light Topnav__link--action">
+                <i className="iconfont icon-remind-old" />
+                {displayBadge ? (
+                  <div className="Topnav__notifications-count">{notificationsCountDisplay}</div>
                   ): null }
-                </a>
-              </Popover>
-            </BTooltip>
+                <FormattedMessage id="nav_notifications" defaultMessage="Notifications" />
+                </Link>
           </Menu.Item>
+
+          <Menu.Item key="wallet" className="Topnav__item--badge">
+                <Link to="/wallet" className="Topnav__link Topnav__link--light Topnav__link--action">
+                  <i className="iconfont icon-wallet" />
+                  <FormattedMessage id="nav_wallet" defaultMessage="Wallet" />
+                </Link>
+          </Menu.Item>
+
           <Menu.Item key="user" className="Topnav__item-user-main Topnav-dropdown-avatar-desktop">
             <Link className="Topnav__user" to={`/@${username}`} onClick={Topnav.handleScrollToTop}>
-							{/* <a className="Topnav__link Topnav__link--light "> */}
 							<Avatar username={username} size={36} />
-              {/* </a> */}
             </Link>
           </Menu.Item>
           <Menu.Item key="more" className="Topnav__menu--icon">
@@ -247,26 +214,23 @@ class Topnav extends React.Component {
                   <PopoverMenuItem key="my-profile">
                     <FormattedMessage id="my_profile" defaultMessage="My profile" />
                   </PopoverMenuItem>
-                  <PopoverMenuItem key="wallet">
-                    <FormattedMessage id="wallet" defaultMessage="Wallet" />
-                  </PopoverMenuItem>
                   <PopoverMenuItem key="trending">
                     <FormattedMessage id="trending" defaultMessage="Trending" />
+                  </PopoverMenuItem>
+                  <PopoverMenuItem key="feed">
+                    <FormattedMessage id="feed" defaultMessage="My Feed" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="hot">
                     <FormattedMessage id="hot" defaultMessage="Hot" />
                   </PopoverMenuItem>
-                  <PopoverMenuItem key="feed">
-                    <FormattedMessage id="feed" defaultMessage="My Feed" />
+                  <PopoverMenuItem key="new">
+                    <FormattedMessage id="new" defaultMessage="New" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="boards">
                     <FormattedMessage id="boards" defaultMessage="Boards" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="discover">
                     <FormattedMessage id="discover" defaultMessage="Discover" />
-                  </PopoverMenuItem>
-                  <PopoverMenuItem key="activity">
-                    <FormattedMessage id="activity" defaultMessage="Activity" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="bookmarks">
                     <FormattedMessage id="bookmarks" defaultMessage="Bookmarks" />
@@ -283,6 +247,9 @@ class Topnav extends React.Component {
 									<PopoverMenuItem key="edit-profile">
                     <FormattedMessage id="edit-profile" defaultMessage="Edit Profile" />
                   </PopoverMenuItem>
+                  <PopoverMenuItem key="about">
+                    <FormattedMessage id="about" defaultMessage="About" />
+                  </PopoverMenuItem>
                   <PopoverMenuItem key="logout">
                     <FormattedMessage id="logout" defaultMessage="Logout" />
                   </PopoverMenuItem>
@@ -292,7 +259,7 @@ class Topnav extends React.Component {
               <a className="Topnav__link Topnav__link--light Topnav-dropdown-avatar-mobile">
 								<Avatar username={username} size={36} />
               </a>
-							<i className="iconfont icon-caretbottom Topnav-dropdown-caret" />
+							<i className="iconfont icon-stealth Topnav-dropdown-caret" />
             </Popover>
           </Menu.Item>
         </Menu>
@@ -319,21 +286,21 @@ class Topnav extends React.Component {
     this.hideAutoCompleteDropdown();
     this.props.history.push({
       pathname: '/search',
-      search: `q=${value.replace(/^@/ig, '')}`,
+      search: `q=${value}`,
       state: {
-        query: query.replace(/^@/ig, ''),
+        query: query,
       },
     });
   }
 
-  debouncedSearch = _.debounce(value => this.props.searchAutoComplete(value.replace(/^@/ig, '')), 300);
+  debouncedSearch = _.debounce(value => this.props.searchAutoComplete(value), 300);
 
   handleAutoCompleteSearch(value) {
-    this.debouncedSearch(value.replace(/^@/ig, ''));
+    this.debouncedSearch(value);
   }
 
   handleSelectOnAutoCompleteDropdown(value) {
-		this.props.history.push(`/@${value.replace(/^@/ig, '')}`);
+		this.props.history.push(`/@${value}`);
 		this.setState({
       searchBarValue: '',
     });
@@ -341,33 +308,42 @@ class Topnav extends React.Component {
 
   handleOnChangeForAutoComplete(value) {
 		const { searchBarValue } = this.state;
-		// if(searchBarValue == '@'+value){
-		// 	this.setState({
-		// 		searchBarValue: '@'+value,
-		// 	});
-		// } else {
 			this.setState({
 				searchBarValue: value,
 			});
-		// }
   }
 
   render() {
     const { intl, autoCompleteSearchResults } = this.props;
     const { searchBarActive, searchBarValue } = this.state;
-    const dropdownOptions = _.map(autoCompleteSearchResults, option => (
-      <AutoComplete.Option key={option.replace(/^@/ig, '')} value={option.replace(/^@/ig,'')} className="Topnav__search-autocomplete">
-        {'@'+option}
+    
+    const dropdownOptions = autoCompleteSearchResults.map((option, i) => (
+      <AutoComplete.Option key={`searchAccount-${i}`} value={option} className="Topnav__search-autocomplete">
+        {`User: ${option}`}
       </AutoComplete.Option>
     ));
-    const formattedAutoCompleteDropdown = _.isEmpty(dropdownOptions)
-      ? dropdownOptions
+    const formattedAutoCompleteDropdown = _.isEmpty(searchBarValue)
+      ? []
       : dropdownOptions.concat([
-          <AutoComplete.Option disabled key="all" className="Topnav__search-all-results">
+
+        <AutoComplete.Option disabled key="searchTag" className="Topnav__search-tag">
+          <Link to={`/trending-${searchBarValue}/hot-${searchBarValue}`} key="searchTag-link">
+            <span onClick={this.hideAutoCompleteDropdown} role="presentation">
+                {intl.formatMessage(
+                  {
+                    id: 'search_tag_results',
+                    defaultMessage: 'Tag: {search}',
+                  },
+                  { search: searchBarValue },
+                )}
+            </span>
+          </Link>
+        </AutoComplete.Option>,
+        <AutoComplete.Option disabled key="searchPage-all" className="Topnav__search-all-results">
             <Link
               to={{
                 pathname: '/search',
-                search: `?q=${searchBarValue.replace(/^@/ig, '')}`,
+                search: `?q=${searchBarValue}`,
                 state: { query: searchBarValue },
               }}
             >
@@ -381,8 +357,10 @@ class Topnav extends React.Component {
                 )}
               </span>
             </Link>
-          </AutoComplete.Option>,
+          </AutoComplete.Option>
         ]);
+    
+    //console.log("formattedAutoCompleteDropdown:", formattedAutoCompleteDropdown);
 
     return (
       <div className="Topnav">
@@ -390,7 +368,7 @@ class Topnav extends React.Component {
           <div className={classNames('left', { 'Topnav__mobile-hidden': searchBarActive })}>
             <Link className="Topnav__brand" to="/trending-all/hot-all">
 							<img src="/images/logo" className="Topnav__brand__logo"></img>
-              <img src="/images/logo-icon.png" className="Topnav__brand__logo-mobile"></img>
+              {/* <img src="/images/logo-icon.png" className="Topnav__brand__logo-mobile"></img> */}
             </Link>
           </div>
           <div className={classNames('center', { mobileVisible: searchBarActive })}>
@@ -413,7 +391,7 @@ class Topnav extends React.Component {
                   onPressEnter={this.handleSearchForInput}
                   placeholder={intl.formatMessage({
                     id: 'search_placeholder',
-                    defaultMessage: 'Search WeYouMe',
+                    defaultMessage: 'Search:',
                   })}
                   autoCapitalize="off"
                   autoCorrect="off"
@@ -423,19 +401,6 @@ class Topnav extends React.Component {
             </div>
           </div>
           <div className="right">
-            <button
-              className={classNames('Topnav__mobile-search', {
-                'Topnav__mobile-search-close': searchBarActive,
-              })}
-              onClick={this.handleMobileSearchButtonClick}
-            >
-              <i
-                className={classNames('iconfont', {
-                  'icon-close': searchBarActive,
-                  'icon-search': !searchBarActive,
-                })}
-              />
-            </button>
             {this.content()}
           </div>
         </div>

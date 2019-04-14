@@ -16,6 +16,9 @@ const initialState = {
   exitPageSetting: false,
   rewardSetting: rewardsValues.half,
   boardSetting: boardValues.random,
+  languageSetting: 'en',
+  access: 'public',
+  accessList: [],
   useBeta: false,
 };
 
@@ -37,6 +40,9 @@ const settings = (state = initialState, action) => {
           exitPageSetting,
           rewardSetting,
           boardSetting,
+          languageSetting,
+          accessList,
+          access,
           useBeta,
         } = action.payload.user_metadata.settings;
         return {
@@ -55,6 +61,9 @@ const settings = (state = initialState, action) => {
             typeof exitPageSetting === 'boolean' ? exitPageSetting : initialState.exitPageSetting,
           rewardSetting: rewardSetting || initialState.rewardSetting,
           boardSetting: boardSetting || initialState.boardSetting,
+          languageSetting: languageSetting || initialState.languageSetting,
+          accessList: accessList || initialState.accessList,
+          access: access || initialState.access,
           useBeta: typeof useBeta === 'boolean' ? useBeta : initialState.useBeta,
         };
       }
@@ -79,6 +88,9 @@ const settings = (state = initialState, action) => {
         exitPageSetting: action.payload.exitPageSetting,
         rewardSetting: action.payload.rewardSetting,
         boardSetting: action.payload.boardSetting,
+        languageSetting: action.payload.languageSetting,
+        accessList: action.payload.accessList,
+        access: action.payload.access,
         useBeta: !!action.payload.useBeta,
       };
     case settingsTypes.SAVE_SETTINGS_ERROR:
@@ -110,4 +122,7 @@ export const getUpvoteSetting = state => state.upvoteSetting;
 export const getExitPageSetting = state => state.exitPageSetting;
 export const getRewardSetting = state => state.rewardSetting;
 export const getBoardSetting = state => state.boardSetting;
+export const getLanguageSetting = state => state.languageSetting;
+export const getAccessListSetting = state => state.accessList;
+export const getAccessSetting = state => state.access;
 export const getUseBeta = state => state.useBeta;

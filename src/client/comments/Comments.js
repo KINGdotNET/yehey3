@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 import { find } from 'lodash';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { getHasDefaultSlider } from '../helpers/user';
 import {
   getAuthenticatedUser,
@@ -15,16 +17,30 @@ import {
   getRewardFund,
   getVotePercent,
   getRewriteLinks,
+  getUsersTransactions,
+  getUsersAccountHistory,
+  getUsersAccountHistoryLoading,
+  getLoadingMoreUsersAccountHistory,
 } from '../reducers';
 import CommentsList from '../components/Comments/Comments';
 import * as commentsActions from './commentsActions';
+import { getAccount } from '../user/usersActions';
+import {
+  getUserAccountHistory,
+  getMoreUserAccountHistory,
+} from '../wallet/walletActions';
+
 import { notify } from '../app/Notification/notificationActions';
+import { getUserDetailsKey } from '../helpers/stateHelpers';
 import './Comments.less';
 import { openTransfer } from '../wallet/walletActions'
 import ellipsis from 'text-ellipsis';
+import { jsonParse } from '../helpers/formatter';
+import { FormattedMessage } from 'react-intl';
 
+@withRouter
 @connect(
-  state => ({
+  (state, ownProps) => ({
     user: getAuthenticatedUser(state),
     comments: getComments(state),
     commentsList: getCommentsList(state),
@@ -35,6 +51,11 @@ import ellipsis from 'text-ellipsis';
     rewardFund: getRewardFund(state),
     defaultVotePercent: getVotePercent(state),
     rewriteLinks: getRewriteLinks(state),
+    authenticatedUserName: getAuthenticatedUserName(state),
+    usersTransactions: getUsersTransactions(state),
+    usersAccountHistory: getUsersAccountHistory(state),
+    usersAccountHistoryLoading: getUsersAccountHistoryLoading(state),
+    loadingMoreUsersAccountHistory: getLoadingMoreUsersAccountHistory(state),
   }),
   dispatch =>
     bindActionCreators(
@@ -45,13 +66,26 @@ import ellipsis from 'text-ellipsis';
           commentsActions.sendComment(parentPost, body, isUpdating, originalPost),
         openTransfer: (comment) => openTransfer(comment),
         notify,
+        getUserAccountHistory,
+        getMoreUserAccountHistory,
+        getAccount,
       },
       dispatch,
-    ),
+    )
 )
+
 export default class Comments extends React.Component {
   static propTypes = {
     authenticated: PropTypes.bool.isRequired,
+    getUserAccountHistory: PropTypes.func.isRequired,
+    getMoreUserAccountHistory: PropTypes.func.isRequired,
+    getAccount: PropTypes.func.isRequired,
+    usersTransactions: PropTypes.shape().isRequired,
+    usersAccountHistory: PropTypes.shape().isRequired,
+    usersAccountHistoryLoading: PropTypes.bool.isRequired,
+    loadingMoreUsersAccountHistory: PropTypes.bool.isRequired,
+    authenticatedUserName: PropTypes.string.isRequired,
+
     user: PropTypes.shape().isRequired,
     rewardFund: PropTypes.shape().isRequired,
     defaultVotePercent: PropTypes.number.isRequired,
@@ -76,18 +110,23 @@ export default class Comments extends React.Component {
   };
 
   static defaultProps = {
-    username: undefined,
+    authenticatedUserName: '',
     sliderMode: 'auto',
     post: {},
     comments: {},
     commentsList: {},
     pendingVotes: [],
+    usersTransactions: [],
     show: false,
     notify: () => {},
     getComments: () => {},
     voteComment: () => {},
     sendComment: () => {},
     openTransfer: () => {},
+    getUserAccountHistory: () => {},
+    getMoreUserAccountHistory: () => {},
+    getAccount: () => {},
+
   };
 
   state = {
@@ -95,16 +134,40 @@ export default class Comments extends React.Component {
   };
 
   componentDidMount() {
+    const {
+      usersTransactions,
+      user,
+      authenticatedUserName,
+    } = this.props;
+
+    const username = authenticatedUserName;
+
     if (this.props.show && this.props.post.children !== 0) {
       this.props.getComments(this.props.post.id);
     }
+
+    if (_.isEmpty(user)) {
+      this.props.getAccount(username);
+    }
+
+    if (_.isEmpty(usersTransactions[getUserDetailsKey(username)])) {
+      //console.log("got user account history");
+      this.props.getUserAccountHistory(username);
+    }
+    //console.log("Component did mount - Username:", username, user, usersTransactions);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { post, show } = this.props;
+    //console.log("Component will receive props");
+    const { post, show, usersAccountHistoryLoading} = this.props;
 
-    if (nextProps.show && (nextProps.post.id !== post.id || !show)) {
+    if (!usersAccountHistoryLoading && (nextProps.show && (nextProps.post.id !== post.id || !show) || 
+    (nextProps.usersTransactions.length != this.props.usersTransactions.length) || 
+    (nextProps.authenticatedUserName != this.props.authenticatedUserName))) {
       this.props.getComments(nextProps.post.id);
+      this.props.getUserAccountHistory(nextProps.authenticatedUserName);
+      //console.log("got user account history");
+
     }
   }
 
@@ -152,9 +215,24 @@ export default class Comments extends React.Component {
       amount: 1,
       memo: "Tip for comment: " + ellipsis(comment.body, 50, { ellipsis: '…' }),
       currency: 'TME',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   }
+
+  handleCommentPayment(e, post) {
+    e.preventDefault();
+    const metaData = jsonParse(post.json);
+    //console.log("metaData:", metaData);
+    const transferQuery = {
+      to: post.author,
+      amount: `${metaData.commentPrice} TME`,
+      memo: `@${post.author}/${post.permlink}`,
+    };
+    const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
+    win.focus();
+  }
+
 
   render() {
     const {
@@ -167,9 +245,52 @@ export default class Comments extends React.Component {
       rewardFund,
       defaultVotePercent,
       rewriteLinks,
+      usersTransactions,
+      usersAccountHistoryLoading,
+      authenticatedUserName,
     } = this.props;
+    
     const postId = post.id;
+    const postAuthor = post.author;
+    const postPermlink = post.permlink;
+
+    const metaData = jsonParse(post.json);
+
     let rootLevelComments = [];
+
+    const userKey = getUserDetailsKey(user.name);
+    const transactions = _.get(usersTransactions, userKey, []);
+    let commentsActive = false;
+    let paymentAcknowledged = false;
+    let commentPrice = 0;
+
+    if (postAuthor == authenticatedUserName) {
+      commentsActive = true;
+    }
+    
+    if (metaData.commentPrice) {
+      commentPrice = parseFloat(metaData.commentPrice);
+    }
+    const transfers = transactions.filter(txn => txn.op[0] == "transfer");
+    const validPayments = transfers.filter(txn => 
+      (txn.op[1].from == user.name) && 
+      (txn.op[1].to == postAuthor) && 
+      (txn.op[1].memo == `@${postAuthor}/${postPermlink}`) &&
+      (parseFloat(txn.op[1].amount) >= commentPrice));
+    
+    if (commentPrice > 0) {
+      //console.log("Active commentPrice is:", commentPrice);
+      if (validPayments.length >= 1) {
+        commentsActive = true;
+        paymentAcknowledged = true;
+        //console.log("commentPrice paid:", validPayments);
+    }} else {
+      commentsActive = true;
+    }
+
+    //console.log("transfers:", transfers);
+    //console.log("comment price:", commentPrice);
+    //console.log("Comments Active:", commentsActive);
 
     const parentNode = comments.childrenById[postId];
 
@@ -184,7 +305,15 @@ export default class Comments extends React.Component {
     }
 
     return (
-      rootLevelComments && (
+
+    <div>
+      {paymentAcknowledged && 
+        <div className="Comments__paymentAcknowledged">
+          <i className="iconfont icon-right" />
+          <FormattedMessage id="payment_acknowledged" defaultMessage="Comment Payment Received - Thank you." /> 
+        </div>
+      }
+      {rootLevelComments && (
         <CommentsList
           user={user}
           parentPost={post}
@@ -192,6 +321,7 @@ export default class Comments extends React.Component {
           rootLevelComments={rootLevelComments}
           commentsChildren={commentsChildren}
           authenticated={this.props.authenticated}
+          commentsActive={commentsActive}
           username={this.props.username}
           pendingVotes={pendingVotes}
           loading={comments.isFetching}
@@ -206,8 +336,11 @@ export default class Comments extends React.Component {
           onDislikeClick={this.handleDislikeClick}
           onSendComment={this.props.sendComment}
           onTransferClick={this.handleTransferClick}
+          onCommentPayment={this.handleCommentPayment}
+          commentPrice={commentPrice}
         />
-      )
+      )}
+      </div>
     );
   }
 }

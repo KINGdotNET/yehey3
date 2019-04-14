@@ -4,6 +4,7 @@ import Handlebars from 'handlebars';
 import HandlebarsIntl from 'handlebars-intl';
 import { getHtml } from '../../client/components/Story/Body';
 import { dropCategory } from '../../client/helpers/postHelpers';
+import { jsonParse } from '../../client/helpers/formatter';
 
 HandlebarsIntl.registerWith(Handlebars);
 
@@ -92,7 +93,8 @@ function getContext(post, body, appUrl) {
 }
 
 export default function renderAmpPage(post, appUrl, template) {
-  const body = cleanHTML(getHtml(post.body, post.json, 'text'));
+  const json = jsonParse(post.json);
+  const body = cleanHTML(getHtml(post.body, json, 'text'));
   const context = getContext(post, body, appUrl);
 
   return template(context, {

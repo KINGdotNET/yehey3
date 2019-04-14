@@ -1,10 +1,12 @@
 @import (reference) '../../../styles/custom.less';
 
 .Notification {
-  display: flex;
+  display: inline-flex;
   padding: 12px;
+  width: 100%;
   background-color: @notification-read-background-color;
   border-bottom: @base-border;
+  flex-direction: column;
 
   &:hover {
     cursor: pointer;
@@ -36,10 +38,6 @@
     border-bottom: @base-border;
     color: @black;
     justify-content: center;
-  }
-
-  &:last-of-type {
-    border-bottom: 0 !important;
   }
 }
 

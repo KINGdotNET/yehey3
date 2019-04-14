@@ -34,6 +34,7 @@ export default class CommentFooter extends React.Component {
     onReplyClick: PropTypes.func,
     onEditClick: PropTypes.func,
     onTransferClick: PropTypes.func,
+    commentsActive: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -119,6 +120,7 @@ export default class CommentFooter extends React.Component {
       editing,
       replying,
       pendingVotes,
+      commentsActive,
     } = this.props;
     const { sliderVisible } = this.state;
 
@@ -136,6 +138,7 @@ export default class CommentFooter extends React.Component {
           user={user}
           comment={comment}
           pendingVotes={pendingVotes}
+          commentsActive={commentsActive}
           defaultVotePercent={defaultVotePercent}
           onLikeClick={this.handleLikeClick}
           onDislikeClick={this.handleDislikeClick}
