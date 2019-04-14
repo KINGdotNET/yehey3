@@ -5,61 +5,46 @@ import formatter from '../helpers/blockchainProtocolFormatter';
 const initialState = {
   loading: true,
   searchError: false,
-  searchResults: [],
+  userSearchResults: [],
   autoCompleteSearchResults: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case searchActions.SEARCH_ASK.START:
+    //console.log("Search_Ask Init:", action);
       return {
         ...state,
         loading: true,
         searchError: false,
       };
     case searchActions.SEARCH_ASK.SUCCESS: {
-      const askBlockchainResults = _.get(action.payload, 0, []);
-      const lookupResults = _.get(action.payload, 1, []);
-      const parsedlookupResults = _.map(lookupResults, accountDetails => ({
+      //console.log("Search_Ask Success:", action);
+      const userBlockchainResults = action.payload;
+      const parsedlookupResults = _.map(userBlockchainResults, accountDetails => ({
         ...accountDetails,
-        reputation: formatter.reputation(accountDetails.reputation),
-        name: accountDetails.account,
         type: 'user',
       }));
-      const sortedlookupResults = _.sortBy(parsedlookupResults, 'reputation').reverse();
-      const searchResults = _.compact(_.concat(sortedlookupResults, askBlockchainResults));
+      const userSearchResults = _.compact(parsedlookupResults);
       return {
         ...state,
-        searchResults,
+        userSearchResults,
         loading: false,
       };
     }
     case searchActions.SEARCH_ASK.ERROR:
       return {
         ...state,
-        searchResults: [],
+        userSearchResults: [],
         loading: false,
         searchError: true,
       };
     case searchActions.AUTO_COMPLETE_SEARCH.SUCCESS: {
       const { result, search } = action.payload;
-      const parsedResults = _.map(result, account => ({
-        ...account,
-        reputation: formatter.reputation(account.reputation),
-      }));
-      const sortedResults = _.compact(
-        _.slice(
-          _.map(
-            _.sortBy(parsedResults, 'reputation').reverse(),
-            accountDetails => accountDetails.account,
-          ).reverse(),
-          0,
-          5,
-        ),
-      );
+      const resultsList = _.compact(_.slice(result, 0, 5)).map(user => user.name);
       return {
         ...state,
-        autoCompleteSearchResults: _.isEmpty(search) ? [] : sortedResults,
+        autoCompleteSearchResults: _.isEmpty(search) ? [] : resultsList,
       };
     }
     default:
@@ -68,5 +53,5 @@ export default (state = initialState, action) => {
 };
 
 export const getSearchLoading = state => state.loading;
-export const getSearchResults = state => state.searchResults;
+export const getUserSearchResults = state => state.userSearchResults;
 export const getAutoCompleteSearchResults = state => state.autoCompleteSearchResults;

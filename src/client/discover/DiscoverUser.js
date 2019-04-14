@@ -6,15 +6,22 @@ import { Link } from 'react-router-dom';
 import ReputationTag from '../components/ReputationTag';
 import Avatar from '../components/Avatar';
 import FollowButton from '../widgets/FollowButton';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
+import formatter from '../helpers/blockchainProtocolFormatter';
 
-const DiscoverUser = ({ user }) => {
+const DiscoverUser = ({ user, totalSCORE, SCOREbackingTMEfundBalance}) => {
+
   const parsedJSON = _.attempt(JSON.parse, user.json);
-  const userJSON = _.isError(parsedJSON) ? {} : parsedJSON;
+  const userJSON = _.isError(parsedJSON) ? user.json : parsedJSON;
   const userProfile = _.has(userJSON, 'profile') ? userJSON.profile : {};
+  
+  const followerCount = user.follower_count;
   const location = userProfile.location;
+  const posts = user.post_count;
   const name = userProfile.name;
   const about = userProfile.about;
   let website = userProfile.website;
+  // console.log("userObject:", user, "parsedJSON:", parsedJSON, "User.json", user.json, "UserJSON:", userJSON, "Profile:", profile);
 
   if (website && website.indexOf('http://') === -1 && website.indexOf('https://') === -1) {
     website = `http://${website}`;
@@ -28,45 +35,69 @@ const DiscoverUser = ({ user }) => {
   }
 
   return (
-    <div key={user.name} className="Discover__user">
-      <div className="Discover__user__content">
-        <div className="Discover__user__links">
+    <div key={user.name} className="DiscoverPage__user">
+      <div className="DiscoverPage__user__content">
+        <div className="DiscoverPage__user__links">
           <Link to={`/@${user.name}`}>
             <Avatar username={user.name} size={40} />
           </Link>
-          <div className="Discover__user__profile">
-            <div className="Discover__user__profile__header">
+          <div className="DiscoverPage__user__profile">
+            <div className="DiscoverPage__user__profile__header">
               <Link to={`/@${user.name}`}>
-                <span className="Discover__user__name">
+                <span className="DiscoverPage__user__name">
                   <span className="username">{name || user.name}</span>
                 </span>
                 <ReputationTag reputation={user.reputation} />
               </Link>
-              <div className="Discover__user__follow">
-                <FollowButton username={user.name} />
+                <div className="DiscoverPage__user__follow">
+                  <FollowButton username={user.name} />
+                </div>
               </div>
-            </div>
-            <div className="Discover__user__location">
-              {location && (
-                <span>
-                  <i className="iconfont icon-coordinates text-icon" />
-                  {`${location} `}
+              <div className="DiscoverPage__user__Followercount">
+                <span> {followerCount} {' Followers '} </span>
+              </div>
+              <div className="DiscoverPage__user__PowerBalance">
+                <span> 
+                  <FormattedNumber
+                    value={parseFloat(
+                    formatter.SCOREinTMEvalue(
+                    user.SCORE,
+                    totalSCORE,
+                    SCOREbackingTMEfundBalance,
+                  ),
+                )}
+                />
+                {' POWER '}
                 </span>
-              )}
-              {website && (
+              </div>
+              <div className="DiscoverPage__user__postcount">
                 <span>
-                  <i className="iconfont icon-link text-icon" />
-                  <a target="_blank" rel="noopener noreferrer" href={website}>
-                    {`${hostWithoutWWW}${url.pathname.replace(/\/$/, '')}`}
-                  </a>
+                  {posts}{' Posts '}
                 </span>
-              )}
-            </div>
-            <div className="Discover__user__about">{about}</div>
+              </div>
+              <div className="DiscoverPage__user__location">
+                {location && (
+                  <span>
+                    <i className="iconfont icon-coordinates text-icon" />
+                    {`${location} `}
+                  </span>
+                )}
+                {website && (
+                  <span>
+                    <i className="iconfont icon-link text-icon" />
+                    <a target="_blank" rel="noopener noreferrer" href={website}>
+                      {`${hostWithoutWWW}${url.pathname.replace(/\/$/, '')}`}
+                    </a>
+                  </span>
+                )}
+              </div>
+              <div className="DiscoverPage__user__about">
+                {about}
+              </div>
           </div>
         </div>
       </div>
-      <div className="Discover__user__divider" />
+    <div className="DiscoverPage__user__divider" />
     </div>
   );
 };

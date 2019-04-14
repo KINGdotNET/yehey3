@@ -17,7 +17,11 @@ import {
   getUseBeta,
   getUpvoteSetting,
   getBoardSetting,
+  getLanguageSetting,
+  getAccessListSetting,
+  getAccessSetting,
   getExitPageSetting,
+  getAuthenticatedUser,
 } from '../reducers';
 import { saveSettings } from './settingsActions';
 import { reload } from '../auth/authActions';
@@ -38,6 +42,7 @@ import { boardValues } from '../../common/constants/boards';
 @injectIntl
 @connect(
   state => ({
+    user: getAuthenticatedUser(state),
     reloading: getIsReloading(state),
     locale: getLocale(state),
     votingPower: getVotingPower(state),
@@ -50,17 +55,24 @@ import { boardValues } from '../../common/constants/boards';
     loading: getIsSettingsLoading(state),
     upvoteSetting: getUpvoteSetting(state),
     boardSetting: getBoardSetting(state),
+    languageSetting: getLanguageSetting(state),
+    accessList: getAccessListSetting(state),
+    access: getAccessSetting(state),
     exitPageSetting: getExitPageSetting(state),
   }),
   { reload, saveSettings, notify },
 )
 export default class Settings extends React.Component {
   static propTypes = {
+    user: PropTypes.shape().isRequired,
     intl: PropTypes.shape().isRequired,
     reloading: PropTypes.bool,
     locale: PropTypes.string,
     votingPower: PropTypes.string,
     boardSetting: PropTypes.string,
+    languageSetting: PropTypes.string,
+    accessList: PropTypes.array,
+    access: PropTypes.string,
     votePercent: PropTypes.number,
     loading: PropTypes.bool,
     showNSFWPosts: PropTypes.bool,
@@ -79,6 +91,9 @@ export default class Settings extends React.Component {
     reloading: false,
     locale: 'auto',
     votingPower: 'off',
+    languageSetting: 'en',
+    accessList: [],
+    access: 'public',
     boardSetting: boardValues.random,
     votePercent: 10000,
     loading: false,
@@ -108,6 +123,9 @@ export default class Settings extends React.Component {
     nightmode: false,
     rewriteLinks: false,
     boardSetting: boardValues.random,
+    languageSetting: 'en',
+    accessList: [],
+    access: 'public',
     exitPageSetting: false,
   };
 
@@ -119,6 +137,9 @@ export default class Settings extends React.Component {
       showNSFWPosts: this.props.showNSFWPosts,
       showImagesOnly: this.props.showImagesOnly,
       boardSetting: this.props.boardSetting,
+      languageSetting: this.props.languageSetting,
+      accessList: this.props.accessList,
+      access: this.props.access,
       nightmode: this.props.nightmode,
       rewriteLinks: this.props.rewriteLinks,
       useBeta: this.props.useBeta,
@@ -172,6 +193,18 @@ export default class Settings extends React.Component {
       this.setState({ boardSetting: nextProps.boardSetting });
     }
 
+    if (nextProps.languageSetting !== this.props.languageSetting) {
+      this.setState({ languageSetting: nextProps.languageSetting });
+    }
+
+    if (nextProps.accessList !== this.props.accessList) {
+      this.setState({ accessList: nextProps.accessList});
+    }
+
+    if (nextProps.access !== this.props.access) {
+      this.setState({ access: nextProps.access});
+    }
+
     if (nextProps.exitPageSetting !== this.props.exitPageSetting) {
       this.setState({ exitPageSetting: nextProps.exitPageSetting });
     }
@@ -190,6 +223,9 @@ export default class Settings extends React.Component {
         useBeta: this.state.useBeta,
         upvoteSetting: this.state.upvoteSetting,
         boardSetting: this.state.boardSetting,
+        languageSetting: this.state.languageSetting,
+        accessList: this.state.accessList,
+        access: this.state.access,
         exitPageSetting: this.state.exitPageSetting,
       })
       .then(() =>
@@ -203,6 +239,9 @@ export default class Settings extends React.Component {
   handleLocaleChange = locale => this.setState({ locale });
   handleVotingPowerChange = event => this.setState({ votingPower: event.target.value });
   handleBoardChange = boardSetting => this.setState({ boardSetting });
+  handleLanguageChange = languageSetting => this.setState({ languageSetting });
+  handleAccessListChange = accessList => this.setState({ accessList });
+  handleAccessChange = access => this.setState({ access });
   handleVotePercentChange = value => this.setState({ votePercent: value });
   handleShowNSFWPosts = event => this.setState({ showNSFWPosts: event.target.checked });
   handleShowImagesOnly = event => this.setState({ showImagesOnly: event.target.checked });
@@ -222,6 +261,9 @@ export default class Settings extends React.Component {
       locale: initialLocale,
       votingPower: initialVotingPower,
       boardSetting: initialBoardSetting,
+      languageSetting: initialLanguageSetting,
+      accessList: initialAccessList,
+      access: initialAccess,
       showNSFWPosts: initialShowNSFWPosts,
       showImagesOnly: initialShowImagesOnly,
       nightmode: initialNightmode,
@@ -231,11 +273,13 @@ export default class Settings extends React.Component {
       votingPower,
       locale,
       boardSetting,
+      languageSetting,
+      accessList,
+      access,
       showNSFWPosts,
       showImagesOnly,
       nightmode,
       rewriteLinks,
-      useBeta,
       upvoteSetting,
       exitPageSetting,
     } = this.state;
@@ -293,43 +337,144 @@ export default class Settings extends React.Component {
                     style={{ width: '100%', maxWidth: 240 }}
                     onChange={this.handleBoardChange}
                   >
-                    <Select.Option value={boardValues.pics}>
+                    <Select.Option value={boardValues.pics} key={boardValues.pics}>
                       <FormattedMessage id="board_pics" defaultMessage="Pictures" />
                     </Select.Option>
-                    <Select.Option value={boardValues.vids}>
+                    <Select.Option value={boardValues.vids} key={boardValues.vids}>
                       <FormattedMessage id="board_vids" defaultMessage="Videos" />
                     </Select.Option>
-                    <Select.Option value={boardValues.news}>
+                    <Select.Option value={boardValues.news} key={boardValues.news}>
                       <FormattedMessage id="board_news" defaultMessage="News" />
                     </Select.Option>
-                    <Select.Option value={boardValues.music}>
+                    <Select.Option value={boardValues.music} key={boardValues.music}>
                       <FormattedMessage id="board_music" defaultMessage="Music" />
                     </Select.Option>
-                    <Select.Option value={boardValues.tech}>
+                    <Select.Option value={boardValues.tech} key={boardValues.tech}>
                       <FormattedMessage id="board_tech" defaultMessage="Technology" />
                     </Select.Option>
-                    <Select.Option value={boardValues.politics}>
+                    <Select.Option value={boardValues.politics} key={boardValues.politics}>
                       <FormattedMessage id="board_politics" defaultMessage="Politics" />
                     </Select.Option>
-                    <Select.Option value={boardValues.crypto}>
+                    <Select.Option value={boardValues.crypto} key={boardValues.crypto}>
                       <FormattedMessage id="board_crypto" defaultMessage="Crypto" />
                     </Select.Option>
-                    <Select.Option value={boardValues.intro}>
+                    <Select.Option value={boardValues.intro} key={boardValues.intro}>
                       <FormattedMessage id="board_intro" defaultMessage="Introductions" />
                     </Select.Option>
-                    <Select.Option value={boardValues.games}>
+                    <Select.Option value={boardValues.games} key={boardValues.games}>
                       <FormattedMessage id="board_games" defaultMessage="Games" />
                     </Select.Option>
-                    <Select.Option value={boardValues.text}>
+                    <Select.Option value={boardValues.sport} key={boardValues.sport}>
+                      <FormattedMessage id="board_sport" defaultMessage="Sport" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.text} key={boardValues.text}>
                       <FormattedMessage id="board_text" defaultMessage="Text" />
                     </Select.Option>
-                    <Select.Option value={boardValues.links}>
+                    <Select.Option value={boardValues.links} key={boardValues.links}>
                       <FormattedMessage id="board_links" defaultMessage="Links" />
                     </Select.Option>
-                    <Select.Option value={boardValues.random}>
+                    <Select.Option value={boardValues.nsfw} key={boardValues.nsfw}>
+                      <FormattedMessage id="board_nsfw" defaultMessage="NSFW" />
+                    </Select.Option>
+                    <Select.Option value={boardValues.random} key={boardValues.random}>
                       <FormattedMessage id="board_random" defaultMessage="Random" />
                     </Select.Option>
                   </Select>
+                </div>
+                <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="language_tag" defaultMessage="Posting Language Selection" />
+                  </h3>
+                  <p>
+                    <FormattedMessage
+                      id="language_info"
+                      defaultMessage="Which posting language do you want to use?"
+                    />
+                  </p>
+                  <Select
+                    defaultValue={initialLanguageSetting}
+                    value={languageSetting}
+                    style={{ width: '100%', maxWidth: 240 }}
+                    onChange={this.handleLanguageChange}
+                  >
+                    <Select.Option value={"en"}>
+                      <FormattedMessage id="lan_en" defaultMessage="English" />
+                    </Select.Option>
+                    <Select.Option value={"hi"}>
+                      <FormattedMessage id="lan_hi" defaultMessage="Hindi" />
+                    </Select.Option>
+                    <Select.Option value={"zh"}>
+                      <FormattedMessage id="lan_zh" defaultMessage="Chinese" />
+                    </Select.Option>
+                    <Select.Option value={"es"}>
+                      <FormattedMessage id="lan_es" defaultMessage="Spanish" />
+                    </Select.Option>
+                    <Select.Option value={"de"}>
+                      <FormattedMessage id="lan_de" defaultMessage="German" />
+                    </Select.Option>
+                    <Select.Option value={"fr"}>
+                      <FormattedMessage id="lan_fr" defaultMessage="French" />
+                    </Select.Option>
+                    <Select.Option value={"ru"}>
+                      <FormattedMessage id="lan_ru" defaultMessage="Russian" />
+                    </Select.Option>
+                    <Select.Option value={"ja"}>
+                      <FormattedMessage id="lan_ja" defaultMessage="Japanese" />
+                    </Select.Option>
+                  </Select>
+                </div>
+                <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="access_message" defaultMessage="Post privacy setting" />
+                  </h3>
+                  <p>
+                    <FormattedMessage
+                      id="access_info"
+                      defaultMessage="Which posting type do you want to use?"
+                    />
+                  </p>
+                  <Select
+                    defaultValue={initialAccess}
+                    value={access}
+                    style={{ width: '100%', maxWidth: 240 }}
+                    onChange={this.handleAccessChange}
+                  >
+                    <Select.Option value={'public'}>
+                      <i className="iconfont icon-group" />
+                      <FormattedMessage id="public_post" defaultMessage="Public Post" />
+                    </Select.Option>
+                    <Select.Option value={'private'}>
+                      <i className="iconfont icon-lock" />
+                      <FormattedMessage id="private_post" defaultMessage="Encrypted Private Post" />
+                    </Select.Option>
+                  </Select>
+                </div>
+                <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="select_accesslist" defaultMessage="Private Post Connections List" />
+                  </h3>
+                  <p>
+                    <FormattedMessage
+                      id="access_list"
+                      defaultMessage="These users will be able to access your encrypted private posts."
+                    />
+                  </p>
+                <Select
+                  ref={ref => {
+                    this.select = ref;
+                  }}
+                  defaultValue={initialAccessList}
+                  value={accessList}
+                  onChange={this.handleAccessListChange}
+                  className="Editor__accesslist"
+                  mode="tags"
+                  placeholder={intl.formatMessage({
+                    id: 'accesslist_placeholder',
+                    defaultMessage: 'Add usernames here:',
+                  })}
+                  dropdownStyle={{ display: 'none' }}
+                  tokenSeparators={[' ', ',']}
+                />
                 </div>
                 <div className="Settings__section">
                   <h3>
@@ -397,7 +542,7 @@ export default class Settings extends React.Component {
                   <p>
                     <FormattedMessage
                       id="display_nsfw_posts_details"
-                      defaultMessage="You can enable all posts tagged with NSFW to be shown as default."
+                      defaultMessage="Enable posts tagged with NSFW to be shown as default, and NSFW usernames to be shown in discovery."
                     />
                   </p>
                   <div className="Settings__section__checkbox">
@@ -409,7 +554,7 @@ export default class Settings extends React.Component {
                     >
                       <FormattedMessage
                         id="display_nsfw_posts"
-                        defaultMessage="Display NSFW Posts"
+                        defaultMessage="Display NSFW Content"
                       />
                     </Checkbox>
                   </div>

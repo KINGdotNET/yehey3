@@ -49,6 +49,7 @@ class Comment extends React.Component {
     onDislikeClick: PropTypes.func,
     onTransferClick: PropTypes.func,
     onSendComment: PropTypes.func,
+    commentsActive: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -224,6 +225,7 @@ class Comment extends React.Component {
       rewardFund,
       defaultVotePercent,
       rewriteLinks,
+      commentsActive,
     } = this.props;
     const { showHiddenComment } = this.state;
     const anchorId = `@${comment.author}/${comment.permlink}`;
@@ -326,6 +328,7 @@ class Comment extends React.Component {
             onTransferClick={this.props.onTransferClick}
             onReplyClick={this.handleReplyClick}
             onEditClick={this.handleEditClick}
+            commentsActive={commentsActive}
           />
           {this.state.replyOpen &&
             user.name && (

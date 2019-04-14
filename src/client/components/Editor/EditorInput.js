@@ -350,7 +350,6 @@ class EditorInput extends React.Component {
             </HotKeys>
           </Dropzone>
         </div>
-        
       </React.Fragment>
     );
   }

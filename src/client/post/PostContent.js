@@ -152,6 +152,7 @@ class PostContent extends React.Component {
       amount: 1,
       memo: "Tip for post: " + post.title,
       currency: 'TME',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   };
@@ -162,6 +163,7 @@ class PostContent extends React.Component {
       amount: 1,
       memo: "@"+post.author+"/"+post.permlink,
       currency: 'TSD',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   }

@@ -8,38 +8,37 @@ import Loading from '../components/Icon/Loading';
 import USDDisplay from '../components/Utils/USDDisplay';
 import './UserWalletSummary.less';
 
-const getFormattedTotalDelegatedSCORE = (user, totalSCORE, SCOREbackingTMEfundBalance) => {
-  const totalDelegatedSCORE = calculateTotalDelegatedSCORE(
-    user,
-    totalSCORE,
-    SCOREbackingTMEfundBalance,
-  );
+// const getFormattedTotalDelegatedSCORE = (user, totalSCORE, SCOREbackingTMEfundBalance) => {
+//   const totalDelegatedSCORE = calculateTotalDelegatedSCORE(
+//     user,
+//     totalSCORE,
+//     SCOREbackingTMEfundBalance,
+//   );
 
-  if (totalDelegatedSCORE !== 0) {
-    return (
-      <BTooltip
-        title={
-          <span>
-            <FormattedMessage
-              id="SCORE_delegated_to_account_tooltip"
-              defaultMessage="SCORE delegated to this account"
-            />
-          </span>
-        }
-      >
-        <span>
-          {totalDelegatedSCORE > 0 ? '(+' : '('}
-          <FormattedNumber
-            value={calculateTotalDelegatedSCORE(user, totalSCORE, SCOREbackingTMEfundBalance)}
-          />
-          {' POWER)'}
-        </span>
-      </BTooltip>
-    );
-  }
+//   if (totalDelegatedSCORE !== 0) {
+//     return (
+//       <BTooltip
+//         title={
+//           <span>
+//             <FormattedMessage
+//               id="SCORE_delegated_to_account_tooltip"
+//               defaultMessage="SCORE delegated to this account"
+//             />
+//           </span>
+//         }
+//       >
+//         <span>
+//           {totalDelegatedSCORE > 0 ? '(+' : '('}
+//           <FormattedNumber
+//             value={calculateTotalDelegatedSCORE(user, totalSCORE, SCOREbackingTMEfundBalance)}
+//           />
+//         </span>
+//       </BTooltip>
+//     );
+//   }
 
-  return null;
-};
+//   return null;
+// };
 
 const UserWalletSummary = ({
   user,
@@ -53,63 +52,98 @@ const UserWalletSummary = ({
 }) => (
   <div className="UserWalletSummary">
     <div className="UserWalletSummary__item">
-      <i className="iconfont icon-steem UserWalletSummary__icon" />
-      <div className="UserWalletSummary__label">
-        <FormattedMessage id="TME" defaultMessage="TME" />
-      </div>
-      <div className="UserWalletSummary__value">
-        {loading ? (
-          <Loading />
-        ) : (
-          <span>
-            <FormattedNumber value={parseFloat(user.balance)} />
-            {' TME'}
-          </span>
-        )}
-      </div>
+    <img src= "/favicon-32x32.png" className="UserWalletSummary__icon"></img>
+      <BTooltip
+          title={
+            <span>
+              <FormattedMessage
+                id="TME_tooltip"
+                defaultMessage="Liquid testnet currency, can be transferred or powered up into POWER."
+              />
+            </span>
+          }
+        >
+        <div className="UserWalletSummary__label">
+          <FormattedMessage id="TME" defaultMessage="TME (TestMeCoin)" />
+        </div>
+      </BTooltip>
+        <div className="UserWalletSummary__value">
+          {loading ? (
+            <Loading />
+          ) : (
+            <span>
+              <FormattedNumber value={parseFloat(user.balance)} />
+              {' TME'}
+            </span>
+          )}
+        </div>
+      
     </div>
+    
     <div className="UserWalletSummary__item">
       <i className="iconfont icon-flashlight_fill UserWalletSummary__icon" />
+        <BTooltip
+              title={
+                <span>
+                  <FormattedMessage
+                    id="POWER_tooltip"
+                    defaultMessage="Staked TME. Increases your voting power and curation rewards. Can be powered down into TME for transfers."
+                  />
+                </span>
+              }
+            >
       <div className="UserWalletSummary__label">
         <FormattedMessage id="POWER" defaultMessage="POWER" />
       </div>
-      <div className="UserWalletSummary__value">
-        {loading || loadingGlobalProperties ? (
-          <Loading />
-        ) : (
+      </BTooltip>
+        <div className="UserWalletSummary__value">
+          {loading || loadingGlobalProperties ? (
+            <Loading />
+          ) : (
+            <span>
+              <FormattedNumber
+                value={parseFloat(
+                  formatter.SCOREinTMEvalue(
+                    user.SCORE,
+                    totalSCORE,
+                    SCOREbackingTMEfundBalance,
+                  ),
+                )}
+              />
+              {' POWER '}
+            </span>
+          )}
+        </div>
+    </div>
+    <div className="UserWalletSummary__item">
+    <i className="iconfont icon-Dollar UserWalletSummary__icon" />
+    <BTooltip
+        title={
           <span>
-            <FormattedNumber
-              value={parseFloat(
-                formatter.SCOREinTMEvalue(
-                  user.SCORE,
-                  totalSCORE,
-                  SCOREbackingTMEfundBalance,
-                ),
-              )}
+            <FormattedMessage
+              id="TSD_tooltip"
+              defaultMessage="Liquid stablecoin. Paid as rewards for content creation. Can be used for promoting posts."
             />
-            {' POWER '}
-            {getFormattedTotalDelegatedSCORE(user, totalSCORE, SCOREbackingTMEfundBalance)}
           </span>
-        )}
+        }
+        >
+        <div className="UserWalletSummary__label">
+          <FormattedMessage id="TSD" defaultMessage="TSD (TestDollars)" />
       </div>
+    </BTooltip>
+        <div className="UserWalletSummary__value">
+          {loading ? (
+            <Loading />
+          ) : (
+            <span>
+              <FormattedNumber value={parseFloat(user.TSDbalance)} />
+              {' TSD'}
+            </span>
+          )}
+        </div>
     </div>
-    <div className="UserWalletSummary__item">
-      <i className="iconfont icon-Dollar UserWalletSummary__icon" />
-      <div className="UserWalletSummary__label">
-        <FormattedMessage id="TSD" defaultMessage="TSD" />
-      </div>
-      <div className="UserWalletSummary__value">
-        {loading ? (
-          <Loading />
-        ) : (
-          <span>
-            <FormattedNumber value={parseFloat(user.TSDbalance)} />
-            {' TSD'}
-          </span>
-        )}
-      </div>
-    </div>
-    <div className="UserWalletSummary__item">
+
+    {/* <div className="UserWalletSummary__item">
       <i className="iconfont icon-savings UserWalletSummary__icon" />
       <div className="UserWalletSummary__label">
         <FormattedMessage id="savings" defaultMessage="Savings" />
@@ -126,7 +160,8 @@ const UserWalletSummary = ({
           </span>
         )}
       </div>
-    </div>
+    </div> */}
+
     {/* <div className="UserWalletSummary__item">
       <i className="iconfont icon-people_fill UserWalletSummary__icon" />
       <div className="UserWalletSummary__label">

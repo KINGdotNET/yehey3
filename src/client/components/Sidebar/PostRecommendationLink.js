@@ -11,11 +11,12 @@ const PostRecommendationLink = ({ post, navigateToPost, navigateToPostComments }
   const images = getFromMetadata(post.json, 'image');
   const firstImage = _.head(images);
   let imagePath = '';
+  let body = post.body;
 
   if (images && firstImage) {
     imagePath = getProxyImageURL(firstImage, 'small');
   } else {
-    const contentImages = getContentImages(post.body);
+    const contentImages = getContentImages(body);
     if (contentImages.length) {
       imagePath = getProxyImageURL(contentImages[0], 'small');
     }

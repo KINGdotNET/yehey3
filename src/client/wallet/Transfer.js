@@ -17,6 +17,7 @@ import {
   getTransferAmount,
   getTransferMemo,
   getTransferCurrency,
+  getTransferType,
   getCryptosPriceHistory,
 } from '../reducers';
 import './Transfer.less';
@@ -31,6 +32,7 @@ const InputGroup = Input.Group;
     amount: getTransferAmount(state),
     memo: getTransferMemo(state),
     currency: getTransferCurrency(state),
+    type: getTransferType(state),
     authenticated: getIsAuthenticated(state),
     user: getAuthenticatedUser(state),
     cryptosPriceHistory: getCryptosPriceHistory(state),
@@ -48,7 +50,8 @@ export default class Transfer extends React.Component {
     to: PropTypes.string,
     amount: PropTypes.number,
     memo: PropTypes.string,
-    currency: PropTypes.string,
+    currency: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
     authenticated: PropTypes.bool.isRequired,
     user: PropTypes.shape().isRequired,
     form: PropTypes.shape().isRequired,
@@ -62,6 +65,7 @@ export default class Transfer extends React.Component {
     amount: 0,
     memo: '',
     currency: 'TME',
+    type: 'transfer',
     visible: false,
     closeTransfer: () => {},
   };
@@ -78,6 +82,7 @@ export default class Transfer extends React.Component {
 
   state = {
     currency: this.props.currency,
+    type: this.props.type,
     oldAmount: undefined,
   };
 
@@ -96,13 +101,14 @@ export default class Transfer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { form, to, amount, memo, currency } = nextProps;
+    const { form, to, amount, memo, currency, type } = nextProps;
     if (this.props.to !== to) {
       form.setFieldsValue({
         to,
         amount,
         currency,
         memo,
+        type,
       });
       this.setState({
         currency,
@@ -152,8 +158,16 @@ export default class Transfer extends React.Component {
     );
   };
 
-  handleContinueClick = () => {
+  handleTypeChange = event => {
     const { form } = this.props;
+    this.setState({ type: event.target.value }, () =>
+      form.validateFields(['type'], { force: true }),
+    );
+  };
+
+  handleContinueClick = () => {
+    const { form, user } = this.props;
+
     form.validateFields({ force: true }, (errors, values) => {
       if (!errors) {
         const transferQuery = {
@@ -161,9 +175,27 @@ export default class Transfer extends React.Component {
           amount: `${parseFloat(values.amount).toFixed(3)} ${values.currency}`,
           memo: values.memo,
         };
-        const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
-        win.focus();
-        this.props.closeTransfer();
+        if (values.type == 'transfer') {
+          const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
+          win.focus();
+          this.props.closeTransfer();
+        }
+        else if (values.type == 'request') {
+          const requestData = {
+            type: 'request',
+            to: user.name,
+            amount: `${parseFloat(values.amount).toFixed(3)} ${values.currency}`,
+            memo: values.memo,
+          }
+          const requestQuery = {
+            to: values.to,
+            amount: `${parseFloat(0.001).toFixed(3)} ${values.currency}`,
+            memo: JSON.stringify(requestData),
+          }
+          const win = window.open(weauthjsInstance.sign('transfer', requestQuery), '_blank');
+          win.focus();
+          this.props.closeTransfer();
+        }
       }
     });
   };
@@ -303,6 +335,24 @@ export default class Transfer extends React.Component {
     }
   };
 
+  getModalTitle = (type, intl) => {
+    if(type == 'transfer') {
+      return (intl.formatMessage({ id: 'transfer_modal_title', defaultMessage: 'Transfer funds' }));
+    }
+    else if (type == 'request') {
+      return (intl.formatMessage({ id: 'transfer_modal_title_request', defaultMessage: 'Request funds' }));
+    }
+  };
+
+  getUsernameTitle = (type, intl) => {
+    if(type == 'transfer') {
+      return (intl.formatMessage({ id: 'transfer_to', defaultMessage: 'To' }));
+    }
+    else if (type == 'request') {
+      return (intl.formatMessage({ id: 'transfer_from', defaultMessage: 'Request from' }));
+    }
+  };
+
   render() {
     const { intl, visible, authenticated, user } = this.props;
     const { getFieldDecorator } = this.props.form;
@@ -319,19 +369,34 @@ export default class Transfer extends React.Component {
       </Radio.Group>,
     );
 
+    const transferType= getFieldDecorator('type', {
+      initialValue: this.props.type,
+    })(
+      <Radio.Group onChange={this.handleTypeChange} className="Transfer__type__setting">
+        <Radio.Button value={'transfer'}>{'send'}</Radio.Button>
+        <Radio.Button value={'request'}>{'request'}</Radio.Button>
+      </Radio.Group>,
+    );
+
     const usdValue = this.getUSDValue();
+
+    //const modalTitle = this.getModalTitle(this.state.type, intl);
+
+    //const usernameTitle = this.getUsernameTitle(this.state.type, intl);
 
     return (
       <Modal
         visible={visible}
-        title={intl.formatMessage({ id: 'transfer_modal_title', defaultMessage: 'Transfer funds' })}
+        title={this.getModalTitle(this.state.type, intl)}
         okText={intl.formatMessage({ id: 'continue', defaultMessage: 'Continue' })}
         cancelText={intl.formatMessage({ id: 'cancel', defaultMessage: 'Cancel' })}
         onOk={this.handleContinueClick}
         onCancel={this.handleCancelClick}
       >
         <Form className="Transfer" hideRequiredMark>
-          <Form.Item label={<FormattedMessage id="to" defaultMessage="To" />}>
+
+          
+          <Form.Item label={<FormattedMessage id="to_message" defaultMessage={this.getUsernameTitle(this.state.type, intl)} />}>
             {getFieldDecorator('to', {
               rules: [
                 {
@@ -417,6 +482,9 @@ export default class Transfer extends React.Component {
                 })}
               />,
             )}
+          </Form.Item>
+          <Form.Item label={<FormattedMessage id="type" defaultMessage="Type" />}>
+            {transferType}
           </Form.Item>
         </Form>
         <FormattedMessage

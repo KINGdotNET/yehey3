@@ -6,17 +6,16 @@ import Cookie from 'js-cookie';
 import _ from 'lodash';
 import { showPostModal } from '../app/appActions';
 import { getFeedContent, getMoreFeedContent } from './feedActions';
+import { Checkbox, Form, Input, Select, Button} from 'antd';
+import { Link } from 'react-router-dom';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 import {
   getFeedFromState,
   getFeedLoadingFromState,
   getFeedFetchedFromState,
-  getUserFeedLoadingFromState,
-  getUserFeedFetchedFromState,
   getFeedHasMoreFromState,
-  getUserFeedFailedFromState,
   getFeedFailedFromState,
-  getUserFeedFromState,
 } from '../helpers/stateHelpers';
 
 import { getIsAuthenticated, getIsLoaded, getAuthenticatedUser, getFeed } from '../reducers';
@@ -37,9 +36,9 @@ import PostModal from '../post/PostModalContainer';
   }),
   dispatch => ({
     getFeedContent: (sortBy, category) => 
-      dispatch(getFeedContent({sortBy: sortBy, category: category, limit: 10 })),
+      dispatch(getFeedContent({sortBy: sortBy, category: category, limit: 9 })),
     getMoreFeedContent: (sortBy, category) =>
-      dispatch(getMoreFeedContent({ sortBy: sortBy, category: category, limit: 10 })),
+      dispatch(getMoreFeedContent({ sortBy: sortBy, category: category, limit: 9 })),
     showPostModal: post => dispatch(showPostModal(post)),
   }),
 )
@@ -61,11 +60,19 @@ class SubFeed extends React.Component {
   };
   state = {
     stateReady: false,
+    keyReady: true,
   };
 
   componentDidMount() {
-    // console.log("COMPONENT DID MOUNT");
+    //console.log("COMPONENT DID MOUNT");
     const { authenticated, loaded, user, match, feed } = this.props;
+
+    let storagekey = "UserMemoKey-"+user.name;
+    if (_.isEmpty(localStorage.getItem(storagekey))) {
+      this.setState({
+        keyReady: false,
+      });
+    }
 
     const sortBy1 = match.params.sortBy1 || 'trending';
     const sortBy2 = match.params.sortBy2 || 'hot';
@@ -92,18 +99,25 @@ class SubFeed extends React.Component {
     let hasMore3 = false;
     let failed3 = false;
 
+    let isFetchingP = false;
+    let fetchedP = false;
+    let hasMoreP = false;
+    let failedP = false;
+
     // console.log("Mounted - Loaded:", loaded);
     if (!loaded && Cookie.get('access_token')) return;
 
     isFetching1 = getFeedLoadingFromState(sortBy1, category1, feed);
     isFetching2 = getFeedLoadingFromState(sortBy2, category2, feed);
+    isFetchingP = getFeedLoadingFromState([sortBy1, sortBy2].join('-'), 'promoted', feed);
     isFetching3 = getFeedLoadingFromState([sortBy1, sortBy2].join('-'), [category1, category2].join('-'), feed);
-    isFetching = isFetching1 || isFetching2 || isFetching3;
+    isFetching = isFetching1 || isFetching2 || isFetching3 || isFetchingP;
 
     fetched1 = getFeedFetchedFromState(sortBy1, category1, feed);
     fetched2 = getFeedFetchedFromState(sortBy2, category2, feed);
+    fetchedP = getFeedFetchedFromState([sortBy1, sortBy2].join('-'), 'promoted', feed);
     fetched3 = getFeedFetchedFromState([sortBy1, sortBy2].join('-'), [category1, category2].join('-'), feed);
-    fetched = fetched1 && fetched2 && fetched3;
+    fetched = fetched1 && fetched2 && fetched3 && fetchedP;
 
     hasMore1 = getFeedHasMoreFromState(sortBy1, category1, feed);
     hasMore2 = getFeedHasMoreFromState(sortBy2, category2, feed);
@@ -111,8 +125,9 @@ class SubFeed extends React.Component {
 
     failed1 = getFeedFailedFromState(sortBy1, category1, feed);
     failed2 = getFeedFailedFromState(sortBy2, category2, feed);
+    failedP = getFeedFailedFromState([sortBy1, sortBy2].join('-'), 'promoted', feed);
     failed3 = getFeedFailedFromState([sortBy1, sortBy2].join('-'), [category1, category2].join('-'), feed);
-    failed = failed1 || failed2 || failed3;
+    failed = failed1 || failed2 || failed3 || failedP;
     
     // console.log("Feed did mount:", feed);
     // console.log("Fetched status:", fetched1, fetched2);
@@ -124,7 +139,7 @@ class SubFeed extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    // console.log("COMPONENT WILL RECIEVE PROPS");
+    //console.log("COMPONENT WILL RECEIVE PROPS");
     const { authenticated, loaded, user, match, feed } = nextProps;
     const {stateReady} = this.state;
     const oldSortBy1 = this.props.match.params.sortBy1 || 'trending';
@@ -152,6 +167,8 @@ class SubFeed extends React.Component {
     let isFetching3 = false;
     let fetched3 = false;
    
+    let isFetchingP = false;
+    let fetchedP = false;
 
     if (!isLoaded && Cookie.get('access_token')) return;
 
@@ -165,22 +182,24 @@ class SubFeed extends React.Component {
 
       isFetching1 = getFeedLoadingFromState(newSortBy1, newCategory1, feed);
       isFetching2 = getFeedLoadingFromState(newSortBy2, newCategory2, feed);
+      isFetchingP = getFeedLoadingFromState([newSortBy1, newSortBy2].join('-'), 'promoted', feed);
       isFetching3 = getFeedLoadingFromState([newSortBy1, newSortBy2].join('-'), [newCategory1, newCategory2].join('-'), feed);
-      isFetching = isFetching1 || isFetching2 || isFetching3;
+      isFetching = isFetching1 || isFetching2 || isFetching3 || isFetchingP;
 
       fetched1 = getFeedFetchedFromState(newSortBy1, newCategory1, feed);
       fetched2 = getFeedFetchedFromState(newSortBy2, newCategory2, feed);
+      fetchedP = getFeedFetchedFromState([newSortBy1, newSortBy2].join('-'), 'promoted', feed);
       fetched3 = getFeedFetchedFromState([newSortBy1, newSortBy2].join('-'), [newCategory1, newCategory2].join('-'), feed);
-      fetched = fetched1 && fetched2 && fetched3;
+      fetched = fetched1 && fetched2 && fetched3 && fetchedP;
 
-      // console.log("NEWPROPS Fetching:", isFetching1, isFetching2, isFetching3, "Fetched:", fetched1, fetched2, fetched3, "State ready:", stateReady);
+      //console.log("NEWPROPS Fetching:", isFetching1, isFetching2, isFetching3, isFetchingP, "Fetched:", fetched1, fetched2, fetched3, fetchedP, "State ready:", stateReady);
 
       if (!isFetching) {
-        // console.log("GettingNewPropsFeedContent", newSortBy1, newSortBy2, newCategory1, newCategory2);
+        //console.log("GettingNewPropsFeedContent", newSortBy1, newSortBy2, newCategory1, newCategory2);
         this.props.getFeedContent([newSortBy1, newSortBy2], [newCategory1, newCategory2]);
       };
       if (!isFetching && fetched && !stateReady) {
-        // console.log("STATE READY ACTIVATED");
+        //console.log("STATE READY ACTIVATED");
         this.setState({
           stateReady: true,
         });
@@ -189,9 +208,9 @@ class SubFeed extends React.Component {
   };
 
   render() {
-    // console.log("RENDER");
-    const { authenticated, loaded, user, feed, match } = this.props;
-    const { stateReady } = this.state;
+    //console.log("RENDER");
+    const { authenticated, loaded, feed, match } = this.props;
+    const { stateReady, keyReady } = this.state;
 
     const sortBy1 = match.params.sortBy1 || 'trending';
     const sortBy2 = match.params.sortBy2 || 'hot';
@@ -222,17 +241,24 @@ class SubFeed extends React.Component {
     let hasMore3 = false;
     let failed3 = false;
 
+    let isFetchingP = false;
+    let fetchedP = false;
+    let hasMoreP = false;
+    let failedP = false;
+
     let loadMoreContent = () => {};
     
     isFetching1 = getFeedLoadingFromState(sortBy1, category1, feed);
     isFetching2 = getFeedLoadingFromState(sortBy2, category2, feed);
+    isFetchingP = getFeedLoadingFromState([sortBy1, sortBy2].join('-'), 'promoted', feed);
     isFetching3 = getFeedLoadingFromState([sortBy1, sortBy2].join('-'), [category1, category2].join('-'), feed);
-    isFetching = isFetching1 || isFetching2 || isFetching3;
+    isFetching = isFetching1 || isFetching2 || isFetching3 || isFetchingP;
 
     fetched1 = getFeedFetchedFromState(sortBy1, category1, feed);
     fetched2 = getFeedFetchedFromState(sortBy2, category2, feed);
+    fetchedP = getFeedFetchedFromState([sortBy1, sortBy2].join('-'), 'promoted', feed);
     fetched3 = getFeedFetchedFromState([sortBy1, sortBy2].join('-'), [category1, category2].join('-'), feed);
-    fetched = fetched1 && fetched2 && fetched3;
+    fetched = fetched1 && fetched2 && fetched3 && fetchedP;
 
     hasMore1 = getFeedHasMoreFromState(sortBy1, category1, feed);
     hasMore2 = getFeedHasMoreFromState(sortBy2, category2, feed);
@@ -240,17 +266,18 @@ class SubFeed extends React.Component {
 
     failed1 = getFeedFailedFromState(sortBy1, category1, feed);
     failed2 = getFeedFailedFromState(sortBy2, category2, feed);
+    failedP = getFeedFailedFromState([sortBy1, sortBy2].join('-'), 'promoted', feed);
     failed3 = getFeedFailedFromState([sortBy1,sortBy2].join('-'), [category1, category2].join('-'), feed);
-    failed = failed1 || failed2 || failed3;
+    failed = failed1 || failed2 || failed3 || failedP;
 
     loadMoreContent = () => this.props.getMoreFeedContent([sortBy1, sortBy2], [category1, category2]);
     
-    // console.log("Fetching:", isFetching1, isFetching2, isFetching3, "Fetched:", fetched1, fetched2, fetched3, "State ready:", stateReady);
+    //console.log("Fetching:", isFetching1, isFetching2, isFetching3, isFetchingP, "Fetched:", fetched1, fetched2, fetched3, fetchedP, "State ready:", stateReady);
 
-    // console.log("Rendering:", sortBy1, sortBy2, category1, category2);
+    //console.log("Rendering:", sortBy1, sortBy2, category1, category2);
 
     if (!isFetching && fetched && !stateReady) {
-      // console.log("STATE READY ACTIVATED");
+      //console.log("STATE READY ACTIVATED");
       this.setState({
         stateReady: true,
       });
@@ -258,7 +285,7 @@ class SubFeed extends React.Component {
 
     if (stateReady) {
     content = getFeedFromState([sortBy1, sortBy2].join('-'), [category1, category2].join('-'), feed);
-    // console.log("Loaded Feed from state:", content);
+    //console.log("Loaded Feed from state:", content, "Feed", feed);
     };
     
     const empty = _.isEmpty(content);
@@ -269,6 +296,21 @@ class SubFeed extends React.Component {
     return (
       <div>
         {authenticated && <LetsGetStarted />}
+        {authenticated && !keyReady && ready && (  
+          <div className="Story__keymessage">
+            <div> 
+              <i className="iconfont icon-lock" />
+              <FormattedMessage id="key_not_found" defaultMessage="To create and read private posts, please generate your secret key." />
+            </div>
+            <div>
+              <Link to="/edit-profile" >
+                <Button> 
+                  <FormattedMessage id="generate_key" defaultMessage="Generate Key" />
+                </Button>
+              </Link> 
+            </div>
+          </div>
+        )}
         {empty && <ScrollToTop />}
         <Feed
           content={content}

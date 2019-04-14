@@ -9,14 +9,16 @@ import {
   FormattedTime,
 } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
-import { Tag , Icon } from 'antd';
+import { Tag , Icon, Button} from 'antd';
 import formatter from '../../helpers/blockchainProtocolFormatter';
 import { getHasDefaultSlider } from '../../helpers/user';
+import { jsonParse } from '../../helpers/formatter';
 import {
   isPostDeleted,
   isPostTaggedNSFW,
   dropCategory,
   isBannedPost,
+  isPostTaggedPrivate,
 } from '../../helpers/postHelpers';
 import withAuthActions from '../../auth/withAuthActions';
 import BTooltip from '../BTooltip';
@@ -39,6 +41,7 @@ class Story extends React.Component {
     intl: PropTypes.shape().isRequired,
     user: PropTypes.shape().isRequired,
     post: PropTypes.shape().isRequired,
+    postUser: PropTypes.shape().isRequired,
     postState: PropTypes.shape().isRequired,
     rewardFund: PropTypes.shape().isRequired,
     defaultVotePercent: PropTypes.number.isRequired,
@@ -111,14 +114,7 @@ class Story extends React.Component {
     this.handleTransferClick = this.handleTransferClick.bind(this);
     this.handlePromoteClick = this.handlePromoteClick.bind(this);
     this.onFollowClick = this.onFollowClick.bind(this);
-    //this.getName = this.getName.bind(this);
 	}
-	
-	// componentDidMount(){
-		// if(this.props.post){
-		// 	this.getName(this.props.post.author)
-		// }
-  // }
   
 	handleTransferClick(post) {
     this.transfer = {
@@ -126,6 +122,7 @@ class Story extends React.Component {
       amount: 1,
       memo: "Tip for post: " + post.title,
       currency: 'TME',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   }
@@ -136,6 +133,7 @@ class Story extends React.Component {
       amount: 1,
       memo: "@"+post.author+"/"+post.permlink,
       currency: 'TSD',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   }
@@ -156,7 +154,6 @@ class Story extends React.Component {
     } else if (postAuthorReputation < 0) {
       return false;
     }
-
     return true;
   }
 
@@ -203,6 +200,7 @@ class Story extends React.Component {
     } else {
       this.props.followUser(post.author);
     }
+    this.props.getAccount(post.author);
   }
 
   handleEditClick(post) {
@@ -283,8 +281,22 @@ class Story extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const { post, postUser } = this.props;
+
+    if(_.isEmpty(postUser)) {
+      this.props.getAccount(post.author);
+    }
+  }
+
   renderStoryPreview() {
-    const { post, showImagesOnly } = this.props;
+    const { post, showImagesOnly, user } = this.props;
+    const json = jsonParse(post.json);
+    let postLink = '';
+    if (json && json.link) {
+      postLink = json.link;
+    }
+
     const showStoryPreview = this.getDisplayStoryPreview();
     const hiddenStoryPreviewMessage = isPostTaggedNSFW(post) ? (
       <NSFWStoryPreviewMessage onClick={this.handleShowStoryPreview} />
@@ -293,18 +305,28 @@ class Story extends React.Component {
     );
 
     if (isBannedPost(post)) {
-      return <DMCARemovedMessage />;
+      return <div />;
     }
 
     return showStoryPreview ? (
-      <a
-        href={dropCategory(post.url)}
-        target="_blank"
-        onClick={this.handlePreviewClickPostModalDisplay}
-        className="Story__content__preview"
-      >
-        <StoryPreview post={post} showImagesOnly={showImagesOnly}/>
-      </a>
+      <div>
+        <a
+          href={dropCategory(post.url)}
+          target="_blank"
+          onClick={this.handlePreviewClickPostModalDisplay}
+          className="Story__content__preview"
+        >
+          <StoryPreview post={post} showImagesOnly={showImagesOnly} username={user.name}/>
+        </a>
+        <a 
+          href={postLink}
+          target="_blank"
+          className="Story__content__link"
+          >
+          {postLink ?  <div className="Story__content__link__icon" > <Button> Link <i className="iconfont icon-link"/> </Button> </div> : null}
+        
+        </a>
+      </div>
     ) : (
       hiddenStoryPreviewMessage
     );
@@ -314,6 +336,7 @@ class Story extends React.Component {
     const {
       user,
       post,
+      postUser,
       postState,
       pendingLike,
       pendingDislike,
@@ -324,7 +347,6 @@ class Story extends React.Component {
       rewardFund,
       ownPost,
       sliderMode,
-      showImagesOnly,
       defaultVotePercent,
       intl
 		} = this.props;
@@ -355,21 +377,29 @@ class Story extends React.Component {
     
     let authorAvatar = null;
     let authorName = null;
+    //console.log("postUser:", postUser);
 
     if (!ownPost) {
       authorAvatar = (
         <div>
         <BTooltip
           title={
-            <Action primary onClick={this.onFollowClick} > 
-              <div className = "Story__followText">
-                {pendingFollow ? <Icon type="loading" /> : <i className="iconfont icon-people" />}
-                {followText}
+            <span>
+              <Action primary onClick={this.onFollowClick} > 
+                <div className = "Story__followText">
+                  {pendingFollow ? <Icon type="loading" /> : <i className="iconfont icon-people" />}
+                  {followText}
+                </div>
+              </Action>
+              <div className = "Story__followCount">
+                {`${postUser.follower_count} `}
+                <FormattedMessage id="follower-number" defaultMessage="Followers" />
               </div>
-            </Action> }>
-        <Link to={`/@${post.author}`}>
-        <Avatar username={post.author} size={45} />
-        </Link>
+            </span>
+            }>
+          <Link to={`/@${post.author}`}>
+            <Avatar username={post.author} size={45} />
+          </Link>
         </BTooltip> 
         </div>
         );
@@ -377,34 +407,42 @@ class Story extends React.Component {
         <div>
           <BTooltip
             title={
+              <span>
               <Action primary onClick={this.onFollowClick} > 
                 <div className = "Story__followText">
-                {pendingFollow ? <Icon type="loading" /> : <i className="iconfont icon-people" />}
-                {followText}
+                  {pendingFollow ? <Icon type="loading" /> : <i className="iconfont icon-people" />}
+                  {followText}
+                </div>
+              </Action> 
+              <div className = "Story__followCount">
+                {pendingFollow ? <div /> : `${postUser.follower_count} `}
+                <FormattedMessage id="follower-number" defaultMessage="Followers" />
               </div>
-            </Action> }>
-            <Link to={`/@${post.author}`}>
-              <h3	className="Story__username">	
-                <span className="username">{`${post.author}`}</span>
-              </h3>
-            </Link>
+              </span>
+              } >
+              <Link to={`/@${post.author}`}>
+                <h3	className="Story__username">	
+                  <span className="username">
+                    {`${post.author}`}
+                  </span>
+                </h3>
+              </Link>
           </BTooltip>
-        </div>
-      );
+        </div>);
       } else {
-      authorAvatar =(
+      authorAvatar = (
         <div>
-        <Link to={`/@${post.author}`}>
-        <Avatar username={post.author} size={45} />
-        </Link>
+          <Link to={`/@${post.author}`}>
+            <Avatar username={post.author} size={45} />
+          </Link>
         </div>
       );
       authorName = (
         <Link to={`/@${post.author}`}>
-              <h3	className="Story__username">	
-                <span className="username">{`${post.author}`}</span>
-              </h3>
-            </Link>
+          <h3	className="Story__username">	
+            <span className="username">{`${post.author}`}</span>
+          </h3>
+        </Link>
       );
     }
 
@@ -438,6 +476,22 @@ class Story extends React.Component {
       );
     }
 
+    if (isPostTaggedPrivate(post, user.name)) {
+      return <div />;
+    }
+
+    let ptd = null;
+    if (parseFloat(post.promoted) > 0) {
+      ptd = (
+        <div>
+          <FormattedMessage id="promoted" defaultMessage="promoted" />
+        </div>
+      );
+    } else {
+      ptd = (
+        <div />
+      );
+    }
 
     return (
       <div className="Story" id={`${post.author}-${post.permlink}`}>
@@ -446,11 +500,22 @@ class Story extends React.Component {
           <div className="Story__header">
             <div className="Story__header__text">
               <span className="Story__header__flex">
-              <span className="Story__avatar">
-              {authorAvatar}
-              </span>
-              <span className="Story__authorName">
+                <span className="Story__avatar">
+                {authorAvatar}
+                </span>
+                <span className="Story__authorName">
                 {authorName}
+                </span>
+                <span className="Story__ptd">
+                  <BTooltip 
+                    title={
+                      <span>
+                        {post.promoted}
+                      </span>} >
+                      <span >
+                        {ptd}
+                      </span>
+                  </BTooltip>
                 </span>
 								<span className="Story__posted__time">
 									<BTooltip

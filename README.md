@@ -47,7 +47,7 @@ If you would like to contribute, but don't know what to work on, check our [Cont
 ## Preliminary ICO contributors
 
 WeYouMe is funded by the contributors to the preliminary ICO conducted in 2018, who hold the EZIRA bitshares asset.
-Holders of EZIRA will recieve mainnet WYM when the network is launched.
+Holders of EZIRA will receive mainnet WYM when the network is launched.
 [Thank you to all EZIRA holders for making this project possible.](http://www.bts.ai/a/EZIRA)
 [You can purchase EZIRA from Bitshares](https://exchange.weyoume.io/market/EZIRA_BTS)
 

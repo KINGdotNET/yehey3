@@ -43,6 +43,19 @@ class WalletSidebar extends React.Component {
 		showEarnings: true,
   };
 
+  handlePaymentRequest = () => {
+    const { match, user, isCurrentUser } = this.props;
+    const username = match.params.name === user.name || isCurrentUser ? '' : match.params.name;
+    this.transfer = {
+      to: username,
+      amount: 0,
+      memo: " ",
+      currency: 'TME',
+      type: 'request',
+    };
+    this.props.openTransfer(this.transfer);
+  };
+
   handleOpenTransfer = () => {
     const { match, user, isCurrentUser } = this.props;
     const username = match.params.name === user.name || isCurrentUser ? '' : match.params.name;
@@ -51,6 +64,7 @@ class WalletSidebar extends React.Component {
       amount: 0,
       memo: " ",
       currency: 'TME',
+      type: 'transfer',
     };
     this.props.openTransfer(this.transfer);
   };
@@ -72,6 +86,9 @@ class WalletSidebar extends React.Component {
       <div className="WalletSidebar">
         <Action primary className="WalletSidebar__transfer"  onClick={this.handleOpenTransfer}>
           <FormattedMessage id="send" defaultMessage="Send" />
+        </Action>
+        <Action primary className="WalletSidebar__request"  onClick={this.handlePaymentRequest}>
+          <FormattedMessage id="request" defaultMessage="Request" />
         </Action>
         {ownProfile && (
           <div className="WalletSidebar__power">

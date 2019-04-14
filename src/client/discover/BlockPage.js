@@ -70,21 +70,16 @@ class BlockPage extends React.Component {
         block,
       } = this.props;
     const { num } = match.params;
-    
-    if (_.isEmpty(block) ) {
-        this.props.getBlock(num);
-      }
+    this.props.getBlock(num);
     }
 
   componentWillReceiveProps(nextProps) {
-    const { num } = nextProps.match.params;
-    const { num: prevNum } = this.props.match.params;
+    const { num } = nextProps.match.params || 1;
+    const { num: prevNum } = this.props.match.params || 1;
 
     const shouldUpdate = num !== prevNum;
     if (shouldUpdate) {
-      this.setState( () => {
         this.props.getBlock(num);
-        });
       }
     }
 

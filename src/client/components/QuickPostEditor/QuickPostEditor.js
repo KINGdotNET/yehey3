@@ -77,7 +77,7 @@ class QuickPostEditor extends React.Component {
 
   getQuickPostData = () => {
     const currentPaths = this.props.location.pathname.split(/[/-]/);
-    const nativeTag = 'weyoume';
+    const nativeTag = 'all';
     const tag1 = currentPaths[2];
     const tag2 = currentPaths[4];
     const tags = [];
@@ -126,7 +126,7 @@ class QuickPostEditor extends React.Component {
 
     metaData.tags = tags;
 
-    data.parentPermlink = _.isEmpty(tags) ? nativeTag : tag1;
+    data.parentPermlink = _.isEmpty(tags) ? nativeTag : tags;
     data.permlink = _.kebabCase(postTitle);
     data.json = metaData;
 

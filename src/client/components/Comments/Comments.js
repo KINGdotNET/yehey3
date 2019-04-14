@@ -11,6 +11,8 @@ import Comment from './Comment';
 import './Comments.less';
 import MoreCommentsButton from './MoreCommentsButton';
 import { findTopComment, getLinkedComment } from '../../helpers/commentHelpers';
+import GfyBar from '../Editor/GfyBar';
+import Action from '../Button/Action';
 
 @injectIntl
 class Comments extends React.Component {
@@ -18,6 +20,7 @@ class Comments extends React.Component {
     intl: PropTypes.shape().isRequired,
     user: PropTypes.shape().isRequired,
     authenticated: PropTypes.bool.isRequired,
+    commentsActive: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     loaded: PropTypes.bool.isRequired,
     username: PropTypes.string,
@@ -39,8 +42,10 @@ class Comments extends React.Component {
     notify: PropTypes.func,
     onLikeClick: PropTypes.func,
     onDislikeClick: PropTypes.func,
+    onCommentPayment: PropTypes.func,
     onSendComment: PropTypes.func,
     onTransferClick: PropTypes.func,
+    commentPrice: PropTypes.number,
   };
 
   static defaultProps = {
@@ -53,11 +58,13 @@ class Comments extends React.Component {
     rewriteLinks: false,
     sliderMode: 'auto',
     show: false,
+    commentPrice: 0,
     notify: () => {},
     onLikeClick: () => {},
     onDislikeClick: () => {},
     onSendComment: () => {},
     onTransferClick: () => {},
+    onCommentPayment: () => {},
   };
 
   static SHOW_COMMENTS_INCREMENT = 20;
@@ -78,6 +85,7 @@ class Comments extends React.Component {
     this.handleSortChange = this.handleSortChange.bind(this);
     this.handleSubmitComment = this.handleSubmitComment.bind(this);
     this.handleShowMoreComments = this.handleShowMoreComments.bind(this);
+
   }
 
   componentDidMount() {
@@ -102,6 +110,8 @@ class Comments extends React.Component {
       this.setSort('OLDEST');
     }
   }
+
+  handleCommentPayment = (e) => this.props.onCommentPayment(e, this.props.parentPost);
 
   handleSortChange(type) {
     this.setSort(type);
@@ -204,6 +214,8 @@ class Comments extends React.Component {
       onDislikeClick,
       onTransferClick,
       authenticated,
+      commentsActive,
+      commentPrice,
       username,
       sliderMode,
       rewardFund,
@@ -238,7 +250,17 @@ class Comments extends React.Component {
           </SortSelector>
         </div>
 
-        {authenticated && (
+        {authenticated && !commentsActive && (
+        <div className="Comments__payment"> 
+          <Action primary 
+            className="Comments__paymentbutton" 
+            onClick={this.handleCommentPayment} 
+          >
+          <FormattedMessage id="comment_payment" defaultMessage={`Pay ${commentPrice} TME to comment`} />
+          </Action>
+        </div>
+        )}
+        {authenticated && commentsActive && (
           <CommentForm
             top
             parentPost={this.props.parentPost}
@@ -250,6 +272,9 @@ class Comments extends React.Component {
             onImageInserted={this.handleImageInserted}
             onImageInvalid={this.handleImageInvalid}
           />
+        )}
+        {authenticated && commentsActive && (
+          <GfyBar/>
         )}
         {loading && <Loading />}
         {loaded &&
@@ -283,6 +308,7 @@ class Comments extends React.Component {
               onDislikeClick={onDislikeClick}
               onSendComment={this.props.onSendComment}
               onTransferClick={onTransferClick}
+              commentsActive={commentsActive}
             />
           ))}
         <MoreCommentsButton

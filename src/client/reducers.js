@@ -93,6 +93,10 @@ export const getPendingReblogs = state => fromReblog.getPendingReblogs(state.reb
 
 export const getFollowingList = state => fromUser.getFollowingList(state.user);
 export const getNetworkUserList = state => fromUser.getNetworkUserList(state.user);
+export const getTopFollowedList = state => fromUser.getTopFollowedList(state.user);
+export const getIsFetchingTopFollowedList = state => fromUser.getIsFetchingTopFollowedList(state.user);
+export const getAllAccountsList = state => fromUser.getAllAccounts(state.user);
+export const getIsFetchingAllAccountsList = state => fromUser.getIsFetchingAllAccounts(state.user);
 export const getPendingFollows = state => fromUser.getPendingFollows(state.user);
 export const getIsFetchingFollowingList = state => fromUser.getIsFetchingFollowingList(state.user);
 export const getIsFetchingNetworkUserList = state => fromUser.getIsFetchingNetworkUserList(state.user);
@@ -118,6 +122,7 @@ export const getTransferTo = state => fromWallet.getTransferTo(state.wallet);
 export const getTransferAmount = state => fromWallet.getTransferAmount(state.wallet);
 export const getTransferMemo = state => fromWallet.getTransferMemo(state.wallet);
 export const getTransferCurrency = state => fromWallet.getTransferCurrency(state.wallet);
+export const getTransferType = state => fromWallet.getTransferType(state.wallet);
 export const getIsPowerUpOrDownVisible = state =>
   fromWallet.getIsPowerUpOrDownVisible(state.wallet);
 export const getIsPowerDown = state => fromWallet.getIsPowerDown(state.wallet);
@@ -134,6 +139,9 @@ export const getUpvoteSetting = state => fromSettings.getUpvoteSetting(state.set
 export const getExitPageSetting = state => fromSettings.getExitPageSetting(state.settings);
 export const getRewardSetting = state => fromSettings.getRewardSetting(state.settings);
 export const getBoardSetting = state => fromSettings.getBoardSetting(state.settings);
+export const getLanguageSetting = state => fromSettings.getLanguageSetting(state.settings);
+export const getAccessListSetting = state => fromSettings.getAccessListSetting(state.settings);
+export const getAccessSetting = state => fromSettings.getAccessSetting(state.settings);
 export const getUseBeta = state => fromSettings.getUseBeta(state.settings);
 
 export const gettotalSCORE = state => fromWallet.gettotalSCORE(state.wallet);
@@ -175,6 +183,6 @@ export const getCurrentFilteredActions = state =>
   fromWallet.getCurrentFilteredActions(state.wallet);
 
 export const getSearchLoading = state => fromSearch.getSearchLoading(state.search);
-export const getSearchResults = state => fromSearch.getSearchResults(state.search);
+export const getUserSearchResults = state => fromSearch.getUserSearchResults(state.search);
 export const getAutoCompleteSearchResults = state =>
   fromSearch.getAutoCompleteSearchResults(state.search);

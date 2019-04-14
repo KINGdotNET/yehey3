@@ -22,6 +22,27 @@ export function combineArrays(arraySet) {
   //[SOURCE - user633183]: https://stackoverflow.com/questions/47061160/merge-two-arrays-with-alternating-values
   };
 
+export function mergePostLists(mainposts, promposts, ratio) {
+  //console.log("Mergepostlists: ", mainposts, promposts, ratio);
+  const cleanArray = mainposts.filter(Boolean);
+  if (cleanArray.length < 2) {
+    return cleanArray.flat();
+  }
+  const interleave = ([ x, ...xs ], ...rest) => 
+    x === undefined
+      ? rest.length === 0
+        ? []                               // base: no x, no rest
+        : interleave (...rest)             // inductive: no x, some rest
+      : [ x, ...interleave(...rest, xs) ]  // inductive: some x, some rest 
+      
+      const mixedPosts = _.uniqBy(interleave(...cleanArray), 'id');
+      const postChunks = _.chunk(mixedPosts, ratio);
+      const promPostChunks = _.chunk(promposts, 1); 
+      //console.log("mixedposts:", mixedPosts, "postchunks:", postChunks, "prompostchunks:", promPostChunks);
+      //console.log(_.flatten(interleave(postChunks, promPostChunks)));
+      return _.uniqBy(_.flatten(interleave(postChunks, promPostChunks)), 'id');
+      };
+
 /** *
  * Condense an array of arrays N x M into a transposed array of M x N, by pushing ordered array elements that iterate over each array. 
  * @param arraySet - Input: An array of multiple arrays to be transposed. Arrays must be equal in length, or extra elements are dropped.
@@ -35,3 +56,4 @@ export function transposeArrays(...arraySet) {
     // console.log("arraySet length too low:", arraySet);
     return [];
   }};
+

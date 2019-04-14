@@ -1,5 +1,6 @@
 import * as actions from './userActions';
 import * as appTypes from '../app/appActions';
+import { filterNSFWwords } from '../helpers/postHelpers.js';
 
 const initialState = {
   recommendations: [],
@@ -14,7 +15,12 @@ const initialState = {
   loadingNotifications: false,
   fetchFollowListError: false,
   networkUsers: [],
+  topFollowed: [],
+  allAccounts: [],
   loadingNetworkUsers: false,
+  loadingTopFollowed: false,
+  loadingAllAccounts: false,
+  nsfw: false,
 };
 
 // filterRecommendations generates a random list of `count` recommendations.
@@ -23,6 +29,7 @@ const initialState = {
 
 const filterRecommendations = (following, networkUsers, count = 5) => {
   const usernames = Object.values(following);
+
   return networkUsers
     .filter(p => !usernames.includes(p))
     .sort(() => 0.5 - Math.random())
@@ -75,16 +82,63 @@ export default function userReducer(state = initialState, action) {
       };
 
     case actions.GET_NETWORK_USER_LIST.SUCCESS:
-      return {
-        ...state,
-        networkUsers: action.payload,
-        loadingNetworkUsers: false,
-      };
+      if(action.meta.nsfw) {
+        return {
+          ...state,
+          networkUsers: action.payload,
+          loadingNetworkUsers: false,
+        };
+      } else {
+        return {
+          ...state,
+          networkUsers: filterNSFWwords(action.payload),
+          loadingNetworkUsers: false,
+        };
+      }
+      
 
     case actions.GET_NETWORK_USER_LIST.ERROR:
       return {
         ...state,
         loadingNetworkUsers: false,
+      };
+
+    case actions.GET_TOP_FOLLOWED_LIST.START:
+      return {
+        ...state,
+        loadingTopFollowed: true,
+      };
+
+    case actions.GET_TOP_FOLLOWED_LIST.SUCCESS:
+      return {
+        ...state,
+        topFollowed: action.payload,
+        loadingTopFollowed: false,
+      };
+
+    case actions.GET_TOP_FOLLOWED_LIST.ERROR:
+      return {
+        ...state,
+        loadingTopFollowed: false,
+      };
+
+      case actions.GET_ALL_ACCOUNTS.START:
+      return {
+        ...state,
+        loadingAllAccounts: true,
+      };
+
+    case actions.GET_ALL_ACCOUNTS.SUCCESS:
+      return {
+        ...state,
+        allAccounts: action.payload,
+        loadingAllAccounts: false,
+      };
+
+    case actions.GET_ALL_ACCOUNTS.ERROR:
+      return {
+        ...state,
+        loadingAllAccounts: false,
       };
 
     case actions.FOLLOW_USER_START:
@@ -174,6 +228,10 @@ export const getIsFetchingFollowingList = state => state.following.isFetching;
 export const getRecommendations = state => state.recommendations;
 export const getNetworkUserList = state => state.networkUsers;
 export const getIsFetchingNetworkUserList = state => state.loadingNetworkUsers;
+export const getTopFollowedList = state => state.topFollowed;
+export const getIsFetchingTopFollowedList = state => state.loadingTopFollowed;
+export const getAllAccounts = state => state.allAccounts;
+export const getIsFetchingAllAccounts = state => state.loadingAllAccounts;
 export const getFollowingFetched = state => state.following.fetched;
 export const getNotifications = state => state.notifications;
 export const getIsLoadingNotifications = state => state.loadingNotifications;

@@ -14,7 +14,7 @@
 		&-avatar {
 			&-desktop {
 				display: none !important;
-				@media (min-width: @small-bp - 1){
+				@media (min-width: @small-bp){
 					display: flex !important;
 				}
 			}
@@ -98,13 +98,13 @@
 		&__logo {
 			height: 40px;
       margin-right: 5px;
-      @media @small {
-        display: initial;
-      }
-      @media (max-width: @small-bp){
-        display: none;
-        // padding-left: 0;
-      }
+      // @media @small {
+      //   display: initial;
+      // }
+      // @media (max-width: @small-bp){
+      //   display: none;
+      //   // padding-left: 0;
+      // }
 		}
 		.Me {
 			margin-left: 2px;
@@ -218,6 +218,8 @@
       border: 0 !important;
       line-height: 45px !important;
       margin-left: @base-spacing;
+      width: 100%;
+      justify-content: space-between;
 
       & > li.ant-menu-item {
         height: 45px !important;
@@ -227,15 +229,30 @@
         border-bottom: 0 !important;
         align-items: center;
 
-        & > a {
+        .Topnav__menu__link {
+          margin-top:-8px;
+          &:hover {
+            color: white;
+          }
+        }
+
+        > a {
           color: @tertiary-color !important;
           font-weight: 600 !important;
           padding: 0 2px !important;
           display: flex;
 
+         
+
           &.Topnav__link--action {
             margin-top: 7px;
             align-items: center;
+            @media @small {
+              display: initial;
+            }
+            @media (max-width: @small-bp){
+              display: none;
+            }
           }
 
           &:hover {
@@ -327,18 +344,17 @@
 
   &__notifications-count {
     height: 15px;
-    min-width: 15px;
+    width: 15px;
     border-radius: 50%;
     background-color: @primary-color;
     color: @white;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     font-size: 10px;
     margin-bottom: -10px;
     margin-left:-10px;
   }
-
 
   .icon-caretbottom {
     font-size: 12px !important;
@@ -403,6 +419,14 @@ div[data-dir='rtl'] .Topnav {
 }
 
 .Topnav__search-all-results {
+  font-weight: bold !important;
+  text-align: center;
+  background-color: @white-darker;
+  padding: 10px 14px;
+  cursor: default !important;
+}
+
+.Topnav__search-tag {
   font-weight: bold !important;
   text-align: center;
   background-color: @white-darker;

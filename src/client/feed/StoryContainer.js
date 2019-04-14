@@ -18,6 +18,7 @@ import {
   getVotePercent,
   getShowNSFWPosts,
   getShowImagesOnly,
+  getUser,
 } from '../reducers';
 import { votePost } from '../post/postActions';
 import { openTransfer } from '../wallet/walletActions';
@@ -25,11 +26,12 @@ import { toggleBookmark } from '../bookmarks/bookmarksActions';
 import { editPost } from '../post/Write/editorActions';
 import { reblog } from '../app/Reblog/reblogActions';
 import { followUser, unfollowUser } from '../user/userActions';
+import { getAccount } from '../user/usersActions';
 
 const mapStateToProps = (state, { id }) => {
   const user = getAuthenticatedUser(state);
   const post = getPosts(state)[id];
-
+  const postUser = getUser(state, post.author);
   const userVote = _.find(post.active_votes, { voter: user.name }) || {};
 
   const postState = {
@@ -54,6 +56,7 @@ const mapStateToProps = (state, { id }) => {
   return {
     user,
     post,
+    postUser,
     postState,
 		pendingLike,
 		pendingDislike,
@@ -79,4 +82,5 @@ export default connect(mapStateToProps, {
   followUser,
   unfollowUser,
   push,
+  getAccount,
 })(Story);

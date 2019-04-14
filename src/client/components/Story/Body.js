@@ -39,7 +39,8 @@ const getEmbed = link => {
 // Should return text(html) if returnType is text
 // Should return Object(React Compatible) if returnType is Object
 export function getHtml(body, json = {}, returnType = 'Object', options = {}) {
-  const parsedjson = jsonParse(json) || {};
+  //console.log("json body:", json);
+  const parsedjson = json || {};
   parsedjson.image = parsedjson.image || [];
 
   let parsedBody = body.replace(/<!--([\s\S]+?)(-->|$)/g, '(html comment removed: $1)');
@@ -107,7 +108,7 @@ const Body = props => {
 
 Body.propTypes = {
   body: PropTypes.string,
-  json: PropTypes.string,
+  json: PropTypes.shape(),
   full: PropTypes.bool,
   rewriteLinks: PropTypes.bool,
   exitPageSetting: PropTypes.bool,
@@ -115,7 +116,7 @@ Body.propTypes = {
 
 Body.defaultProps = {
   body: '',
-  json: '',
+  json: {},
   full: false,
   rewriteLinks: false,
   exitPageSetting: true,

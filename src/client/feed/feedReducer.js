@@ -22,10 +22,10 @@ const feedIdsList = (state = [], action, index) => {
     case feedTypes.GET_USER_COMMENTS.START:
     case feedTypes.GET_REPLIES.START:
     case feedTypes.GET_BOOKMARKS.START:
-      // console.log("Getting feedIDsList Start:", index, action);
+      //console.log("Getting feedIDsList Start:", index, action);
       return [];
     case feedTypes.GET_FEED_CONTENT.SUCCESS:
-      // console.log("Getting feedIDsList Success:", index, action);
+      //console.log("Getting feedIDsList Success:", index, action);
       if (!action.payload) return [];
       if (!action.payload[index]) return [];
       if (!action.payload[index][0]) return [];
@@ -36,10 +36,10 @@ const feedIdsList = (state = [], action, index) => {
       if (!action.payload) return [];
       return action.payload.map(post => post.id)
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
-      // console.log("Getting more feedIDsList Success:", index, action);
-      if (!action.payload) return [];
-      if (!action.payload[index]) return [];
-      if (!action.payload[index][0]) return [];
+      //console.log("Getting more feedIDsList Success:", index, action);
+      if (!action.payload) return _.uniq([...state]);
+      if (!action.payload[index]) return _.uniq([...state]);
+      if (!action.payload[index][0]) return _.uniq([...state]);
       return (action.payload[index][0].id) ? (_.uniq([...state, ...action.payload[index].map(post => post.id)])) : [];
     case feedTypes.GET_MORE_USER_COMMENTS.SUCCESS:
     case feedTypes.GET_MORE_REPLIES.SUCCESS:
@@ -58,7 +58,7 @@ const feedCategory = (state = {}, action, index) => {
     case feedTypes.GET_REPLIES.START:
     case feedTypes.GET_MORE_REPLIES.START:
     case feedTypes.GET_BOOKMARKS.START:
-      // console.log("Getting Feedcategory Start:", index, action);
+      //console.log("Getting Feedcategory Start:", index, action);
       return {
         ...state,
         isFetching: true,
@@ -68,13 +68,13 @@ const feedCategory = (state = {}, action, index) => {
       };
     case feedTypes.GET_FEED_CONTENT.SUCCESS:
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
-      // console.log("Getting Feedcategory Success:", index, action);
+      //console.log("Getting Feedcategory Success:", index, action);
       return {
         ...state,
         isFetching: false,
         isLoaded: true,
         failed: false,
-        hasMore: action.payload[index] ? ((action.payload[index][index]) ? ((action.payload[index].length) === action.meta.limit) || action.meta.once : false) : false,
+        hasMore: action.payload[index] ? (action.payload[index][0] ? (action.payload[index].length === action.meta.limit) || action.meta.once : false) : false,
         list: feedIdsList(state.list, action, index),
       };
     case feedTypes.GET_USER_COMMENTS.SUCCESS:
@@ -97,7 +97,7 @@ const feedCategory = (state = {}, action, index) => {
     case feedTypes.GET_REPLIES.ERROR:
     case feedTypes.GET_MORE_REPLIES.ERROR:
     case feedTypes.GET_BOOKMARKS.ERROR:
-    // console.log("Feedcategory", index, "error");
+    //console.log("Feedcategory", index, "error");
       return {
         ...state,
         isFetching: false,
@@ -122,7 +122,9 @@ const feedSortBy = (state = {}, action) => {
         ...state,
         [action.meta.category[0]]: feedCategory(state[action.meta.category[0]], action, 0),
         [action.meta.category[1]]: feedCategory(state[action.meta.category[1]], action, 1),
-        [action.meta.category[2]]: feedCategory(state[action.meta.category[2]], action, 2),
+        [action.meta.category[2]]: feedCategory(state[action.meta.category[2]], action, 3),
+        promoted: feedCategory(state['promoted'], action, 2),
+        
       };
     case feedTypes.GET_USER_COMMENTS.START:
     case feedTypes.GET_USER_COMMENTS.SUCCESS:
@@ -156,12 +158,13 @@ const feed = (state = initialState, action) => {
     case feedTypes.GET_MORE_FEED_CONTENT.START:
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
     case feedTypes.GET_MORE_FEED_CONTENT.ERROR:
-      // console.log("Getting FeedState Init", action);
+      //console.log("Getting FeedState Init", action);
       return {
         ...state,
-        [action.meta.sortBy[0]]: feedSortBy(state[action.meta.sortBy[0]], action, 0),
-        [action.meta.sortBy[1]]: feedSortBy(state[action.meta.sortBy[1]], action, 1),
-        [action.meta.sortBy.join('-')]: feedSortBy(state[action.meta.sortBy.join('-')], action, 2),
+        [action.meta.sortBy[0]]: feedSortBy(state[action.meta.sortBy[0]], action),
+        [action.meta.sortBy[1]]: feedSortBy(state[action.meta.sortBy[1]], action),
+        [action.meta.sortBy.join('-')]: feedSortBy(state[action.meta.sortBy.join('-')], action),
+        
       };
     case feedTypes.GET_USER_COMMENTS.START:
     case feedTypes.GET_USER_COMMENTS.SUCCESS:
@@ -180,7 +183,7 @@ const feed = (state = initialState, action) => {
     case feedTypes.GET_BOOKMARKS.ERROR:
       return {
         ...state,
-        [action.meta.sortBy]: feedSortBy(state[action.meta.sortBy], action, 0),
+        [action.meta.sortBy]: feedSortBy(state[action.meta.sortBy], action),
       };
     case TOGGLE_BOOKMARK:
       return {

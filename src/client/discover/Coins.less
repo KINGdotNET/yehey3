@@ -1,0 +1,46 @@
+@import (reference) '../styles/custom.less';
+@import (reference) '../styles/modules/variables';
+
+.Coins {
+	// min-width: 150px;
+	width: auto;
+	margin-left: -11px;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+    flex-direction: column;
+    font-weight: 600;
+    color: black;
+    margin-bottom: 50px;
+    margin-top: 25px;
+    
+    &__title {
+        margin: 10px;
+        font-weight: 700;
+        font-size: 30px;
+    }
+
+    &__symbol {
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    &__block {
+        display: inline-flex;
+        flex-direction: row;
+        border: @base-border;
+        border-radius: 10px;
+        margin: 5px;
+        padding: 10px;
+        text-align: center;
+        align-items: center;
+        width: 100%;
+        justify-content: space-evenly;
+        font-size: 22px;
+    }
+
+    &__coinpic {
+        width:50px;
+        height:50px;
+    }
+}

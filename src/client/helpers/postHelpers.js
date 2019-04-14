@@ -5,10 +5,11 @@ import { categoryRegex } from './regexHelpers';
 import { jsonParse } from './formatter';
 import DMCA from '../../common/constants/dmca.json';
 import whiteListedApps from './apps';
+import { NSFWwords } from '../helpers/constants';
 
 const appVersion = require('../../../package.json').version;
 
-export const isPostDeleted = post => post.title === 'deleted' && post.body === 'deleted';
+export const isPostDeleted = post => post.title === 'deleted';
 
 export const isPostTaggedNSFW = post => {
   if (post.parent_permlink === 'nsfw') return true;
@@ -18,6 +19,55 @@ export const isPostTaggedNSFW = post => {
   if (_.isError(postjson)) return false;
 
   return _.includes(postjson.tags, 'nsfw');
+};
+
+/**
+ * Determines whether a string contains any NSFW element substrings.
+ * @param {string} string The string to examined.
+ * @returns True or false for string input.
+ */
+export function isStringNSFW(string) {
+  for (const word of NSFWwords) {
+    if (string.includes(word)) {
+      //console.log("Found NSFW word:", string);
+      return true;
+    }
+  };
+  return false;
+};
+
+/**
+ * Determines whether an array of strings contain NSFW name values.
+ * @param {array} array The array to be filtered.
+ * @returns True or false for post input.
+ */
+export function filterNSFWwords(array) {
+  if (array[0]) {
+    return array.filter(p => !isStringNSFW(p));
+  }
+  else {
+    return [];
+  }
+};
+
+/**
+ * Determines whether a post contains the tag "private" for filtering from feed.
+ * @param post the post to be examined.
+ * @returns True or false for post input.
+ */
+export const isPostTaggedPrivate = (post, username) => {
+
+  const postjson = _.attempt(JSON.parse, post.json);
+
+  let privatePost = false;
+
+  if (_.isError(postjson)) return false;
+
+  if (postjson.accessList && !postjson.accessList[username] && _.includes(postjson.tags, 'private')) {
+    privatePost = true;
+    //console.log("Post tagged private and dropped:", post.permlink);
+  }
+  return privatePost;
 };
 
 export function dropCategory(url) {
@@ -66,7 +116,7 @@ export function getContentImages(content, parsed = false) {
   );
 }
 
-export function createPostMetadata(body, board, tags, oldMetadata = {}) {
+export function createPostMetadata(body, board, tags, link, commentPrice, nsfwtag, access, language, oldMetadata = {}) {
   let metaData = {
     community: 'weyoume',
     app: `alpha.weyoume/${appVersion}`,
@@ -90,15 +140,25 @@ export function createPostMetadata(body, board, tags, oldMetadata = {}) {
   }
 
   const parsedBody = getHtml(body, {}, 'text');
-
   const images = getContentImages(parsedBody, true);
-  const links = extractLinks(parsedBody);
-  const boardWithTags = [board, ...tags];
+
+  let boardWithTags = [board, ...tags];
+  if (nsfwtag) {
+    boardWithTags = [...boardWithTags, 'nsfw'];
+  }
+  if (access == 'private'){
+    boardWithTags = [...boardWithTags, 'private'];
+  }
+  boardWithTags = _.uniq([...boardWithTags, language]);
 
   metaData.tags = boardWithTags;
   metaData.users = users;
-  metaData.links = links.slice(0, 10);
   metaData.image = images;
+  metaData.board = board;
+  metaData.link = link;
+  metaData.commentPrice = commentPrice;
+  metaData.language = language;
+  metaData.nsfw = nsfwtag;
 
   return metaData;
 }

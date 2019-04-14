@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Form, Input, Icon } from 'antd';
+import { Form, Input, Icon, Button } from 'antd';
 import weauthjsInstance from '../weauthjsInstance';
 import { getIsReloading, getAuthenticatedUser } from '../reducers';
 import socialProfiles from '../helpers/socialProfiles';
@@ -19,7 +19,10 @@ import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import { isValidImage, MAXIMUM_UPLOAD_SIZE } from '../helpers/image';
 import requiresLogin from '../auth/requiresLogin';
 import classNames from 'classnames';
+import wehelpjs from 'wehelpjs';
+import { message } from 'antd';
 import './Settings.less';
+import { invalid } from 'glamor';
 
 const FormItem = Form.Item;
 
@@ -55,6 +58,7 @@ export default class ProfileSettings extends React.Component {
   static propTypes = {
     intl: PropTypes.shape().isRequired,
     form: PropTypes.shape().isRequired,
+    user: PropTypes.shape().isRequired,
     onImageUpload: PropTypes.func,
     onImageInvalid: PropTypes.func,
   };
@@ -84,10 +88,10 @@ export default class ProfileSettings extends React.Component {
 
     this.handleSignatureChange = this.handleSignatureChange.bind(this);
     this.handleImageChange = this.handleImageChange.bind(this);
-
     this.handleSubmit = this.handleSubmit.bind(this);
     this.renderBody = this.renderBody.bind(this);
-    this.renderImage = this.renderImage.bind(this);  
+    this.renderImage = this.renderImage.bind(this);
+    this.onPasswordInput = this.onPasswordInput.bind(this);  
   };
 
 
@@ -95,7 +99,6 @@ handleUpdateCurrentInputValue = e =>
     this.setState({
       currentInputValue: e.target.value,
     });
-
 
 disableAndInsertImage = (image, imageName = 'image') => {
   this.setState({
@@ -164,13 +167,93 @@ insertImage(image, imageName = 'image') {
     });
   }
 
+  saveViewKey(password) {
+    const { user } = this.props;
+    let storagekey = "UserMemoKey-"+user.name;
+    let memoKeys = wehelpjs.auth.getPrivateKeys(user.name, password, ['memo']);
+    //console.log("memoKeys", memoKeys);
+    if (user.memoKey == memoKeys.memoPubkey) {
+      //console.log("Key match successful", memoKeys);
+      localStorage.setItem(storagekey, memoKeys.memo);
+      message.info("Secret key set successfully.");
+      window.location.reload();
+    } else {
+      //console.log("Key match Invalid: on-chain public memo key: ", user.memoKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
+      message.error("Secret key invalid, please input correct password.");
+    }
+  }
 
+  onPasswordInput(e) {
+    e.preventDefault();
+    const newSearch = document.getElementById("PassInput");
+    const form = document.getElementById("PassForm");
+    if (newSearch.value != "") {
+      let password = newSearch.value;
+      this.saveViewKey(password);
+      }
+    form.reset();
+  }
+
+  passwordForm(){
+    const { user } = this.props;
+    let storagekey = "UserMemoKey-"+user.name;
+    let memoPrivateKey = '';
+    if (localStorage) {
+      memoPrivateKey = localStorage.getItem(storagekey);
+    }
+    let form = '';
+    if (memoPrivateKey) {
+      form = (
+        <div className="Settings__password">
+          <h3>
+              <FormattedMessage id="key_form" defaultMessage="Privacy Key" />
+          </h3>
+          <div className="Settings__keyvalid">
+            <i className="iconfont icon-right" />
+            <FormattedMessage id="key_valid" defaultMessage="Secret Key valid and set" />
+          </div>
+          <Form className="Settings__password__form" id="PassForm"> 
+              <Input
+              type="password"
+              className="Settings__passinput"
+              id="PassInput"
+              placeholder="Update account Password:"
+              />
+              <Button onClick={this.onPasswordInput}> 
+                <FormattedMessage id="generate_key" defaultMessage="Generate Key" /> 
+              </Button>
+          </Form>
+        </div> );
+      } else {
+      form = (
+        <div className="Settings__password">
+          <h3>
+              <FormattedMessage id="key_form" defaultMessage="Privacy Key" />
+          </h3>
+          <div className="Settings__keynotset">
+            <i className="iconfont icon-lock" />
+            <FormattedMessage id="key_not_set" defaultMessage="Please enter your account password to use and read private posts." />
+          </div>
+          <Form className="Settings__password__form" id="PassForm"> 
+              <Input
+              type="password"
+              className="Settings__passinput"
+              id="PassInput"
+              placeholder="Enter account Password:"
+              />
+              <Button onClick={this.onPasswordInput}> 
+                <FormattedMessage id="generate_key" defaultMessage="Generate Key" /> 
+              </Button>
+          </Form>
+          </div>);
+            } 
+    return form;
+  }
 
   render() {
     const { intl, form } = this.props;
     const { bodyHTML, profileImage  } = this.state;
     const { getFieldDecorator } = form;
-
     const socialInputs = socialProfiles.map(profile => (
       <FormItem key={profile.id}>
         {getFieldDecorator(profile.id, {
@@ -218,6 +301,9 @@ insertImage(image, imageName = 'image') {
             <h1>
               <FormattedMessage id="edit_profile" defaultMessage="Edit Profile" />
             </h1>
+            <div className="Settings__section">
+            {this.passwordForm()}
+            </div>
             <Form onSubmit={this.handleSubmit}>
               <div className="Settings">
                 <div className="Settings__section">

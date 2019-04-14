@@ -1,6 +1,8 @@
 @import (reference) '../styles/custom.less';
 @import (reference) '../styles/modules/variables.less';
 
+@base-spacing: 0;
+
 .Search {
   margin-bottom: 20px;
 
@@ -64,6 +66,14 @@
     }
   }
 
+  &__taglink {
+    justify-content: space-between;
+    position: relative;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+  }
+
   &__user {
     background-color: @white;
     border-radius: @border-radius-base;
@@ -79,6 +89,59 @@
       font-size: 18px;
     }
   }
+
+  &__results-container {
+    background-color: @white;
+    border-radius: @border-radius-base;
+    border: @base-border;
+    margin-top: 12px;
+    padding: 16px;
+  }
+
+  &__input-container {
+    padding: 0 @base-spacing;
+    position: relative;
+    height: 60px;
+    display: flex;
+    margin-left: 20px;
+    margin-right: 20px;
+    max-width: 500px;
+		align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    > .ant-select-show-search {
+      width: 100%;
+    }
+		.ant-select-search__field {
+			margin-top: 0px;
+			font-size: 14px !important;
+			&::placeholder {
+				font-size: 14px !important;
+			}
+		}
+    input {
+      height: 32px !important;
+      margin-top: 8px;
+      align-items: center;
+      border-radius: @border-radius-base;
+      padding: 0 0 0 15px !important;
+      border: @border-width-base @border-style-base @border-color-base;
+      &:hover,
+      &:focus {
+        box-shadow: none !important;
+        border: @border-width-base @border-style-base @border-color-base !important;
+      }
+    }
+
+    i {
+      right: 10px;
+      position: absolute;
+      color: #c2ccd3;
+      font-size: 20px;
+    }
+    
+  }
+
 }
 
 @import 'Search-nightmode';

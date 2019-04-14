@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import weauthjsInstance from '../weauthjsInstance';
+import { Checkbox, Form, Input, Select, Button } from 'antd';
 import './ErrorPage.less';
 
 const Error401 = ({ staticContext }) => {
@@ -12,39 +13,27 @@ const Error401 = ({ staticContext }) => {
   return (
     <div className="ErrorPage container">
       <h1>
-        <FormattedMessage id="page_forbidden" defaultMessage="Page Requires Authentication" />
+        <FormattedMessage id="page_forbidden" defaultMessage="You are now logged out." />
       </h1>
       <h2>
         <FormattedMessage
           id="page_forbidden_message"
-          defaultMessage="Oops! Looks like you need to login to use this page."
+          defaultMessage="Please to login to use this page."
         />
       </h2>
       <p>
-        <FormattedMessage
-          id="need_login_link_text"
-          defaultMessage="You need to login to use this feature, please {link}."
-          values={{
-            link: (
-              <a href={weauthjsInstance.getLoginURL()}>
-                <FormattedMessage id="login" defaultMessage="Login" />
-              </a>
-            ),
-          }}
-        />
+      <Button>
+          <a href={weauthjsInstance.getLoginURL()}>
+            <FormattedMessage id="homepage_link_text" defaultMessage="Login" />
+          </a>
+      </Button>
       </p>
       <p>
-        <FormattedMessage
-          id="homepage_link_text"
-          defaultMessage="Here's a link to {link}."
-          values={{
-            link: (
-              <Link to="/">
-                <FormattedMessage id="homepage" defaultMessage="the home page" />
-              </Link>
-            ),
-          }}
-        />
+        <Button>
+          <Link to="/trending-all/hot-all">
+            <FormattedMessage id="homepage" defaultMessage="Return to the Homepage" />
+          </Link>
+        </Button>
       </p>
     </div>
   );

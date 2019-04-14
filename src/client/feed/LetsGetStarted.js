@@ -118,9 +118,9 @@ class LetsGetStarted extends React.Component {
       <div className="LetsGetStarted">
         <h4 className="LetsGetStarted__title">
           <span className="LetsGetStarted__title__text">
-            <FormattedMessage id="lets_get_started" defaultMessage="Let's get started:" />
-            <Link to="/about"> What is WeYouMe? </Link>
+            <FormattedMessage id="lets_get_started" defaultMessage="Let's get started:" /> 
           </span>
+            <Link to="/about"> <FormattedMessage id="what_is_weyoume" defaultMessage="What is WeYouMe? Learn more..." /> </Link>
           <HorizontalBarChart current={currentSelected} total={totalOptions} />
           <span className="LetsGetStarted__title__description">
             {`${currentSelected}/${totalOptions} `}
@@ -153,7 +153,7 @@ class LetsGetStarted extends React.Component {
               isLoading={isFetchingFollowingList}
               iconClassName="icon-addpeople"
             />
-            <Link to="/discover">
+            <Link to="/discover/">
               <span
                 className={classNames('LetsGetStarted__action__text', {
                   LetsGetStarted__action__completed: hasFollowed,

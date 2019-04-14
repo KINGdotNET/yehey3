@@ -1,5 +1,6 @@
 @import (reference) '../../styles/custom.less';
 @import (reference) '../../styles/modules/variables.less';
+@import (reference) '../../styles/mixins.less';
 
 .Story {
   background-color: white;
@@ -19,6 +20,19 @@
     > i {
         font-size: 18px;
     }
+  }
+
+  &__followCount {
+    position: relative;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__keymessage {
+    padding: 10px;
+    margin: 10px;
+    border: @base-border;
+    position: relative;
   }
 
   &__reblog {
@@ -91,9 +105,18 @@
     }
   }
 
+  &__ptd {
+    position: relative;
+    font-size: 14px;
+    color: #4d5f6a;
+    display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-left: 5px;
+  }
+
   &__date {
     position: relative;
-    // top: -2px;
     font-size: 14px;
     color: #4d5f6a;
   }
@@ -190,11 +213,30 @@
         color: @grey-mortar;
         text-decoration: none;
       }
+    }
 
-      video {
-        width: 100%;
-        max-height: 600px;
+    &__link {
+      font-family: @font-family;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 2;
+      color: rgb(31, 139, 175);
+      text-align: center;
+      vertical-align: center;
+
+      &__icon {
+        text-align: right;
+        padding-right: 30px;
+        .iconfont {
+          font-size: 14px;
+        }
       }
+    }
+
+    video {
+      width: 100%;
+      max-height: 600px;
+    
     }
 
     &__body {
