@@ -175,7 +175,7 @@ insertImage(image, imageName = 'image') {
     if (user.memoKey == memoKeys.memoPubkey) {
       //console.log("Key match successful", memoKeys);
       localStorage.setItem(storagekey, memoKeys.memo);
-      message.info("Secret key set successfully.");
+      message.success("Secret key set successfully.");
       window.location.reload();
     } else {
       //console.log("Key match Invalid: on-chain public memo key: ", user.memoKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
