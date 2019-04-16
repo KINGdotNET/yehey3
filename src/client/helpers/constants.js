@@ -88,6 +88,7 @@ export const NSFWwords = [
   'kike',
   'pussy',
   'blowjob',
+  'handjob',
   'tits',
   'cum',
   'cunnilingus',

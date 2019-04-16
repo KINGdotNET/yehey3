@@ -29,6 +29,7 @@ import {
 } from '../wallet/walletActions';
 import { getAccount } from './usersActions';
 import WalletSidebar from '../components/Sidebar/WalletSidebar';
+import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount';
 
 @withRouter
 @connect(
@@ -143,6 +144,7 @@ class Wallet extends Component {
 
     return (
 			<div className="UserWalletContent">
+        <ScrollToTopOnMount />
 				<WalletSidebar isCurrentUser={isCurrentUser} showMarket={false} />
         <UserWalletSummary
           user={user}

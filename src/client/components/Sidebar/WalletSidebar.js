@@ -84,26 +84,28 @@ class WalletSidebar extends React.Component {
 
     return (
       <div className="WalletSidebar">
-        <Action primary className="WalletSidebar__transfer"  onClick={this.handleOpenTransfer}>
-          <FormattedMessage id="send" defaultMessage="Send" />
-        </Action>
-        <Action primary className="WalletSidebar__request"  onClick={this.handlePaymentRequest}>
-          <FormattedMessage id="request" defaultMessage="Request" />
-        </Action>
+        <div className="WalletSidebar__walletbutton">
+          <Action primary className="WalletSidebar__actionbutton" onClick={this.handleOpenTransfer}>
+            <FormattedMessage id="send" defaultMessage="Send" />
+          </Action>
+        </div>
+        <div className="WalletSidebar__walletbutton">
+            <Action primary className="WalletSidebar__actionbutton" onClick={this.handlePaymentRequest}>
+              <FormattedMessage id="request" defaultMessage="Request" />
+            </Action>
+        </div>
         {ownProfile && (
-          <div className="WalletSidebar__power">
-          <span>
-            <Action primary onClick={this.handleOpenPowerUp}>
+          <div className="WalletSidebar__walletbutton">
+            <Action primary className="WalletSidebar__actionbutton" onClick={this.handleOpenPowerUp}>
               <FormattedMessage id="power_up" defaultMessage="Power up" />
             </Action>
-            </span>
-            <span>
-            <Action primary onClick={this.handleOpenPowerDown}>
+          </div>)}
+        {ownProfile && (
+          <div className="WalletSidebar__walletbutton">
+            <Action primary className="WalletSidebar__actionbutton" onClick={this.handleOpenPowerDown}>
               <FormattedMessage id="power_down" defaultMessage="Power down" />
             </Action>
-            </span>
-          </div>
-				)}
+          </div>)}
 				{ showMarket && 
         <CryptoTrendingCharts cryptos={cryptos} />
 				}

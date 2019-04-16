@@ -19,6 +19,7 @@ import wehelpjs from 'wehelpjs';
  * @returns {function}
  */
 export function getDiscussionsFromAPI(sortBy, query, blockchainAPI) {
+  console.log("sortby:", sortBy || "null");
   switch (sortBy) {
     case 'feed':
     case 'hot':

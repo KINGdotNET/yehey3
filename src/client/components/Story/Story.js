@@ -318,14 +318,19 @@ class Story extends React.Component {
         >
           <StoryPreview post={post} showImagesOnly={showImagesOnly} username={user.name}/>
         </a>
+
+        {postLink ? 
+        <div className="Story__content__link__icon" > 
         <a 
           href={postLink}
           target="_blank"
           className="Story__content__link"
           >
-          {postLink ?  <div className="Story__content__link__icon" > <Button> Link <i className="iconfont icon-link"/> </Button> </div> : null}
-        
-        </a>
+          <Button> 
+            Link <i className="iconfont icon-link"/> 
+          </Button> 
+          </a>
+        </div> : <div />} 
       </div>
     ) : (
       hiddenStoryPreviewMessage

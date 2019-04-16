@@ -198,7 +198,7 @@ insertImage(image, imageName = 'image') {
     const { user } = this.props;
     let storagekey = "UserMemoKey-"+user.name;
     let memoPrivateKey = '';
-    if (localStorage) {
+    if (!_.isEmpty(localStorage)) {
       memoPrivateKey = localStorage.getItem(storagekey);
     }
     let form = '';

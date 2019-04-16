@@ -58,7 +58,7 @@
 
   &__brand {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 500;
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -98,13 +98,13 @@
 		&__logo {
 			height: 40px;
       margin-right: 5px;
-      // @media @small {
-      //   display: initial;
-      // }
-      // @media (max-width: @small-bp){
-      //   display: none;
-      //   // padding-left: 0;
-      // }
+      @media @small {
+        display: initial;
+       }
+       @media (max-width: @small-bp){
+        display: none;
+        padding-left: 0;
+       }
 		}
 		.Me {
 			margin-left: 2px;
@@ -140,15 +140,10 @@
 
   &__name {
     color: @primary-color;
-    font-weight: 700;
+    font-weight: 500;
     font-family: @font-family-helvetica-neue;
-    // position: absolute;
-		// margin-top: 14px;
-		// left: 70px;
-		// right: 17px;
 		font-size: 20px;
 		z-index: 0;
-		// display: none;
 		@media @small {
 			display: initial;
 		}

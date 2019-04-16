@@ -367,8 +367,8 @@ class Topnav extends React.Component {
         <div className="topnav-layout">
           <div className={classNames('left', { 'Topnav__mobile-hidden': searchBarActive })}>
             <Link className="Topnav__brand" to="/trending-all/hot-all">
-							<img src="/images/logo" className="Topnav__brand__logo"></img>
-              {/* <img src="/images/logo-icon.png" className="Topnav__brand__logo-mobile"></img> */}
+							<img src="/images/logo.png" className="Topnav__brand__logo"></img>
+              <img src="/images/logo-mobile.png" className="Topnav__brand__logo-mobile"></img>
             </Link>
           </div>
           <div className={classNames('center', { mobileVisible: searchBarActive })}>
