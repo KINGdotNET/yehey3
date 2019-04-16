@@ -39,13 +39,13 @@ class About extends React.Component {
                                 Reserve your username and WYM allocation (For all EZIRA, BTS, and STEEMPower Holders):
                             </li>
                             <li>
-                                <a href="https://share.hsforms.com/1C3S3z9rNSEa2XmVKZzWs_g34jhu" target="_blank" ><Button>Username and WYM registration</Button></a>
+                                <a href="https://share.hsforms.com/1MCBMlc3BQqyylpjQsqhHKA34jhu" target="_blank" ><Button>Username and WYM registration</Button></a>
                             </li>
                             <li>
                                 Learn more about the roadmap envisioned for the WeYouMe Protocol by signing up for our information pack.
                             </li>
                             <li>
-                                <a href="https://share.hsforms.com/1MCBMlc3BQqyylpjQsqhHKA34jhu" target="_blank" ><Button>Information Pack</Button></a>
+                                <a href="https://share.hsforms.com/1C3S3z9rNSEa2XmVKZzWs_g34jhu" target="_blank" ><Button>Information Pack</Button></a>
                             </li>
                         </ul>
                         <ul className="AboutList">

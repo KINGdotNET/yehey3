@@ -4,29 +4,21 @@
 
 .WalletSidebar {
 	
-  &__transfer {
-	margin-bottom: 7px;
-	margin-top:15px;
-	width: 80%;
-	.flex(center, center, row, nowrap);
-  }
-
-  &__request {
-	margin-bottom: 7px;
-	margin-top:15px;
-	width: 80%;
-	.flex(center, center, row, nowrap);
-}
-
-  &__power {
-    display: flex;
-	margin-bottom: 7px;
-	width: 40%;
-		
-
-    & > :not(:last-child) {
-      margin-right: 7px;
-    }
+  &__walletbutton {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	align-content: center;
+	align-items: center;
+	width: 100%;
+	flex-direction: row;
+	justify-content: center;
+	display: flex;
+	
+	}
+	&__actionbutton {
+			width: 80%;
+			font-size: 24px;
+			height: 40px;
 	}
 }
 
@@ -39,7 +31,7 @@
 			
 			padding-left: 5px;
 			padding-right: 5px;
-			display: block
+			//display: block;
 		}
 	}
 }

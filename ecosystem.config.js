@@ -7,8 +7,7 @@ module.exports = {
     {
       name: 'prod-weapp',
       script: 'build/server.js',
-      instances: 2,
-      exec_mode: 'cluster',
+      instances: 1,
       max_memory_restart: '600M',
     },
   ],

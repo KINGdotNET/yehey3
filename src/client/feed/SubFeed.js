@@ -28,17 +28,19 @@ import PostModal from '../post/PostModalContainer';
 
 @withRouter
 @connect(
-  state => ({
+  (state, ownProps) => ({
     authenticated: getIsAuthenticated(state),
     loaded: getIsLoaded(state),
     user: getAuthenticatedUser(state),
     feed: getFeed(state),
+    sortBy: [ownProps.match.params.sortBy1, ownProps.match.params.sortBy2],
+    category: [ownProps.match.params.category1, ownProps.match.params.category2],
   }),
   dispatch => ({
     getFeedContent: (sortBy, category) => 
-      dispatch(getFeedContent({sortBy: sortBy, category: category, limit: 9 })),
+      dispatch(getFeedContent({sortBy: sortBy || ['trending','hot'], category: category || ['all','all'], limit: 9 })),
     getMoreFeedContent: (sortBy, category) =>
-      dispatch(getMoreFeedContent({ sortBy: sortBy, category: category, limit: 9 })),
+      dispatch(getMoreFeedContent({ sortBy: sortBy || ['trending','hot'], category: category || ['all','all'], limit: 9 })),
     showPostModal: post => dispatch(showPostModal(post)),
   }),
 )
@@ -52,11 +54,15 @@ class SubFeed extends React.Component {
     showPostModal: PropTypes.func.isRequired,
     getFeedContent: PropTypes.func,
     getMoreFeedContent: PropTypes.func,
+    sortBy: PropTypes.array,
+    category: PropTypes.array,
   };
 
   static defaultProps = {
     getFeedContent: () => {},
     getMoreFeedContent: () => {},
+    sortBy: ['trending', 'hot'],
+    category: ['all', 'all'],
   };
   state = {
     stateReady: false,
@@ -68,16 +74,21 @@ class SubFeed extends React.Component {
     const { authenticated, loaded, user, match, feed } = this.props;
 
     let storagekey = "UserMemoKey-"+user.name;
-    if (_.isEmpty(localStorage.getItem(storagekey))) {
+
+    if (_.isEmpty(localStorage)) {
+      this.setState({
+        keyReady: false,
+      });
+    } else if (_.isEmpty(localStorage.getItem(storagekey))) {
       this.setState({
         keyReady: false,
       });
     }
 
-    const sortBy1 = match.params.sortBy1 || 'trending';
-    const sortBy2 = match.params.sortBy2 || 'hot';
-    let category1 = match.params.category1 || 'all';
-    let category2 = match.params.category2 || 'all';
+    let sortBy1 = this.props.sortBy[0] || 'trending';
+    let sortBy2 = this.props.sortBy[1] || 'hot';
+    let category1 = this.props.category[0] || 'all';
+    let category2 = this.props.category[1] || 'all';
 
     let isFetching = false;
     let fetched = false;
@@ -212,10 +223,10 @@ class SubFeed extends React.Component {
     const { authenticated, loaded, feed, match } = this.props;
     const { stateReady, keyReady } = this.state;
 
-    const sortBy1 = match.params.sortBy1 || 'trending';
-    const sortBy2 = match.params.sortBy2 || 'hot';
-    let category1 = match.params.category1 || 'all';
-    let category2 = match.params.category2 || 'all';
+    let sortBy1 = this.props.sortBy[0] || 'trending';
+    let sortBy2 = this.props.sortBy[1] || 'hot';
+    let category1 = this.props.category[0] || 'all';
+    let category2 = this.props.category[1] || 'all';
 
     // console.log("Username:", user.name);
     

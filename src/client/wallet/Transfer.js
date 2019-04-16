@@ -102,7 +102,11 @@ export default class Transfer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { form, to, amount, memo, currency, type } = nextProps;
-    if (this.props.to !== to) {
+    if (this.props.to != to ||
+      this.props.amount != amount || 
+      this.props.memo != memo ||
+      this.props.type != type || 
+      this.props.currency != currency) {
       form.setFieldsValue({
         to,
         amount,
@@ -112,6 +116,7 @@ export default class Transfer extends React.Component {
       });
       this.setState({
         currency,
+        type,
       });
     }
   }
@@ -370,7 +375,7 @@ export default class Transfer extends React.Component {
     );
 
     const transferType= getFieldDecorator('type', {
-      initialValue: this.props.type,
+      initialValue: this.state.type,
     })(
       <Radio.Group onChange={this.handleTypeChange} className="Transfer__type__setting">
         <Radio.Button value={'transfer'}>{'send'}</Radio.Button>
