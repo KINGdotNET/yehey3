@@ -38,12 +38,14 @@ class Notifications extends React.Component {
     currentAuthUsername: PropTypes.string,
     userSCMetaData: PropTypes.shape(),
     onActionInitiated: PropTypes.func,
+    lastSeenTimestamp:PropTypes.number,
   };
 
   static defaultProps = {
     notifications: [],
     currentAuthUsername: '',
     userSCMetaData: {},
+    lastSeenTimestamp: 0,
   };
 
   constructor(props) {
@@ -58,7 +60,7 @@ class Notifications extends React.Component {
 
   componentDidMount() {
     const { userSCMetaData, notifications} = this.props;
-    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp');
+    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp', 0);
     const latestNotification = _.get(notifications, 0);
     const timestamp = _.get(latestNotification, 'timestamp');
     this.props.getUpdatedSCUserMetadata();
@@ -96,7 +98,7 @@ class Notifications extends React.Component {
 
   render() {
     const { notifications, currentAuthUsername, userSCMetaData, loadingNotifications } = this.props;
-    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp');
+    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp', 0);
 
     return (
       <div className="shifted">
