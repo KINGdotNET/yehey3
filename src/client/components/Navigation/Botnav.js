@@ -41,7 +41,7 @@ class Botnav extends React.Component {
     location: PropTypes.shape().isRequired,
     history: PropTypes.shape().isRequired,
     username: PropTypes.string,
-    notifications: PropTypes.arrayOf(PropTypes.shape()),
+    notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
     getUpdatedSCUserMetadata: PropTypes.func.isRequired,
     onMenuItemClick: PropTypes.func,
     userSCMetaData: PropTypes.shape(),
@@ -116,7 +116,9 @@ class Botnav extends React.Component {
 
   menuForLoggedIn = () => {
     const { intl, username, notifications, userSCMetaData, loadingNotifications } = this.props;
-    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp');
+    const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp', 0);
+    //console.log('lastSeenTimestamp:', lastSeenTimestamp);
+    
     const notificationsCount = _.isUndefined(lastSeenTimestamp)
       ? _.size(notifications)
       : _.size(

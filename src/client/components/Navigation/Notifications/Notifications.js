@@ -45,7 +45,6 @@ class Notifications extends React.Component {
     };
 
     this.notificationsContent = null;
-
     this.handleLoadMore = this.handleLoadMore.bind(this);
     this.handleNotificationsClick = this.handleNotificationsClick.bind(this);
     this.onScroll = this.onScroll.bind(this);
@@ -54,7 +53,8 @@ class Notifications extends React.Component {
   componentDidMount() {
     const { notifications, lastSeenTimestamp } = this.props;
     const latestNotification = _.get(notifications, 0);
-    const timestamp = _.get(latestNotification, 'timestamp');
+    const timestamp = _.get(latestNotification, 'timestamp', 0);
+    
 
     if (timestamp > lastSeenTimestamp) {
       saveNotificationsLastTimestamp(timestamp).then(() => this.props.getUpdatedSCUserMetadata());
@@ -75,6 +75,8 @@ class Notifications extends React.Component {
     } else {
       const latestNotification = _.get(nextProps.notifications, 0);
       const timestamp = _.get(latestNotification, 'timestamp');
+      //console.log('timestamp:', timestamp);
+      //console.log('latest notification:', latestNotification);
 
       if (timestamp > nextProps.lastSeenTimestamp) {
         saveNotificationsLastTimestamp(timestamp).then(() => this.props.getUpdatedSCUserMetadata());
@@ -103,6 +105,12 @@ class Notifications extends React.Component {
     const { notifications } = this.props;
     const { displayedNotifications } = this.state;
     const moreNotificationsStartIndex = displayedNotifications.length;
+    const latestNotification = _.get(nextProps.notifications, 0);
+      const timestamp = _.get(latestNotification, 'timestamp');
+
+      if (timestamp > nextProps.lastSeenTimestamp) {
+        saveNotificationsLastTimestamp(timestamp).then(() => this.props.getUpdatedSCUserMetadata());
+      }
     const moreNotifications = _.slice(
       notifications,
       moreNotificationsStartIndex,
@@ -130,6 +138,7 @@ class Notifications extends React.Component {
     } = this.props;
     const { displayedNotifications } = this.state;
     const displayEmptyNotifications = _.isEmpty(notifications) && !loadingNotifications;
+    this.props.getUpdatedSCUserMetadata();
 
     return (
       <div className="Notifications">
