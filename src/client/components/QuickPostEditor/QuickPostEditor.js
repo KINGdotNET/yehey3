@@ -126,7 +126,7 @@ class QuickPostEditor extends React.Component {
 
     metaData.tags = tags;
 
-    data.parentPermlink = _.isEmpty(tags) ? nativeTag : tags;
+    data.parentPermlink = _.isEmpty(tags) ? nativeTag : tags.join('-');
     data.permlink = _.kebabCase(postTitle);
     data.json = metaData;
 
@@ -213,7 +213,7 @@ class QuickPostEditor extends React.Component {
   handleDragLeave = () => this.setState({ dropzoneActive: false });
 
   handleFocusInput = () =>
-    this.setState({ focusedInput: true, inputMinRows: 2 }, () => this.resizeTextArea());
+    this.setState({ focusedInput: true, inputMinRows: 1 }, () => this.resizeTextArea());
 
   handleUnfocusInput = e => {
     const footerClassName = _.isElement(e.relatedTarget) ? e.relatedTarget.className : '';
@@ -263,6 +263,14 @@ class QuickPostEditor extends React.Component {
     this.setState({ currentImages });
   };
 
+  countLength = length => {
+    return(
+      <div className="QuickPostEditor__lengthcounter">
+        {`${length}/300`}
+      </div>
+    )
+  }
+
   render() {
     const { imageUploading, focusedInput, currentImages, inputMinRows } = this.state;
     const { user, postCreationLoading, intl } = this.props;
@@ -303,11 +311,12 @@ class QuickPostEditor extends React.Component {
                   defaultMessage: 'Write your post:',
                 })}
                 value={this.state.currentInputValue}
-                maxLength="255"
+                maxLength="300"
               />
             </Dropzone>
           </div>
         </div>
+          {this.countLength(this.state.currentInputValue.length)}
           <QuickPostEditorFooter
             imageUploading={imageUploading}
             postCreationLoading={postCreationLoading}

@@ -120,11 +120,10 @@ const feedSortBy = (state = {}, action) => {
     case feedTypes.GET_MORE_FEED_CONTENT.ERROR:
       return {
         ...state,
+        promoted: feedCategory(state['promoted'], action, 2),
         [action.meta.category[0]]: feedCategory(state[action.meta.category[0]], action, 0),
         [action.meta.category[1]]: feedCategory(state[action.meta.category[1]], action, 1),
         [action.meta.category[2]]: feedCategory(state[action.meta.category[2]], action, 3),
-        promoted: feedCategory(state['promoted'], action, 2),
-        
       };
     case feedTypes.GET_USER_COMMENTS.START:
     case feedTypes.GET_USER_COMMENTS.SUCCESS:
