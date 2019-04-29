@@ -80,10 +80,9 @@ export default class RightSidebar extends React.Component {
           <Route path="/activity" component={UserActivitySearch} />
           <Route path="/@:name/activity" component={UserActivitySearch} />
           <Route path="/@:name/transfers" render={() => <WalletSidebar />} />
-          <Route path="/:sortBy1-:category1/:sortBy2-:category2" component={FeedSidebar} />
-          
-           <Route
-            path="/@:name"
+          <Route path="/:sortBy1-:category1/:sortBy2-:category2" component={FeedSidebar} /> 
+          <Route path="/invite" component={FeedSidebar} /> 
+          <Route path="/@:name"
             render={() =>
               authenticated && (
                 <InterestingPeopleWithAPI
@@ -91,27 +90,24 @@ export default class RightSidebar extends React.Component {
                   followingList={followingList}
                   isFetchingFollowingList={isFetchingFollowingList}
                 />
-              )
-            }
-          />
+              )}/>
            <Route
-            path="/"
-            render={() => (
-              <div>
-                {authenticated &&
-                this.props.recommendations.length > 0 &&
-                !showPostRecommendation ? (
-                  <InterestingPeople
-                    users={this.props.recommendations}
-                    onRefresh={this.handleInterestingPeopleRefresh}
-                    isFetchingNetworkUserList={isFetchingNetworkUserList}
-                  />
-                ) : (
-                  <div/>
-                )}
-              </div>
-            )}
-          /> 
+              path="/"
+              render={() => (
+                <div>
+                  {authenticated &&
+                  this.props.recommendations.length > 0 &&
+                  !showPostRecommendation ? (
+                    <InterestingPeople
+                      users={this.props.recommendations}
+                      onRefresh={this.handleInterestingPeopleRefresh}
+                      isFetchingNetworkUserList={isFetchingNetworkUserList}
+                    />
+                  ) : (
+                    <div/>
+                  )}
+                </div>
+              )}/> 
         </Switch>
         {showPostRecommendation && <PostRecommendation isAuthFetching={isAuthFetching} />}
       </div>

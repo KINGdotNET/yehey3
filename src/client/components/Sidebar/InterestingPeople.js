@@ -22,6 +22,11 @@ const InterestingPeople = ({ users, onRefresh, isFetchingNetworkUserList }) => (
           <FormattedMessage id="discover_more_people" defaultMessage="Discover More People" />
         </Link>
       </h4>
+      <h4 className="InterestingPeople__more">
+        <Link to={'/invite'}>
+          <FormattedMessage id="invite_people" defaultMessage="Invite Friends" />
+        </Link>
+      </h4>
     </div>
   </div>
 );

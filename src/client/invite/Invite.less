@@ -8,6 +8,7 @@
   border: @base-border;
   display: flex;
   flex-direction: column;
+  margin: 10px;
   padding: 20px 15px;
   margin-bottom: 15px;
 
@@ -19,9 +20,9 @@
     background-position: center;
     border-radius: 50%;
     display: flex;
-    height: 250px;
+    height: 100px;
     justify-content: center;
-    width: 250px;
+    width: 100px;
   }
 
   &__icon {
@@ -30,13 +31,33 @@
   }
 
   &__title {
-    margin: 8px 0;
+    margin: 15px 0;
   }
 
   &__description {
     max-width: 450px;
-    margin-bottom: 8px;
+    margin-bottom: 15px;
     text-align: center;
+  }
+
+  &__form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &__emailinput {
+    width: 100%;
+    max-width: 500px;
+    min-width: 200px;
+    height: 100%;
+    margin: 10px;
+  }
+
+  &__emailbutton {
+    margin: 10px;
   }
 
   &__input-container {
@@ -77,8 +98,8 @@
   &__social {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
-    min-width: 100px;
+    margin: 20px;
+    min-width: 300px;
   }
 }
 

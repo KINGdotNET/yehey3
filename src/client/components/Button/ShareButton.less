@@ -5,8 +5,14 @@
 
   &__contents {
     border-radius: @border-radius-base;
-    transition: 25ms ease-out;
-    padding: 0 5px;
+    transition: 100ms ease-out;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    vertical-align: middle;
+    text-align: center;
 
     &__facebook {
       background-color: @facebook-background-color;
@@ -15,15 +21,11 @@
     &__twitter {
       background-color: @twitter-background-color;
     }
-
-    &__email {
-      background-color: @email-background-color;
-    }
   }
 
   &__icon {
     color: @white;
-    font-size: 20px !important;
+    font-size: 50px !important;
   }
 
   &:hover {

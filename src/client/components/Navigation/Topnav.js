@@ -229,6 +229,9 @@ class Topnav extends React.Component {
                   <PopoverMenuItem key="boards">
                     <FormattedMessage id="boards" defaultMessage="Boards" />
                   </PopoverMenuItem>
+                  <PopoverMenuItem key="invite">
+                    <FormattedMessage id="invite" defaultMessage="Invite" />
+                  </PopoverMenuItem>
                   <PopoverMenuItem key="discover">
                     <FormattedMessage id="discover" defaultMessage="Discover" />
                   </PopoverMenuItem>

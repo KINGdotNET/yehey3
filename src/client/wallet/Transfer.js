@@ -311,6 +311,7 @@ export default class Transfer extends React.Component {
 
   validateBalance = (rule, value, callback) => {
     const { intl, authenticated, user } = this.props;
+    const { type } = this.state;
 
     const currentValue = parseFloat(value);
 
@@ -326,8 +327,15 @@ export default class Transfer extends React.Component {
       return;
     }
 
-    const selectedBalance =
-      this.state.currency === Transfer.CURRENCIES.TME ? user.balance : user.TSDbalance;
+    let selectedBalance = 0;
+
+    if(type == 'transfer') {
+      selectedBalance = (this.state.currency === Transfer.CURRENCIES.TME) ? user.balance : user.TSDbalance;
+    }
+
+    if(type == 'request') {
+      callback();
+    }
 
     if (authenticated && currentValue !== 0 && currentValue > parseFloat(selectedBalance)) {
       callback([
