@@ -819,6 +819,7 @@ async@^2.1.4:
   dependencies:
     lodash "^4.14.0"
 
+<<<<<<< HEAD
 async@^2.6.1:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.2.tgz#18330ea7e6e313887f5d2f2a904bac6fe4dd5381"
@@ -826,6 +827,8 @@ async@^2.6.1:
   dependencies:
     lodash "^4.17.11"
 
+=======
+>>>>>>> devHaz
 async@~0.9.0:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/async/-/async-0.9.2.tgz#aea74d5e61c1f899613bf64bda66d4c78f2fd17d"
@@ -4655,6 +4658,7 @@ form-data@^0.2.0:
     combined-stream "~0.0.4"
     mime-types "~2.0.3"
 
+<<<<<<< HEAD
 form-data@^2.3.3, form-data@~2.3.2:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.3.3.tgz#dcce52c05f644f298c6a7ab936bd724ceffbf3a6"
@@ -4664,6 +4668,8 @@ form-data@^2.3.3, form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
+=======
+>>>>>>> devHaz
 form-data@~2.1.1:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.4.tgz#33c183acf193276ecaa98143a69e94bfee1750d1"
@@ -5599,6 +5605,7 @@ infinity-agent@^2.0.3:
   resolved "https://registry.yarnpkg.com/infinity-agent/-/infinity-agent-2.0.3.tgz#45e0e2ff7a9eb030b27d62b74b3744b7a7ac4216"
   integrity sha1-ReDi/3qesDCyfWK3SzdEt6esQhY=
 
+<<<<<<< HEAD
 inflection@~1.12.0:
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/inflection/-/inflection-1.12.0.tgz#a200935656d6f5f6bc4dc7502e1aecb703228416"
@@ -5609,6 +5616,8 @@ inflection@~1.3.0:
   resolved "https://registry.yarnpkg.com/inflection/-/inflection-1.3.8.tgz#cbd160da9f75b14c3cc63578d4f396784bf3014e"
   integrity sha1-y9Fg2p91sUw8xjV41POWeEvzAU4=
 
+=======
+>>>>>>> devHaz
 inflight@^1.0.4, inflight@~1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -7211,6 +7220,7 @@ macaddress@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
 
+<<<<<<< HEAD
 mailgun-js@^0.22.0:
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/mailgun-js/-/mailgun-js-0.22.0.tgz#128942b5e47a364a470791608852bf68c96b3a05"
@@ -7226,6 +7236,8 @@ mailgun-js@^0.22.0:
     proxy-agent "^3.0.3"
     tsscmp "^1.0.6"
 
+=======
+>>>>>>> devHaz
 mailgun.js@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/mailgun.js/-/mailgun.js-2.0.1.tgz#13d703e0c25e85da29818a03f1d424a5991d7402"
@@ -8820,6 +8832,7 @@ popsicle@^1.1.1:
     tough-cookie "^2.0.0"
     xtend "^4.0.0"
 
+<<<<<<< HEAD
 portfinder@^1.0.13:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
@@ -8829,6 +8842,8 @@ portfinder@^1.0.13:
     debug "^2.2.0"
     mkdirp "0.5.x"
 
+=======
+>>>>>>> devHaz
 portfinder@^1.0.9:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.13.tgz#bb32ecd87c27104ae6ee44b5a3ccbf0ebb1aede9"
@@ -12375,11 +12390,14 @@ url-join@0.0.1:
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-0.0.1.tgz#1db48ad422d3402469a87f7d97bdebfe4fb1e3c8"
   integrity sha1-HbSK1CLTQCRpqH99l73r/k+x48g=
 
+<<<<<<< HEAD
 url-join@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-2.0.5.tgz#5af22f18c052a000a48d7b82c5e9c2e2feeda728"
   integrity sha1-WvIvGMBSoACkjXuCxenC4v7tpyg=
 
+=======
+>>>>>>> devHaz
 url-join@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-4.0.0.tgz#4d3340e807d3773bda9991f8305acdcc2a665d2a"
