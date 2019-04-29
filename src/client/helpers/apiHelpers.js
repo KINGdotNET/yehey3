@@ -18,8 +18,7 @@ import wehelpjs from 'wehelpjs';
  * @param blockchainAPI - The same giving to Blockchain API
  * @returns {function}
  */
-export function getDiscussionsFromAPI(sortBy, query, blockchainAPI) {
-  //console.log("sortby:", sortBy || "null");
+export function getDiscussionsFromAPI(sortBy = 'trending', query, blockchainAPI) {
   switch (sortBy) {
     case 'feed':
     case 'hot':
@@ -32,7 +31,9 @@ export function getDiscussionsFromAPI(sortBy, query, blockchainAPI) {
       // console.log("getDiscussionsFromApi", sortBy);
 			var ret = blockchainAPI.sendAsync(`get_discussions_by_${sortBy}`, [query])
       .catch(err=>{console.error('err', err)});
-			return ret
+      return ret
+    case null: console.error('getDiscussionsFromAPI Null sortBy');
+      return [];
     default:
       throw new Error('There is not API endpoint defined for this sorting', sortBy);
   }
@@ -54,7 +55,8 @@ export const getMultiDiscussionsFromAPI = (callParams, limit, promRatio, blockch
       const nextPayloadData = await getDiscussionsFromAPI(
         sortBy, 
         {tag: category, limit: limit}, 
-        blockchainAPI);
+        blockchainAPI)
+        .catch(err => console.error(err));
       return payloadList.concat([nextPayloadData]);
     }, []);
     const payloadSet = await payloadArray;
@@ -87,7 +89,8 @@ export const getMoreMultiDiscussionsFromAPI = (callParams, limit, promRatio, blo
         const nextPayloadData = await getDiscussionsFromAPI(
           sortBy, 
           {tag: category, limit: limit+1, start_author: startAuthor, start_permlink: startPermlink}, 
-          blockchainAPI);
+          blockchainAPI)
+          .catch(err => console.error(err));
         return payloadList.concat([nextPayloadData.slice(1, limit+1)]);
       }, []);
       const payloadSet = await payloadArray;

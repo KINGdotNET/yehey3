@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import Action from '../components/Button/Action';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Input } from 'antd';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Input, Form, Button, message } from 'antd';
 import Affix from '../components/Utils/Affix';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
+import RightSidebar from '../app/Sidebar/RightSidebar';
 import requiresLogin from '../auth/requiresLogin';
 import { getAuthenticatedUserName } from '../reducers';
 import FacebookShare from '../components/Button/FacebookShare';
 import TwitterShare from '../components/Button/TwitterShare';
-import EmailShare from '../components/Button/EmailShare';
+import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount.js';
 import './Invite.less';
 
 @requiresLogin
@@ -37,11 +38,57 @@ export default class Invite extends React.Component {
       inviteURL: '',
     };
 
-    this.handleCopyClick = this.handleCopyClick.bind(this);
+    this.onInviteEmail = this.onInviteEmail.bind(this);
+    this.callEmailAPI = this.callEmailAPI.bind(this);
   }
 
   componentDidMount() {
     this.createInviteURL();
+  }
+
+  async callEmailAPI(email) {
+    const emailData = { email: email, link: this.state.inviteURL, username: this.props.authenticatedUserName };
+    const SEND = await fetch(`/api/v1/communicate/mail`,
+    {
+      method: 'POST',
+      body: JSON.stringify(emailData),
+      headers: {
+        'Accept': 'application/json, text/plain, */*', 
+        'Content-Type': 'application/json'},
+    })
+    .then(res => res.json())
+    .catch(err => message.error('Email rejected: ', err));
+  }
+
+  onInviteEmail(e) {
+    e.preventDefault();
+    const newEmail = document.getElementById("EmailInput");
+    const form = document.getElementById("EmailForm");
+    if (newEmail.value != "") {
+      if (newEmail.value.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        this.callEmailAPI(newEmail.value);
+        message.success("Email Sent");
+      } else {
+        message.error("Email Invalid, please try again.");
+      }
+    form.reset();
+    }
+  }
+
+  InviteForm() {
+    return (
+      <Form className="Invite__form" id="EmailForm">
+        <Input
+          type="text"
+          className="Invite__emailinput"
+          id="EmailInput"
+          placeholder="Email:"
+        />
+        <Action primary onClick={this.onInviteEmail} className="Invite__emailbutton"> 
+          Send Invitation 
+        </Action>
+      </Form>
+    ); 
   }
 
   createInviteURL() {
@@ -54,79 +101,53 @@ export default class Invite extends React.Component {
     }
   }
 
-  handleCopyClick() {
-    this.setState({ copied: true });
-  }
-
   render() {
     const { intl } = this.props;
-    const buttonLabel = this.state.copied ? (
-      <FormattedMessage id="invite_copied" defaultMessage="Copied" />
-    ) : (
-      <FormattedMessage id="invite_copy_link" defaultMessage="Copy link" />
-    );
-    return (
-      <div className="shifted">
-        <Helmet>
-          <title>{intl.formatMessage({ id: 'invite', defaultMessage: 'Invite' })} - WeYouMe</title>
-        </Helmet>
-        <div className="settings-layout container">
-          <Affix className="leftContainer" stickPosition={77}>
-            <div className="left">
-              <LeftSidebar />
-            </div>
-          </Affix>
-          <div className="center">
-            <div className="Invite">
-              <div className="Invite__icon-container" />
-              <h1 className="Invite__title">
-                <FormattedMessage id="invite_title" defaultMessage="Don't use WeYouMe alone!" />
-              </h1>
-              <p className="Invite__description">
-                <FormattedMessage
-                  id="invite_info"
-                  defaultMessage="Onboard new users on alpha.weyoume.io today using the link below and get 10% of their rewards for 30 days."
-                />
-              </p>
-              <div className="Invite__input-container">
-                <div className="Invite__input-wrapper">
-                  <Input className="Invite__input" value={this.state.inviteURL} readOnly />
-                  <CopyToClipboard text={this.state.inviteURL} onCopy={this.handleCopyClick}>
-                    <span className="Invite__input__copy">{buttonLabel}</span>
-                  </CopyToClipboard>
+      return (
+        <div className="shifted">
+          <ScrollToTopOnMount />
+          <Helmet>
+            <title>{intl.formatMessage({ id: 'invite', defaultMessage: 'Invite' })} - WeYouMe</title>
+          </Helmet>
+          <div className="feed-layout container">
+            <Affix className="leftContainer" stickPosition={77}>
+              <div className="left">
+                <LeftSidebar />
+              </div>
+            </Affix>
+            <div className="center">
+              <div className="Invite">
+                <div className="Invite__icon-container" />
+                <h2 className="Invite__title">
+                  <FormattedMessage id="invite_title" defaultMessage="Invite your friends to WeYouMe" />
+                </h2>
+                <p className="Invite__description">
+                  <FormattedMessage
+                    id="invite_info"
+                    defaultMessage="Enter an email address:"
+                    />
+                </p>
+                <div className="Invite__emailform">
+                  {this.InviteForm()}
                 </div>
-              </div>
-              <div className="Invite__social">
-                <FacebookShare url={this.state.inviteURL} />
-                <TwitterShare
-                  url={this.state.inviteURL}
-                  text={intl.formatMessage(
-                    {
+                <div className="Invite__social">
+                  <FacebookShare url={this.state.inviteURL} />
+                  <TwitterShare
+                    url={this.state.inviteURL}
+                    text={intl.formatMessage({
                       id: 'invite_share',
-                      defaultMessage: 'Join me today on alpha.weyoume.io and get rewarded to blog {link}',
-                    },
-                    {
-                      link: '',
-                    },
-                  )}
-                />
-                <EmailShare
-                  url={this.state.inviteURL}
-                  text={intl.formatMessage(
-                    {
-                      id: 'invite_share',
-                      defaultMessage: 'Join me today on alpha.weyoume.io and get rewarded to blog {link}',
-                    },
-                    {
-                      link: this.state.inviteURL,
-                    },
-                  )}
-                />
+                      defaultMessage: 'Join me on WeYouMe, the social media network with a positive purpose:',
+                    })}/>
+                </div>             
               </div>
             </div>
-          </div>
+            <Affix className="rightContainer" stickPosition={77}>
+              <div className="right">
+                <RightSidebar />
+              </div>
+            </Affix> 
+          </div>  
         </div>
-      </div>
     );
   }
 }

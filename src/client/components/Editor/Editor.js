@@ -208,6 +208,36 @@ class Editor extends React.Component {
     callback();
   };
 
+  checkUsers = intl => (rule, value, callback) => {
+    if (!value || value.length < 0 || value.length > 100) {
+      callback(
+        intl.formatMessage({
+          id: 'users_error_count',
+          defaultMessage: 'You can only add up to 100 Users.',
+        }),
+      );
+    }
+
+    value
+      .map(user => ({ user, valid: /^[a-z0-9]+(-[a-z0-9]+)*$/.test(user) }))
+      .filter(user => !user.valid)
+      .map(user =>
+        callback(
+          intl.formatMessage(
+            {
+              id: 'users_error_invalid_user',
+              defaultMessage: 'Username {user} is invalid.',
+            },
+            {
+              user: user.user,
+            },
+          ),
+        ),
+      );
+
+    callback();
+  };
+
   checkLink = intl => (rule, value, callback) => {
     if (value) {
     const valid = /^((\w+:\/\/)[-a-zA-Z0-9:@;?&=\/%\+\.\*!'\(\),\$_\{\}\^~\[\]`#|]+)/.test(value);
@@ -240,7 +270,7 @@ class Editor extends React.Component {
         callback(
           intl.formatMessage(
             {
-              id: 'price_error_invalid_link',
+              id: 'price_error_invalid',
               defaultMessage: 'Comment Price {price} is invalid.',
             },
             {
@@ -451,7 +481,7 @@ class Editor extends React.Component {
                 }),
                 type: 'array',
               },
-              { validator: this.checkTopics(intl) },
+              { validator: this.checkUsers(intl) },
             ],
           })(
             <Select

@@ -19,8 +19,6 @@ import { getAllAccounts } from '../user/userActions';
 import Loading from '../components/Icon/Loading';
 import { getAccountWithFollowingCount } from '../helpers/apiHelpers';
 
-
-
 @connect(
   (state) => ({
     isFetchingAllAccountsList: getIsFetchingAllAccountsList(state),

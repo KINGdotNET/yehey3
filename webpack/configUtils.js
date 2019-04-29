@@ -40,7 +40,9 @@ const DEFINE_PLUGIN = new webpack.DefinePlugin({
     process.env.SIGNUP_URL,
   ),
 	'process.env.WSS_API_URL': JSON.stringify(process.env.WSS_API_URL),
-	'process.env.MANIFEST_PATH': JSON.stringify(paths.assets),
+  'process.env.MANIFEST_PATH': JSON.stringify(paths.assets),
+  'process.env.MAILGUN_DOMAIN': JSON.stringify(process.env.MAILGUN_DOMAIN),
+  'process.env.MAILGUN_API_KEY': JSON.stringify(process.env.MAILGUN_API_KEY),
 });
 
 module.exports = {
