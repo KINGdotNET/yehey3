@@ -1,0 +1,165 @@
+@import (reference) '../styles/custom.less';
+@import (reference) '../styles/modules/variables.less';
+
+.shifted { 
+  margin-bottom: 0px;
+}
+
+.Messages {
+  display: inline-block;
+  width: 100%;
+  max-width: 550px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    margin-bottom: 100px;
+    max-width: 550px;
+    margin-top: 70px;
+    max-height: 75%;
+  }
+
+  &__title {
+    text-align: center;
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+    background-color: white;
+    position: fixed;
+    width: 100%;
+    max-width: 550px;
+    z-index: 1050;
+    top: 45px;
+    border-bottom: @base-border;
+    justify-content: center;
+    padding: 3px;
+  }
+}
+
+.Message {
+  border-radius: 20px;
+  border: @base-border;
+  width: 75%;
+  margin: 3px;
+  flex-direction: row;
+  display: flex;
+
+  &__text {
+    display: inline-flex;
+    word-break: break-all;
+  }
+
+  &__content {
+    word-wrap: break-word;
+    vertical-align: middle;
+    margin: 3px;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    
+  }
+
+  &__avatar {
+    vertical-align: middle;
+    margin: 5px;
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  &__time {
+    color: grey;
+    text-align: right;
+    font-size: 10px;
+    margin-right: 10px;
+  }
+
+}
+
+.Left {
+  margin-left: 75px;
+  background-color: rgb(230, 255, 230);
+}
+
+.Right {
+  margin-right: 75px;
+  background-color: rgb(214, 255, 243);
+}
+
+.newContact {
+  color: grey;
+}
+  
+.MessageUser {
+  background-color: white;
+  color: #353535;
+  border-top: @border-width-base @border-style-base @border-color-base;
+
+  @media (min-width: @small-bp) {
+    border-left: @border-width-base @border-style-base @border-color-base;
+    border-right: @border-width-base @border-style-base @border-color-base;
+  }
+
+  width: 90%;
+  margin: 0px;
+  flex-direction: row;
+  display: flex;
+  padding: 5px;
+
+  & a {
+    flex-direction: row;
+    width: 95%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  &__container {
+    flex-direction: row;
+    width: 95%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  &__name {
+    text-align: center;
+    align-items: center;
+  }
+
+  &__text {
+    display: inline-flex;
+    word-break: break-all;
+  }
+
+  &__content {
+    word-wrap: break-word;
+    vertical-align: middle;
+    margin: 3px;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    
+  }
+
+  &__avatar {
+    vertical-align: middle;
+    margin: 8px;
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  &__time {
+    color: grey;
+    text-align: right;
+    font-size: 10px;
+    margin-right: 10px;
+  }
+
+}
+
+
+

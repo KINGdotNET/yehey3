@@ -39,7 +39,6 @@ const getEmbed = link => {
 // Should return text(html) if returnType is text
 // Should return Object(React Compatible) if returnType is Object
 export function getHtml(body, json = {}, returnType = 'Object', options = {}) {
-  //console.log("json body:", json);
   const parsedjson = json || {};
   parsedjson.image = parsedjson.image || [];
 

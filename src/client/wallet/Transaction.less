@@ -4,8 +4,8 @@
 .Transaction {
   display: inline-block;
   width: 100%;
+  word-break: break-all;
   
-
   @media @medium {
     width: 80%;
   }
@@ -17,15 +17,14 @@
     font-size: 28px;
   }
 
-  &__content{
+  &__content {
     border: @base-border;
     border-radius: 10px; 
     background-color: @white;
   }
+
   &__block {
     margin: 10px;
-    
-    
   }
 }
 

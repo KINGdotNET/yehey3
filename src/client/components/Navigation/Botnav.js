@@ -117,8 +117,6 @@ class Botnav extends React.Component {
   menuForLoggedIn = () => {
     const { intl, username, notifications, userSCMetaData, loadingNotifications } = this.props;
     const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp', 0);
-    //console.log('lastSeenTimestamp:', lastSeenTimestamp);
-    
     const notificationsCount = _.isUndefined(lastSeenTimestamp)
       ? _.size(notifications)
       : _.size(
@@ -141,9 +139,9 @@ class Botnav extends React.Component {
             </Link>
           </Menu.Item>
 
-          <Menu.Item key="search" className="Botnav__item--badge">
-            <Link to="/search" className="Botnav__link Botnav__link--light Botnav__link--action">
-                <i className="iconfont icon-search" />
+          <Menu.Item key="messages" className="Botnav__item--badge">
+            <Link to="/messages" className="Botnav__link Botnav__link--light Botnav__link--action">
+                <i className="iconfont icon-mail" />
             </Link>
           </Menu.Item>
           

@@ -10,7 +10,7 @@ const SERVER_PORT = process.env.SSR_PORT;
 const CONTENT_PORT = IS_DEV ? (parseInt(SERVER_PORT) + 1) : SERVER_PORT;
 const MATCH_JS = /\.js$/i;
 const MATCH_CSS_LESS = /\.(css|less)$/i;
-const MATCH_FONTS = /\.(eot|ttf|woff|woff2|svg)(\?.+)?$/;
+const MATCH_FONTS = /\.(ttf|eot|svg|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/;
 
 const POSTCSS_LOADER = {
   loader: 'postcss-loader',

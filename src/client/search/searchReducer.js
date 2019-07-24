@@ -12,14 +12,12 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case searchActions.SEARCH_ASK.START:
-    //console.log("Search_Ask Init:", action);
       return {
         ...state,
         loading: true,
         searchError: false,
       };
     case searchActions.SEARCH_ASK.SUCCESS: {
-      //console.log("Search_Ask Success:", action);
       const userBlockchainResults = action.payload;
       const parsedlookupResults = _.map(userBlockchainResults, accountDetails => ({
         ...accountDetails,

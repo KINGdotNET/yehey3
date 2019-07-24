@@ -112,11 +112,11 @@ class StoryFooter extends React.Component {
 		});
 	};
 
-  handleTransferClick =() => {
+  handleTransferClick = () => {
       this.props.onTransferClick(this.props.post);
   }
 
-  handlePromoteClick =() => {
+  handlePromoteClick = () => {
     this.props.onPromoteClick(this.props.post);
 }
 

@@ -56,8 +56,7 @@ export default class Invite extends React.Component {
         'Accept': 'application/json, text/plain, */*', 
         'Content-Type': 'application/json'},
     })
-    .then(res => res.json())
-    .catch(err => message.error('Email rejected: ', err));
+    .then(res => res.json());
   }
 
   onInviteEmail(e) {

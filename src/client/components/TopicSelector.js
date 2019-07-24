@@ -15,19 +15,13 @@ const TopicSelector = ({ sort, isSingle, topics, onTopicClose, onSortChange }) =
     </div>
     <SortSelector sort={sort} onChange={onSortChange}>
       <SortSelector.Item key="trending">
-        <FormattedMessage id="sort_trending" defaultMessage="Trending" />
-      </SortSelector.Item>
-      <SortSelector.Item key="hot">
-        <FormattedMessage id="sort_hot" defaultMessage="Hot" />
+        <FormattedMessage id="sort_trending" defaultMessage="Top Voted" />
       </SortSelector.Item>
       <SortSelector.Item key="feed">
-        <FormattedMessage id="sort_feed" defaultMessage="Feed" />
+        <FormattedMessage id="sort_feed" defaultMessage="Following" />
       </SortSelector.Item>
       <SortSelector.Item key="created">
-        <FormattedMessage id="sort_created" defaultMessage="New" />
-      </SortSelector.Item>
-      <SortSelector.Item key="active">
-        <FormattedMessage id="sort_active" defaultMessage="Active" />
+        <FormattedMessage id="sort_created" defaultMessage="Latest" />
       </SortSelector.Item>
     </SortSelector>
   </div>

@@ -1,0 +1,85 @@
+@import (reference) '../styles/custom.less';
+
+.Welcome {
+	width: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    flex-direction: column;
+    font-weight: 600;
+    color: black;
+    
+    &__title {
+        margin: 10px;
+        font-weight: 500;
+        font-size: 30px;
+    }
+
+    &__image {
+        width: 90%;
+    }
+
+    &__carousel {
+        width: 100%;
+    }
+
+    &__dots__container {
+        width: 100%;
+        justify-content: center;
+        flex-direction: row;
+        margin-bottom: 15px;
+    }
+
+    &__register {
+        width: 100%;
+        justify-content: center;
+        flex-direction: column;
+    }
+    &__login {
+        margin: 20px;
+        width: 100%;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        &:hover {
+        color: white;
+        }
+        &__text {
+            font-size: 40px;
+        } 
+    }
+    &__choice {
+        text-transform: uppercase;
+        margin: 20px;
+        color: #A1A1A1;
+        font-size: 18px;
+        &:before, &:after {
+            background-color: #F0F0F0;
+            content: "";
+            display: inline-block;
+            height: 1px;
+            position: relative;
+            vertical-align: super;
+            width: 30%;
+        }
+        &:before {
+            right: 1.5em;
+            margin-left: -50%;
+        }
+        &:after {
+            left: 1.5em;
+            margin-right: -50%;
+        }
+    }
+}
+
+.Welcome {
+    .Welcome__login {
+            .ant-btn {
+                background-color: skyblue;
+                color: white;
+                height: auto;
+                width: 70%;
+            }
+    }
+}

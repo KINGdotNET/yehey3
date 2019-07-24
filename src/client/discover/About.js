@@ -8,6 +8,7 @@ import Affix from '../components/Utils/Affix';
 import Cookie from 'js-cookie';
 import { connect } from 'react-redux';
 import DiscoverUser from './DiscoverUser';
+import { NavLink } from 'react-router-dom';
 import { Button } from 'antd';
 import _ from 'lodash';
 import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount.js';
@@ -24,7 +25,6 @@ import './About.less';
 let referral = '';
     if (Cookie.get('referral')) {
         referral = Cookie.get('referral');
-        //console.log("referral found: ", referral);
     }
 
 @connect(
@@ -47,7 +47,7 @@ class About extends React.Component {
         user: {},
     };
     
-    static fetchData({ store}) {
+    static fetchData({ store }) {
     return Promise.all([
             store.dispatch(getGlobalProperties()),
     ]);   
@@ -62,12 +62,10 @@ class About extends React.Component {
     }
 
     if (_.isEmpty(user) && !_.isEmpty(referral)) {
-        console.log("referral fetching user:", referral);
         getAccountWithFollowingCount(referral).then(user => {
         this.setState({
             user,
         })}).catch(err=>{console.error('err', err)});
-        console.log("User retrieved: ", user.name);
         }
     }
 
@@ -98,18 +96,15 @@ class About extends React.Component {
                                  <DiscoverUser 
                                     user={user} 
                                     totalSCORE={totalSCORE} 
-                                    SCOREbackingTMEfundBalance={SCOREbackingTMEfundBalance}  
+                                    SCOREbackingTMEfundBalance={SCOREbackingTMEfundBalance}
                                     /> </div>}
                                 </li>
-                                <li>
-                                    <h2>
-                                        To get started on our Testnet Alpha:
-                                    </h2>
-                                </li>
-                                <li>
-                                    <a href="https://auth.weyoume.io/register" target="_blank"> 
-                                        <Action primary> Register account </Action>
-                                    </a>
+                                <li> 
+                                    <NavLink to='/welcome'>
+                                        <Button> 
+                                            <FormattedMessage id="create_account" defaultMessage="Create Account" />
+                                        </Button> 
+                                    </NavLink>
                                 </li>
                                 <li>
                                     Reserve your username and WYM allocation (For all EZIRA, BTS, and STEEMPower Holders):
@@ -120,13 +115,14 @@ class About extends React.Component {
                                     </a>
                                 </li>
                                 <li>
-                                    Learn more about The WeYouMe roadmap with our information pack.
-                                    This includes our whitepaper and much more.
+                                    Invite your friends to join WeYouMe.
                                 </li>
-                                <li>
-                                    <a href="https://share.hsforms.com/1C3S3z9rNSEa2XmVKZzWs_g34jhu" target="_blank" >
-                                        <Button> Information Pack </Button>
-                                    </a>
+                                <li> 
+                                    <NavLink to='/invite'>
+                                        <Button> 
+                                            <FormattedMessage id="invite_people" defaultMessage="Invite Friends" />
+                                        </Button> 
+                                    </NavLink>
                                 </li>
                             </ul>
                             <ul className="AboutList">
@@ -160,12 +156,43 @@ class About extends React.Component {
                                     </a> 
                                 </li>
                                 <li>
-                                    If you have any questions, feel free to ask our team and community in our telegram channel 
+                                    Join our Social communities:
                                 </li>
                                 <li>
-                                    <a href='https://t.me/WeYouMeNetwork' target="_blank">
-                                        <Button> Telegram </Button>
+                                    <a href="https://t.me/WeYouMeNetwork" target='_blank' >
+                                        <i className="iconfont icon-message" />
+                                        <FormattedMessage id="messenger" defaultMessage="Telegram" />
                                     </a>
+                                </li>
+                                <li>
+                                    <a href="https://twitter.com/WeYouMe_" target='_blank' >
+                                        <i className="iconfont icon-twitter" />
+                                        <FormattedMessage id="twitter" defaultMessage="Twitter" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://discord.gg/QztnDQc" target='_blank' >
+                                        <i className="iconfont icon-interactive_fill" />
+                                        <FormattedMessage id="messenger" defaultMessage="Discord" />
+                                    </a>
+                                </li>
+                                <li>
+                                    Visit our network tracker to view the transactions in real time:
+                                </li>
+                                <li>
+                                    <NavLink to="/network" >
+                                        <i className="iconfont icon-share" />
+                                        <FormattedMessage id="network" defaultMessage="Network" />
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    See the list of coin topics:
+                                </li>
+                                <li>
+                                    <NavLink to="/coins" >
+                                        <i className="iconfont icon-bitcoin" />
+                                        <FormattedMessage id="coins" defaultMessage="Coins" />
+                                    </NavLink>
                                 </li>
                                 <li>
                                     Visit our Welcome and Questions thread to see the log of our updates and news, or ask any questions. 
@@ -185,12 +212,45 @@ class About extends React.Component {
                                     </a> 
                                 </li>
                                 <li>
-                                    To Read the Source code of the WeYouMe blockchain, and Application, head to Our Github repository. 
+                                    To Read the Source code of the WeYouMe Blockchain, and Application, head to Our Github repository. 
                                     We are open to pull requests and issues. 
                                 </li>
                                 <li>
                                     <a href="https://github.com/weyoume"> 
                                         <Button> Github </Button> 
+                                    </a>
+                                </li>
+                                <li>
+                                    Learn more about WeYouMe by reading our documentation:
+                                </li>
+                                <li>   
+                                    <a href="https://alpha.weyoume.io/executivesummary.pdf" target='_blank'>
+                                        <i className="iconfont icon-document" />
+                                        <FormattedMessage id="exec_summary" defaultMessage="Executive Summary" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://alpha.weyoume.io/outline.pdf" target='_blank'>
+                                        <i className="iconfont icon-document" />
+                                        <FormattedMessage id="outline" defaultMessage="Outline" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://alpha.weyoume.io/whitepaper.pdf" target='_blank'>
+                                        <i className="iconfont icon-document" />
+                                        <FormattedMessage id="whitepaper" defaultMessage="Whitepaper" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://alpha.weyoume.io/whitepaperadvanced.pdf" target='_blank'>
+                                        <i className="iconfont icon-document" />
+                                        <FormattedMessage id="technical_whitepaper" defaultMessage="Technical Whitepaper" />
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://alpha.weyoume.io/slidedeck.pdf" target='_blank'>
+                                        <i className="iconfont icon-document" />
+                                        <FormattedMessage id="slide_deck" defaultMessage="Slide Deck" />
                                     </a>
                                 </li>
                                 <li><i>
@@ -219,8 +279,8 @@ class About extends React.Component {
                         </Affix>
                     </div>
                 </div>
-        );
-    }
+            );
+        }
     }
 
 export default About;

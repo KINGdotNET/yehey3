@@ -9,6 +9,7 @@ export class FollowPure extends React.Component {
   static propTypes = {
     intl: PropTypes.shape().isRequired,
     isFollowed: PropTypes.bool,
+    isMutual: PropTypes.bool,
     pending: PropTypes.bool,
     onClick: PropTypes.func,
     secondary: PropTypes.bool,
@@ -16,6 +17,7 @@ export class FollowPure extends React.Component {
 
   static defaultProps = {
     isFollowed: false,
+    isMutual: false,
     pending: false,
     secondary: false,
     onClick: () => {},
@@ -39,19 +41,27 @@ export class FollowPure extends React.Component {
   };
 
   render() {
-    const { intl, isFollowed, pending, secondary } = this.props;
+    const { intl, isFollowed, isMutual, pending, secondary } = this.props;
     const { isHovered } = this.state;
     const isDangerStyles = isFollowed && (isHovered || pending);
 
     let followingText = intl.formatMessage({ id: 'follow', defaultMessage: 'Follow' });
-    if (isFollowed && !(isHovered || pending)) {
+
+    if (isMutual && !(isHovered || pending)) {
+      followingText = intl.formatMessage({ id: 'friend', defaultMessage: 'Friends' });
+
+    } else if (isFollowed && !(isHovered || pending)) {
       followingText = intl.formatMessage({ id: 'followed', defaultMessage: 'Following' });
+    
     } else if (isFollowed && isHovered && !pending) {
       followingText = intl.formatMessage({ id: 'unfollow', defaultMessage: 'Unfollow' });
+
     } else if (isFollowed && pending) {
       followingText = intl.formatMessage({ id: 'unfollowing', defaultMessage: 'Unfollowing' });
+
     } else if (!isFollowed && isHovered && !pending) {
       followingText = intl.formatMessage({ id: 'follow', defaultMessage: 'Follow' });
+      
     } else if (!isFollowed && pending) {
       followingText = intl.formatMessage({ id: 'followed', defaultMessage: 'Following' });
     }

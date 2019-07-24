@@ -31,10 +31,11 @@ class UserInfo extends React.Component {
   };
 
   render() {
-    const { intl, user, rewardFund, rate, currentUser } = this.props;
-    const location = user && _.get(user.json, 'profile.location');
-    const profile = (user && _.get(user.json, 'profile')) || {};
-    let website = user && _.get(user.json, 'profile.website');
+    const { intl, user, currentUser } = this.props;
+    const location = user && _.get(user, 'profile.location');
+    const profile = (user && _.get(user, 'profile')) || {};
+    const about = _.get(user, 'profile.about', '');
+    let website = user && _.get(user, 'profile.website');
 
     if (website && website.indexOf('http://') === -1 && website.indexOf('https://') === -1) {
       website = `http://${website}`;
@@ -45,27 +46,13 @@ class UserInfo extends React.Component {
     if (hostWithoutWWW.indexOf('www.') === 0) {
       hostWithoutWWW = hostWithoutWWW.slice(4);
 		}
-    const voteWorthTME = getVoteValue(
-      user,
-      rewardFund.recent_claims > 0 ? rewardFund.recent_claims : 1,
-      rewardFund.reward_balance,
-      1,
-      10000,
-    );
-    const voteWorthUSD = getVoteValue(
-      user,
-      rewardFund.recent_claims > 0 ? rewardFund.recent_claims : 1,
-      rewardFund.reward_balance,
-      rate,
-      10000,
-    );
 
     return (
       <div>
         {user.name && (
           <div style={{ wordBreak: 'break-word' }}>
             <div className="user-description" style={{ fontSize: '18px' }}>
-              {_.get(user && user.json, 'profile.about')}
+              {about}
             </div>
             <div style={{ marginTop: 14, marginBottom: 16 }}>
               {location && (
@@ -106,36 +93,6 @@ class UserInfo extends React.Component {
                   maximumFractionDigits={0}
                 />
               </div>
-							{/* {
-								isNaN(voteWorthTME) ? '' : (
-									<div>
-										<i className="iconfont icon-dollar text-icon" />
-										<FormattedMessage id="vote_value" defaultMessage="Vote Value" />
-										:{' '}
-										{isNaN(voteWorthTME) ? (
-											<Icon type="loading" className="text-icon-right" />
-										) : (
-											<div>
-												{voteWorthTME}
-											</div>
-										)}
-									</div>
-								)
-							}
-							{
-								isNaN(voteWorthUSD) ? '' : (
-									<div>
-										<i className="iconfont icon-dollar text-icon" />
-										<FormattedMessage id="vote_value" defaultMessage="Vote Value" />
-										:{' '}
-										{isNaN(voteWorthUSD) ? (
-											<Icon type="loading" className="text-icon-right" />
-										) : (
-											<USDDisplay value={voteWorthUSD} />
-										)}
-									</div>
-								)
-							} */}
               <SocialLinks profile={profile} />
 							{
 								user.name == currentUser && 

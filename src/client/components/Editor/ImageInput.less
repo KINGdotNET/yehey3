@@ -41,6 +41,39 @@
   }
 
   &__imagebox {
+
+    display: flex;
+    justify-content: space-evenly;
+    border: @base-border;
+    padding: 2px;
+    margin: 2px;
+    border-radius: 20px;
+    color: royalblue;
+    transition: none;
+
+    & .iconfont {
+      font-size: 24px !important;
+      color: royalblue;
+      margin-right: 4px;
+      vertical-align: -2px;
+    }
+
+    & .anticon {
+      color: royalblue;
+      font-size: 16px !important;
+      margin-right: 8px !important;
+      vertical-align: 1px;
+    }
+
+    &:hover {
+      color: blue;
+    }
+
+    &:hover .iconfont,
+    &.active .iconfont {
+      color: blue;
+    }
+
     input {
       width: 0.1px;
       height: 0.1px;
@@ -52,18 +85,6 @@
 
     label {
       cursor: pointer;
-    }
-
-    .iconfont {
-      font-size: 22px !important;
-      margin-right: 4px;
-      vertical-align: -2px;
-    }
-
-    .anticon {
-      font-size: 16px !important;
-      margin-right: 8px !important;
-      vertical-align: 1px;
     }
   }
 

@@ -58,8 +58,8 @@ const sendMail = express.Router();
 sendMail.post('/mail', async (req, res) => {
   const { email, link, username } = req.body;
   const SEND = await sendInviteEmail(email, link, username)
-  .then(res => {console.log("sendMail Success: ", res); return res;})
-  .catch(err => console.log("sendMail Error: ", err));
+  .then(res => res)
+  .catch(err => console.error("sendMail Error: ", err));
 });
 
 app.use('/api/v1/communicate', sendMail);

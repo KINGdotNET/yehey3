@@ -5,11 +5,14 @@ import { filterNSFWwords } from '../helpers/postHelpers.js';
 const initialState = {
   recommendations: [],
   following: {
-    list: [],
+    followingList: [],
+    followerList: [],
+    mutualList: [],
     pendingFollows: [],
     isFetching: false,
     fetched: false,
   },
+  userMemoPrivateKey: '',
   notifications: [],
   latestNotification: {},
   loadingNotifications: false,
@@ -44,7 +47,9 @@ export default function userReducer(state = initialState, action) {
         ...state,
         following: {
           ...state.following,
-          list: [],
+          followingList: [],
+          followerList: [],
+          mutualList: [],
           isFetching: true,
           fetched: false,
         },
@@ -55,7 +60,9 @@ export default function userReducer(state = initialState, action) {
         ...state,
         following: {
           ...state.following,
-          list: [],
+          followingList: [],
+          followerList: [],
+          mutualList: [],
           isFetching: false,
           fetched: true,
         },
@@ -67,7 +74,9 @@ export default function userReducer(state = initialState, action) {
         recommendations: filterRecommendations(action.payload, state.networkUsers),
         following: {
           ...state.following,
-          list: action.payload,
+          followingList: [...state.following.followingList, ...action.payload.following],
+          followerList: [...state.following.followerList, ...action.payload.followers],
+          mutualList: [...state.following.mutualList, ...action.payload.mutual],
           isFetching: false,
           fetched: true,
         },
@@ -96,7 +105,6 @@ export default function userReducer(state = initialState, action) {
         };
       }
       
-
     case actions.GET_NETWORK_USER_LIST.ERROR:
       return {
         ...state,
@@ -155,7 +163,7 @@ export default function userReducer(state = initialState, action) {
         ...state,
         following: {
           ...state.following,
-          list: [...state.following.list, action.meta.username],
+          followingList: [...state.following.followingList, action.meta.username],
           pendingFollows: state.following.pendingFollows.filter(
             user => user !== action.meta.username,
           ),
@@ -166,7 +174,7 @@ export default function userReducer(state = initialState, action) {
         ...state,
         following: {
           ...state.following,
-          list: state.following.list.filter(user => user !== action.meta.username),
+          followingList: state.following.followingList.filter(user => user !== action.meta.username),
           pendingFollows: state.following.pendingFollows.filter(
             user => user !== action.meta.username,
           ),
@@ -188,7 +196,7 @@ export default function userReducer(state = initialState, action) {
     case actions.UPDATE_RECOMMENDATIONS:
       return {
         ...state,
-        recommendations: filterRecommendations(state.following.list, state.networkUsers),
+        recommendations: filterRecommendations(state.following.followingList, state.networkUsers),
       };
 
     case actions.GET_NOTIFICATIONS.START:
@@ -222,7 +230,9 @@ export default function userReducer(state = initialState, action) {
   }
 }
 
-export const getFollowingList = state => state.following.list;
+export const getFollowingList = state => state.following.followingList;
+export const getFollowerList = state => state.following.followerList;
+export const getMutualList = state => state.following.mutualList;
 export const getPendingFollows = state => state.following.pendingFollows;
 export const getIsFetchingFollowingList = state => state.following.isFetching;
 export const getRecommendations = state => state.recommendations;

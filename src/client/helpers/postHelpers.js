@@ -3,6 +3,7 @@ import { getHtml } from '../components/Story/Body';
 import { extractImageTags, extractLinks } from './parser';
 import { categoryRegex } from './regexHelpers';
 import { jsonParse } from './formatter';
+import changeCase from 'change-case';
 import DMCA from '../../common/constants/dmca.json';
 import whiteListedApps from './apps';
 import { NSFWwords } from '../helpers/constants';
@@ -29,7 +30,6 @@ export const isPostTaggedNSFW = post => {
 export function isStringNSFW(string) {
   for (const word of NSFWwords) {
     if (string.includes(word)) {
-      //console.log("Found NSFW word:", string);
       return true;
     }
   };
@@ -65,7 +65,6 @@ export const isPostTaggedPrivate = (post, username) => {
 
   if (postjson.accessList && !postjson.accessList[username] && _.includes(postjson.tags, 'private')) {
     privatePost = true;
-    //console.log("Post tagged private and dropped:", post.permlink);
   }
   return privatePost;
 };
@@ -141,8 +140,9 @@ export function createPostMetadata(body, board, tags, link, commentPrice, nsfwta
 
   const parsedBody = getHtml(body, {}, 'text');
   const images = getContentImages(parsedBody, true);
+  const normalizedTags = tags.map((tag) => {return changeCase.lowerCase(tag)} );
 
-  let boardWithTags = [board, ...tags];
+  let boardWithTags = [board, ...normalizedTags];
   if (nsfwtag) {
     boardWithTags = [...boardWithTags, 'nsfw'];
   }

@@ -9,7 +9,6 @@ import VisibilitySensor from 'react-visibility-sensor';
 import { dropCategory, isBannedPost } from '../helpers/postHelpers';
 import PostContent from './PostContent';
 import Comments from '../comments/Comments';
-import { getFacebookShareURL, getTwitterShareURL } from '../helpers/socialProfiles';
 import BBackTop from '../components/BBackTop';
 import './PostModal.less';
 
@@ -96,9 +95,6 @@ class PostModal extends React.Component {
     const { author, permlink, title, url } = currentShownPost;
     const baseURL = window ? window.location.origin : 'https://alpha.weyoume.io';
     const postURL = `${baseURL}${dropCategory(url)}`;
-    const twitterText = `"${encodeURIComponent(title)}" by @${author}`;
-    const twitterShareURL = getTwitterShareURL(twitterText, postURL);
-    const facebookShareURL = getFacebookShareURL(postURL);
     const signature = _.get(authorDetails, 'json.profile.signature', null);
 
     return (
@@ -129,12 +125,6 @@ class PostModal extends React.Component {
           <Link replace to={`/@${author}/${permlink}`} className="PostModal__action">
             <i className="iconfont icon-send PostModal__icon" />
           </Link>
-          <a href={twitterShareURL} target="_blank" className="PostModal__action">
-            <i className="iconfont icon-twitter PostModal__icon" />
-          </a>
-          <a href={facebookShareURL} target="_blank" className="PostModal__action">
-            <i className="iconfont icon-facebook PostModal__icon" />
-          </a>
         </div>
         <PostContent content={shownPostContents} signature={signature} />
         <VisibilitySensor onChange={this.handleCommentsVisibility} />

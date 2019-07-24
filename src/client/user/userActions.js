@@ -1,6 +1,13 @@
 import { createAction } from 'redux-actions';
 import { getIsAuthenticated, getAuthenticatedUserName } from '../reducers';
-import { getAllFollowing, getNetworkUserListFromAPI, getTopFollowedListFromAPI, getAllAccountsFromAPI} from '../helpers/apiHelpers';
+import _ from 'lodash';
+import { 
+  getMutualFollowersList, 
+  getNetworkUserListFromAPI, 
+  getTopFollowedListFromAPI, 
+  getAllAccountsFromAPI,
+  retrieveMemoPrivateKey,
+  } from '../helpers/apiHelpers';
 import { createAsyncActionType } from '../helpers/stateHelpers';
 
 export const FOLLOW_USER = '@user/FOLLOW_USER';
@@ -18,7 +25,16 @@ export const followUser = username => (dispatch, getState, { weauthjsInstance })
   return dispatch({
     type: FOLLOW_USER,
     payload: {
-      promise: weauthjsInstance.follow(getAuthenticatedUserName(state), username),
+      promise: weauthjsInstance.follow(getAuthenticatedUserName(state), username)
+      .then(()=> {
+        if (window.analytics) {
+          window.analytics.track('Follow', {
+            category: 'follow',
+            label: `${getAuthenticatedUserName(state)} followed ${username}` ,
+            value: 2,
+          });
+        }
+      }),
     },
     meta: {
       username,
@@ -67,7 +83,9 @@ export const getFollowing = username => (dispatch, getState) => {
     type: GET_FOLLOWING,
     meta: targetUsername,
     payload: {
-      promise: getAllFollowing(targetUsername),
+      promise: getMutualFollowersList(targetUsername)
+      .then(result => result)
+      .catch(err => { console.error('err', err); return err; }),
     },
   });
 };

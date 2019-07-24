@@ -39,7 +39,7 @@ class WalletSidebar extends React.Component {
 		isCurrentUser: false,
 		showPowerControls: true,
 		showTransferControls: true,
-		showMarket: true,
+		showMarket: false,
 		showEarnings: true,
   };
 
@@ -52,6 +52,7 @@ class WalletSidebar extends React.Component {
       memo: " ",
       currency: 'TME',
       type: 'request',
+      callBack: window.location.href,
     };
     this.props.openTransfer(this.transfer);
   };
@@ -65,6 +66,7 @@ class WalletSidebar extends React.Component {
       memo: " ",
       currency: 'TME',
       type: 'transfer',
+      callBack: window.location.href,
     };
     this.props.openTransfer(this.transfer);
   };

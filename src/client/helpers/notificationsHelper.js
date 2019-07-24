@@ -2,6 +2,7 @@ import * as notificationConstants from '../../common/constants/notifications';
 
 export const getNotificationsMessage = (notification, intl, displayUsername) => {
   switch (notification.type) {
+
     case notificationConstants.REPLY:
       return intl.formatMessage(
         {
@@ -10,6 +11,7 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
         },
         { username: displayUsername ? notification.author : '' },
       );
+
     case notificationConstants.FOLLOW:
       return intl.formatMessage(
         {
@@ -18,6 +20,7 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
         },
         { username: displayUsername ? notification.follower : '' },
       );
+
     case notificationConstants.MENTION:
       return notification.is_root_post
         ? intl.formatMessage(
@@ -34,6 +37,7 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
             },
             { username: displayUsername ? notification.author : '' },
           );
+
     case notificationConstants.VOTE: {
       let message = intl.formatMessage(
         {
@@ -65,6 +69,7 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
 
       return message;
     }
+
     case notificationConstants.REBLOG:
       return intl.formatMessage(
         {
@@ -73,6 +78,16 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
         },
         { username: displayUsername ? notification.account : '' },
       );
+
+    case notificationConstants.MESSAGE:
+      return intl.formatMessage(
+        {
+          id: 'notification_message_username',
+          defaultMessage: '{username} sent you a message',
+        },
+        { username: displayUsername ? notification.sender : '' },
+      );
+
     case notificationConstants.TRANSFER:
       return intl.formatMessage(
         {
@@ -84,6 +99,7 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
           amount: notification.amount,
         },
       );
+
     case notificationConstants.WITNESS_VOTE:
       return notification.approve
         ? intl.formatMessage(
@@ -100,6 +116,7 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
             },
             { username: displayUsername ? notification.account : '' },
           );
+
     default:
       return intl.formatMessage({
         id: 'notification_generic_default_message',
@@ -110,21 +127,31 @@ export const getNotificationsMessage = (notification, intl, displayUsername) => 
 
 export const getNotificationsLink = (notification, currentAuthUsername) => {
   switch (notification.type) {
+
     case notificationConstants.REPLY:
-      return `/@${currentAuthUsername}/${notification.parent_permlink}/#@${notification.author}/${
-        notification.permlink
-      }`;
+      return `/@${currentAuthUsername}/${notification.parent_permlink}/#@${notification.author}/${notification.permlink}`;
+
     case notificationConstants.FOLLOW:
       return `/@${notification.follower}`;
+
     case notificationConstants.MENTION:
       return `/@${notification.author}/${notification.permlink}`;
+
     case notificationConstants.VOTE:
+      return `/@${currentAuthUsername}/${notification.permlink}`;
+
     case notificationConstants.REBLOG:
       return `/@${currentAuthUsername}/${notification.permlink}`;
+
+    case notificationConstants.MESSAGE:
+      return `/messages/@${notification.sender}`;
+
     case notificationConstants.TRANSFER:
-      return `/@${notification.from}`;
+      return `/wallet`;
+
     case notificationConstants.WITNESS_VOTE:
       return `/@${notification.account}`;
+
     default:
       return '/notifications';
   }
@@ -132,19 +159,29 @@ export const getNotificationsLink = (notification, currentAuthUsername) => {
 
 export const getNotificationsAvatar = (notification, currentAuthUsername) => {
   switch (notification.type) {
+    
     case notificationConstants.REPLY:
       return notification.author;
+
     case notificationConstants.FOLLOW:
       return notification.follower;
+
     case notificationConstants.MENTION:
       return notification.author;
+
     case notificationConstants.VOTE:
       return notification.voter;
+
     case notificationConstants.TRANSFER:
       return notification.from;
+
+    case notificationConstants.MESSAGE:
+      return notification.sender;
+
     case notificationConstants.REBLOG:
     case notificationConstants.WITNESS_VOTE:
       return notification.account;
+
     default:
       return currentAuthUsername;
   }

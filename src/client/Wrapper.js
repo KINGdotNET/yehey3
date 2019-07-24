@@ -16,13 +16,17 @@ import {
   getLocale,
   getUsedLocale,
   getTranslations,
-  getUseBeta,
   getNightmode,
   getShowNSFWPosts,
   getAllAccountsList
 } from './reducers';
 import { login, logout, busyLogin } from './auth/authActions';
-import { getFollowing, getNotifications, getNetworkUsers, getAllAccounts } from './user/userActions';
+import { 
+  getFollowing, 
+  getNotifications, 
+  getNetworkUsers, 
+  getAllAccounts,
+} from './user/userActions';
 import {
   getRate,
   getRewardFund,
@@ -37,7 +41,6 @@ import Topnav from './components/Navigation/Topnav';
 import Botnav from './components/Navigation/Botnav';
 import Transfer from './wallet/Transfer';
 import PowerUpOrDown from './wallet/PowerUpOrDown';
-import BBackTop from './components/BBackTop';
 
 @withRouter
 @connect(
@@ -124,13 +127,6 @@ export default class Wrapper extends React.PureComponent {
 
     const state = store.getState();
 
-    const useBeta = getUseBeta(state);
-
-    if (useBeta && appUrl === 'https://alpha.weyoume.io') {
-      res.redirect(`https://alpha.weyoume.io${req.originalUrl}`);
-      return;
-    }
-
     let activeLocale = getLocale(state);
     if (activeLocale === 'auto') {
       activeLocale = req.cookies.language || getRequestLocale(req.get('Accept-Language'));
@@ -199,6 +195,9 @@ export default class Wrapper extends React.PureComponent {
         break;
       case 'replies':
         this.props.history.push('/replies');
+        break;
+      case 'search':
+        this.props.history.push('/search');
         break;
       case 'bookmarks':
         this.props.history.push('/bookmarks');

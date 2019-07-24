@@ -82,6 +82,7 @@ export default class Comments extends React.Component {
     getAccount: PropTypes.func.isRequired,
     usersTransactions: PropTypes.shape().isRequired,
     usersAccountHistory: PropTypes.shape().isRequired,
+    history: PropTypes.shape(),
     usersAccountHistoryLoading: PropTypes.bool.isRequired,
     loadingMoreUsersAccountHistory: PropTypes.bool.isRequired,
     authenticatedUserName: PropTypes.string.isRequired,
@@ -151,14 +152,11 @@ export default class Comments extends React.Component {
     }
 
     if (_.isEmpty(usersTransactions[getUserDetailsKey(username)])) {
-      //console.log("got user account history");
       this.props.getUserAccountHistory(username);
     }
-    //console.log("Component did mount - Username:", username, user, usersTransactions);
   }
 
   componentWillReceiveProps(nextProps) {
-    //console.log("Component will receive props");
     const { post, show, usersAccountHistoryLoading} = this.props;
 
     if (!usersAccountHistoryLoading && (nextProps.show && (nextProps.post.id !== post.id || !show) || 
@@ -166,8 +164,6 @@ export default class Comments extends React.Component {
     (nextProps.authenticatedUserName != this.props.authenticatedUserName))) {
       this.props.getComments(nextProps.post.id);
       this.props.getUserAccountHistory(nextProps.authenticatedUserName);
-      //console.log("got user account history");
-
     }
   }
 
@@ -216,6 +212,7 @@ export default class Comments extends React.Component {
       memo: "Tip for comment: " + ellipsis(comment.body, 50, { ellipsis: '…' }),
       currency: 'TME',
       type: 'transfer',
+      callBack: window.location.href,
     };
     this.props.openTransfer(this.transfer);
   }
@@ -223,16 +220,14 @@ export default class Comments extends React.Component {
   handleCommentPayment(e, post) {
     e.preventDefault();
     const metaData = jsonParse(post.json);
-    //console.log("metaData:", metaData);
     const transferQuery = {
       to: post.author,
       amount: `${metaData.commentPrice} TME`,
       memo: `@${post.author}/${post.permlink}`,
     };
-    const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
-    win.focus();
+    const callBack =  window.location.href;
+    this.props.history.push(generateTransferURL(transferQuery, callBack));
   }
-
 
   render() {
     const {
@@ -279,18 +274,12 @@ export default class Comments extends React.Component {
       (parseFloat(txn.op[1].amount) >= commentPrice));
     
     if (commentPrice > 0) {
-      //console.log("Active commentPrice is:", commentPrice);
       if (validPayments.length >= 1) {
         commentsActive = true;
         paymentAcknowledged = true;
-        //console.log("commentPrice paid:", validPayments);
     }} else {
       commentsActive = true;
     }
-
-    //console.log("transfers:", transfers);
-    //console.log("comment price:", commentPrice);
-    //console.log("Comments Active:", commentsActive);
 
     const parentNode = comments.childrenById[postId];
 

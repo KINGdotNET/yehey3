@@ -5,6 +5,8 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Form, Input, Icon, Button } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { generateSignURL } from '../helpers/apiHelpers';
 import weauthjsInstance from '../weauthjsInstance';
 import { getIsReloading, getAuthenticatedUser } from '../reducers';
 import socialProfiles from '../helpers/socialProfiles';
@@ -16,13 +18,10 @@ import BodyContainer from '../containers/Story/BodyContainer';
 import Action from '../components/Button/Action';
 import Affix from '../components/Utils/Affix';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
-import { isValidImage, MAXIMUM_UPLOAD_SIZE } from '../helpers/image';
 import requiresLogin from '../auth/requiresLogin';
-import classNames from 'classnames';
 import wehelpjs from 'wehelpjs';
 import { message } from 'antd';
 import './Settings.less';
-import { invalid } from 'glamor';
 
 const FormItem = Form.Item;
 
@@ -43,6 +42,7 @@ function mapPropsToFields(props) {
   );
 }
 
+@withRouter
 @requiresLogin
 @injectIntl
 @connect(state => ({
@@ -59,6 +59,8 @@ export default class ProfileSettings extends React.Component {
     intl: PropTypes.shape().isRequired,
     form: PropTypes.shape().isRequired,
     user: PropTypes.shape().isRequired,
+    location: PropTypes.shape().isRequired,
+    history: PropTypes.shape().isRequired,
     onImageUpload: PropTypes.func,
     onImageInvalid: PropTypes.func,
   };
@@ -84,6 +86,7 @@ export default class ProfileSettings extends React.Component {
     this.state = {
       bodyHTML: '',
       profileImage: '',
+      memoPrivateKey: '',
     };
 
     this.handleSignatureChange = this.handleSignatureChange.bind(this);
@@ -94,34 +97,33 @@ export default class ProfileSettings extends React.Component {
     this.onPasswordInput = this.onPasswordInput.bind(this);  
   };
 
-
-handleUpdateCurrentInputValue = e =>
+  handleUpdateCurrentInputValue = e =>
     this.setState({
       currentInputValue: e.target.value,
     });
 
-disableAndInsertImage = (image, imageName = 'image') => {
-  this.setState({
-    imageUploading: false,
-  });
-  this.insertImage(image, imageName);
-};
+  disableAndInsertImage = (image, imageName = 'image') => {
+    this.setState({
+      imageUploading: false,
+    });
+    this.insertImage(image, imageName);
+  };
 
-insertImage(image, imageName = 'image') {
-  if (!this.input) return;
+  insertImage(image, imageName = 'image') {
+    if (!this.input) return;
 
-  const { value } = this.props;
+    const { value } = this.props;
 
-  const startPos = this.input.selectionStart;
-  const endPos = this.input.selectionEnd;
-  const imageText = `${image}`;
-  const newValue = `${value.substring(0, startPos)}${imageText}${value.substring(
-    endPos,
-    value.length,
-  )}`;
-  this.resizeTextarea();
-  this.setValue(newValue, startPos + imageText.length, startPos + imageText.length);
-}
+    const startPos = this.input.selectionStart;
+    const endPos = this.input.selectionEnd;
+    const imageText = `${image}`;
+    const newValue = `${value.substring(0, startPos)}${imageText}${value.substring(
+      endPos,
+      value.length,
+    )}`;
+    this.resizeTextarea();
+    this.setValue(newValue, startPos + imageText.length, startPos + imageText.length);
+  }
 
   handleSignatureChange(body) {
     _.throttle(this.renderBody, 200, { leading: false, trailing: true })(body);
@@ -131,13 +133,10 @@ insertImage(image, imageName = 'image') {
     _.throttle(this.renderImage, 200, { leading: false, trailing: true })(image);
   }
 
-
   handleSubmit(e) {
     e.preventDefault();
     const { form } = this.props;
-
     if (!form.isFieldsTouched()) return;
-
     form.validateFields((err, values) => {
       if (!err) {
         const cleanValues = Object.keys(values)
@@ -149,8 +148,8 @@ insertImage(image, imageName = 'image') {
             }),
             {},
           );
-        const win = window.open(weauthjsInstance.sign('profile-update', cleanValues), '_blank');
-        win.focus();
+        const callBack =  window.location.origin;
+        this.props.history.push(generateSignURL('profile-update', cleanValues, callBack));
       }
     });
   }
@@ -171,14 +170,14 @@ insertImage(image, imageName = 'image') {
     const { user } = this.props;
     let storagekey = "UserMemoKey-"+user.name;
     let memoKeys = wehelpjs.auth.getPrivateKeys(user.name, password, ['memo']);
-    //console.log("memoKeys", memoKeys);
     if (user.memoKey == memoKeys.memoPubkey) {
-      //console.log("Key match successful", memoKeys);
       localStorage.setItem(storagekey, memoKeys.memo);
       message.success("Secret key set successfully.");
-      window.location.reload();
+      this.setState({
+        memoPrivateKey: memoKeys.memo,
+      });
     } else {
-      //console.log("Key match Invalid: on-chain public memo key: ", user.memoKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
+      console.error("Key match Invalid: on-chain public memo key: ", user.memoKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
       message.error("Secret key invalid, please input correct password.");
     }
   }
@@ -195,12 +194,7 @@ insertImage(image, imageName = 'image') {
   }
 
   passwordForm(){
-    const { user } = this.props;
-    let storagekey = "UserMemoKey-"+user.name;
-    let memoPrivateKey = '';
-    if (!_.isEmpty(localStorage)) {
-      memoPrivateKey = localStorage.getItem(storagekey);
-    }
+    const { memoPrivateKey } = this.state;
     let form = '';
     if (memoPrivateKey) {
       form = (
@@ -248,6 +242,18 @@ insertImage(image, imageName = 'image') {
           </div>);
             } 
     return form;
+  }
+
+  componentWillMount() {
+    const { user } = this.props;
+    let storagekey = "UserMemoKey-"+user.name;
+    let memoPrivateKey = '';
+    if (localStorage && !_.isEmpty(localStorage)) {
+      memoPrivateKey = localStorage.getItem(storagekey);
+    }
+    this.setState({
+      memoPrivateKey: memoPrivateKey,
+    })
   }
 
   render() {
@@ -349,7 +355,6 @@ insertImage(image, imageName = 'image') {
                     )}
                   </div>
                 </div>
-                
                 {/* <div className="Settings__section">
                   <h3>
                     <FormattedMessage id="profile_cover" defaultMessage="Cover picture" />

@@ -1,0 +1,119 @@
+@import "../styles/modules/variables.less";
+@import "../styles/custom.less";
+
+.AccountForm {
+    background-color: #ffffff;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    text-align: left;
+    margin: 10px;
+    padding: 10px;
+
+&__imagebox {
+
+    color: @primary-color;
+    transition: none;
+    
+    input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+    
+    label {
+        cursor: pointer;
+    }
+    
+    .iconfont {
+        color: @primary-color;
+        font-size: 24px !important;
+        margin-right: 4px;
+        vertical-align: -2px;
+    
+    }
+    
+    .anticon {
+        color: @blue-linkWater;
+        font-size: 16px !important;
+        margin-right: 8px !important;
+        vertical-align: 3px;
+    }
+    
+}
+
+&__label {
+    font-weight: bold;
+    width: 140px;
+  }
+
+&__control {
+    font-size: 18px;
+    border-radius: 0.25em;
+    max-width: 480px;
+    width: 100%;
+    display: block;
+    
+    &:hover, &:focus, &:active {
+        box-shadow: none !important;
+    }
+
+    input {
+        padding: 14px 0 12px 14px;
+    }
+}
+
+.extra-details { 
+	visibility: hidden;
+	height: 0px;
+	&.visible {
+		visibility: visible;
+		height: auto;
+	}
+}
+
+&__submitbutton {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+&__passwordtip {
+    color: black;
+    font-family: @font-family;
+    font-weight: 400;
+
+    .iconfont {
+        color: @primary-color;
+        font-size: 24px !important;
+        margin-right: 4px;
+        vertical-align: -2px;
+    }
+}
+
+&__details {
+    text-align: right;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+&__button {
+    margin: 10px;
+}
+
+&__error {
+    text-align: center;
+    color: red;
+}
+
+&__passpik {
+    text-align: center;
+    color: royalblue;
+}
+
+.ImageInput__textinput {
+    display: none;
+}
+
+}

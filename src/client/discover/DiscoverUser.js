@@ -14,14 +14,14 @@ const DiscoverUser = ({ user, totalSCORE, SCOREbackingTMEfundBalance}) => {
   const parsedJSON = _.attempt(JSON.parse, user.json);
   const userJSON = _.isError(parsedJSON) ? user.json : parsedJSON;
   const userProfile = _.has(userJSON, 'profile') ? userJSON.profile : {};
+  const username = user.name;
   
   const followerCount = user.follower_count;
   const location = userProfile.location;
   const posts = user.post_count;
-  const name = userProfile.name;
+  const fullName = userProfile.name;
   const about = userProfile.about;
   let website = userProfile.website;
-  // console.log("userObject:", user, "parsedJSON:", parsedJSON, "User.json", user.json, "UserJSON:", userJSON, "Profile:", profile);
 
   if (website && website.indexOf('http://') === -1 && website.indexOf('https://') === -1) {
     website = `http://${website}`;
@@ -35,22 +35,22 @@ const DiscoverUser = ({ user, totalSCORE, SCOREbackingTMEfundBalance}) => {
   }
 
   return (
-    <div key={user.name} className="DiscoverPage__user">
+    <div key={"discover-"+username} className="DiscoverPage__user">
       <div className="DiscoverPage__user__content">
         <div className="DiscoverPage__user__links">
-          <Link to={`/@${user.name}`}>
-            <Avatar username={user.name} size={40} />
+          <Link to={`/@${username}`}>
+            <Avatar username={username} size={40} />
           </Link>
           <div className="DiscoverPage__user__profile">
             <div className="DiscoverPage__user__profile__header">
-              <Link to={`/@${user.name}`}>
+              <Link to={`/@${username}`}>
                 <span className="DiscoverPage__user__name">
-                  <span className="username">{name || user.name}</span>
+                  <span className="username">{fullName || username}</span>
                 </span>
                 <ReputationTag reputation={user.reputation} />
               </Link>
                 <div className="DiscoverPage__user__follow">
-                  <FollowButton username={user.name} />
+                  <FollowButton username={username} />
                 </div>
               </div>
               <div className="DiscoverPage__user__Followercount">

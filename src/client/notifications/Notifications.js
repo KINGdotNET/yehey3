@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { FormattedMessage } from 'react-intl';
+import Helmet from 'react-helmet';
+import { withRouter } from 'react-router-dom';
+import { generateTransferURL } from '../helpers/apiHelpers';
 import { connect } from 'react-redux';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import RightSidebar from '../app/Sidebar/RightSidebar';
@@ -22,19 +25,22 @@ import NotificationMention from '../components/Navigation/Notifications/Notifica
 import NotificationFollowing from '../components/Navigation/Notifications/NotificationFollowing';
 import NotificationVote from '../components/Navigation/Notifications/NotificationVote';
 import NotificationReblog from '../components/Navigation/Notifications/NotificationReblog';
+import NotificationMessage from '../components/Navigation/Notifications/NotificationMessage';
 import NotificationTransfer from '../components/Navigation/Notifications/NotificationTransfer';
 import NotificationVoteWitness from '../components/Navigation/Notifications/NotificationVoteWitness';
 import Loading from '../components/Icon/Loading';
 import weauthjsInstance from '../weauthjsInstance';
 import './Notifications.less';
-import { jsonParse } from '../helpers/formatter';
 
+
+@withRouter
 class Notifications extends React.Component {
   static propTypes = {
     loadingNotifications: PropTypes.bool.isRequired,
     getUpdatedSCUserMetadata: PropTypes.func.isRequired,
     getNotifications: PropTypes.func.isRequired,
     notifications: PropTypes.arrayOf(PropTypes.shape()),
+    history: PropTypes.shape(),
     currentAuthUsername: PropTypes.string,
     userSCMetaData: PropTypes.shape(),
     onActionInitiated: PropTypes.func,
@@ -69,9 +75,6 @@ class Notifications extends React.Component {
     if (timestamp > lastSeenTimestamp) {
       saveNotificationsLastTimestamp(timestamp).then(() => this.props.getUpdatedSCUserMetadata());
     }
-
-    //console.log("userSCMetaData:", userSCMetaData);
-    //console.log("notifications::", notifications);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -92,8 +95,8 @@ class Notifications extends React.Component {
 
   handleRequestPayment(e, transferQuery) {
     e.preventDefault();
-    const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
-    win.focus();
+    const callBack =  window.location.href;
+    this.props.history.push(generateTransferURL(transferQuery, callBack));
   };
 
   render() {
@@ -102,6 +105,11 @@ class Notifications extends React.Component {
 
     return (
       <div className="shifted">
+        <Helmet>
+          <title>
+            {`Notifications`}
+          </title>
+        </Helmet>
         <div className="feed-layout container">
           <Affix className="leftContainer" stickPosition={77}>
             <div className="left">
@@ -126,6 +134,7 @@ class Notifications extends React.Component {
                 const key = `${index}${notification.timestamp}`;
                 const read = lastSeenTimestamp >= notification.timestamp;
                 switch (notification.type) {
+
                   case notificationConstants.REPLY:
                     return (
                       <NotificationReply
@@ -135,14 +144,17 @@ class Notifications extends React.Component {
                         read={read}
                       />
                     );
+
                   case notificationConstants.FOLLOW:
                     return (
                       <NotificationFollowing key={key} notification={notification} read={read} />
                     );
+
                   case notificationConstants.MENTION:
                     return (
                       <NotificationMention key={key} notification={notification} read={read} />
                     );
+
                   case notificationConstants.VOTE:
                     return (
                       <NotificationVote
@@ -152,6 +164,7 @@ class Notifications extends React.Component {
                         currentAuthUsername={currentAuthUsername}
                       />
                     );
+
                   case notificationConstants.REBLOG:
                     return (
                       <NotificationReblog
@@ -161,6 +174,16 @@ class Notifications extends React.Component {
                         currentAuthUsername={currentAuthUsername}
                       />
                     );
+
+                  case notificationConstants.MESSAGE:
+                    return (
+                      <NotificationMessage
+                        key={key}
+                        notification={notification}
+                        read={read}
+                      />
+                    );
+
                   case notificationConstants.TRANSFER:
                     return (
                       <NotificationTransfer 
@@ -169,10 +192,12 @@ class Notifications extends React.Component {
                         read={read} 
                         onRequestClick={this.handleRequestPayment} />
                     );
+
                   case notificationConstants.WITNESS_VOTE:
                     return (
                       <NotificationVoteWitness key={key} notification={notification} read={read} />
                     );
+
                   default:
                     return null;
                 }

@@ -6,7 +6,6 @@ import _ from 'lodash';
  * @returns - Output: A flat array with alternating elements.
  */
 export function combineArrays(arraySet) {
-  // console.log("combineArrays", arraySet);
   const cleanArray = arraySet.filter(Boolean);
   if (cleanArray.length < 2) {
     return cleanArray.flat();
@@ -23,7 +22,6 @@ export function combineArrays(arraySet) {
   };
 
 export function mergePostLists(mainposts, promposts, ratio) {
-  //console.log("Mergepostlists: ", mainposts, promposts, ratio);
   const cleanArray = mainposts.filter(Boolean);
   if (cleanArray.length < 2) {
     return cleanArray.flat();
@@ -37,9 +35,7 @@ export function mergePostLists(mainposts, promposts, ratio) {
       
       const mixedPosts = _.uniqBy(interleave(...cleanArray), 'id');
       const postChunks = _.chunk(mixedPosts, ratio);
-      const promPostChunks = _.chunk(promposts, 1); 
-      //console.log("mixedposts:", mixedPosts, "postchunks:", postChunks, "prompostchunks:", promPostChunks);
-      //console.log(_.flatten(interleave(postChunks, promPostChunks)));
+      const promPostChunks = _.chunk(promposts, 1);
       return _.uniqBy(_.flatten(interleave(postChunks, promPostChunks)), 'id');
       };
 
@@ -53,7 +49,6 @@ export function transposeArrays(...arraySet) {
     if (arraySet.length > 0) {
       return _.zip(...arraySet);
   } else {
-    // console.log("arraySet length too low:", arraySet);
     return [];
   }};
 

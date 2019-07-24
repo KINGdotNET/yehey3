@@ -75,7 +75,6 @@ export default class RightSidebar extends React.Component {
     
     return (
       <div>
-        {!authenticated && <SignUp />}
         <Switch>
           <Route path="/activity" component={UserActivitySearch} />
           <Route path="/@:name/activity" component={UserActivitySearch} />

@@ -30,7 +30,6 @@ export const getFeedContent = ({ sortBy, category, limit = 9 }) => (
   getState,
   { blockchainAPI },
 ) => {
-  // console.log("GET FEED CONTENT: sortBy", sortBy, "category", category);
   const fetchParams = _.zip(sortBy, category);
 
   dispatch({
@@ -50,37 +49,28 @@ export const getMoreFeedContent = ({ sortBy, category, limit = 9 }) => (
   getState,
   { blockchainAPI },
 ) => {
-  //console.log("GET MORE FEED CONTENT: sortBy", sortBy, "category", category);
   const state = getState();
   const feed = getFeed(state);
   const posts = getPosts(state);
   const sortByP = sortBy.concat('promoted');
   const categoryP = category.concat('promoted');
-  
-
   const sortByCat = _.zip(sortBy.concat(sortBy.join('-')), categoryP);
-
-  //console.log("sortbycat:", sortByCat);
 
   const feedContent = sortByCat.reduce((feedListP, value) => {
     const feedList = feedListP;
     const nextStateData = getFeedFromState(value[0], value[1], feed);
-    //console.log("reducing feed content", nextStateData);
     return feedList.concat([nextStateData]);
   }, []);
-  
-  //console.log("Getting More feed content:", sortBy, feedContent);
 
   if (feedContent[0].length < 1) return Promise.resolve(null);
   if (feedContent[1].length < 1) return Promise.resolve(null);
   if (feedContent[2].length < 1) return Promise.resolve(null);
 
-  // creates transposed array of content fetching paramters for each sortby value passed
+  // creates transposed array of content fetching parameters for each sortby value passed
   const lastPosts = feedContent.map(feed => posts[feed[feed.length - 1]]);
   const startAuthors = lastPosts.map(post => post.author);
   const startPermlinks = lastPosts.map(post => post.permlink);
   const fetchParams = _.zip(sortByP, categoryP, startAuthors, startPermlinks);
-  //console.log("FetchParams:",  fetchParams);
 
   return dispatch({
     type: GET_MORE_FEED_CONTENT.ACTION,

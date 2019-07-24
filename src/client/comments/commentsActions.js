@@ -123,7 +123,7 @@ export const sendComment = (parentPost, body, isUpdating = false, originalCommen
           if (window.analytics) {
             window.analytics.track('Comment', {
               category: 'comment',
-              label: 'submit',
+              label: `${author} - ${parentPermlink} : ${newBody}`,
               value: 3,
             });
           }

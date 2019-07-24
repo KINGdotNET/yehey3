@@ -19,7 +19,7 @@ export default function requiresLogin(WrappedComponent) {
       );
     }
     if (!authenticated) {
-      return <Error401 />;
+      window.location = `/welcome`;
     }
     return <WrappedComponent {...props} />;
   };

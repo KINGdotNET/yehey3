@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
-import { Icon, Input } from 'antd';
+import { Icon, Input, Button } from 'antd';
 import Dropzone from 'react-dropzone';
 import { HotKeys } from 'react-hotkeys';
 import { MAXIMUM_UPLOAD_SIZE, isValidImage } from '../../helpers/image';
@@ -10,24 +10,29 @@ import './ImageInput.less';
 
 class ImageInput extends React.Component {
   static propTypes = {
-    value: PropTypes.string, // eslint-disable-line react/require-default-props
+    value: PropTypes.string,
     inputId: PropTypes.string,
     addon: PropTypes.node,
     inputRef: PropTypes.func,
     onChange: PropTypes.func,
     onImageUpload: PropTypes.func,
     onImageInvalid: PropTypes.func,
+    uploadText: PropTypes.string,
+    uploadIcon: PropTypes.string,
+    uploadColor: PropTypes.string,
   };
 
   static defaultProps = {
     addon: null,
     inputId: '',
+    uploadText: 'Select Image',
+    uploadColor: '#c2ccd3',
+    uploadIcon: 'icon-picture',
     inputRef: () => {},
     onChange: () => {},
     onImageUpload: () => {},
     onImageInvalid: () => {},
   };
-
 
   constructor(props) {
     super(props);
@@ -97,9 +102,7 @@ class ImageInput extends React.Component {
 
   insertImage(image, imageName = 'image') {
     if (!this.input) return;
-
     const { value } = this.props;
-
     const startPos = this.input.selectionStart;
     const endPos = this.input.selectionEnd;
     const imageText = `${image}`;
@@ -107,17 +110,8 @@ class ImageInput extends React.Component {
       endPos,
       value.length,
     )}`;
-    this.resizeTextarea();
     this.setValue(newValue, startPos + imageText.length, startPos + imageText.length);
   }
-
-  resizeTextarea() {
-    if (this.originalInput) this.originalInput.resizeTextarea();
-  }
-
-  handlers = {
-    
-  };
 
   handlePastedImage(e) {
     if (e.clipboardData && e.clipboardData.items) {
@@ -125,18 +119,14 @@ class ImageInput extends React.Component {
       Array.from(items).forEach(item => {
         if (item.kind === 'file') {
           e.preventDefault();
-
           const blob = item.getAsFile();
-
           if (!isValidImage(blob)) {
             this.props.onImageInvalid();
             return;
           }
-
           this.setState({
             imageUploading: true,
           });
-
           this.props.onImageUpload(blob, this.disableAndInsertImage, () =>
             this.setState({
               imageUploading: false,
@@ -222,6 +212,9 @@ class ImageInput extends React.Component {
       inputRef,
       onImageUpload,
       onImageInvalid,
+      uploadText,
+      uploadIcon,
+      uploadColor,
       ...restProps
     } = this.props;
     const { dropzoneActive } = this.state;
@@ -248,17 +241,9 @@ class ImageInput extends React.Component {
           />
           <label htmlFor={this.props.inputId || 'inputfile'}>
             {this.state.imageUploading ? (
-              <Icon type="loading" />
+                <Icon type="loading" /> 
             ) : (
-              <i className="iconfont icon-picture" />
-            )}
-            {this.state.imageUploading ? (
-              <FormattedMessage id="image_uploading" defaultMessage="Uploading your image..." />
-            ) : (
-              <FormattedMessage
-                id="select_or_past_image"
-                defaultMessage="Select image or paste it from the clipboard."
-              />
+              <span style={{color: uploadColor}}> <i className={`iconfont ${uploadIcon}`} style={{color: uploadColor}} /> {uploadText} </span>
             )}
           </label>
         </p>
@@ -271,8 +256,9 @@ class ImageInput extends React.Component {
               </div>
             )}
             <HotKeys keyMap={this.constructor.hotkeys} handlers={this.handlers}>
-              <Input.TextArea
+              <Input
                 {...restProps}
+                className="ImageInput__textinput"
                 onChange={this.handleChange}
                 value={value}
                 ref={this.setInput}

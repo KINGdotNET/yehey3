@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { withRouter } from 'react-router-dom';
+import { generateTransferURL } from '../helpers/apiHelpers';
 import _ from 'lodash';
 import { Form, Input, Radio, Modal } from 'antd';
 import { TME, TSD } from '../../common/constants/cryptos';
@@ -19,11 +21,13 @@ import {
   getTransferCurrency,
   getTransferType,
   getCryptosPriceHistory,
+  getTransferCallBack,
 } from '../reducers';
 import './Transfer.less';
 
 const InputGroup = Input.Group;
 
+@withRouter
 @injectIntl
 @connect(
   state => ({
@@ -33,6 +37,7 @@ const InputGroup = Input.Group;
     memo: getTransferMemo(state),
     currency: getTransferCurrency(state),
     type: getTransferType(state),
+    callBack: getTransferCallBack(state),
     authenticated: getIsAuthenticated(state),
     user: getAuthenticatedUser(state),
     cryptosPriceHistory: getCryptosPriceHistory(state),
@@ -50,6 +55,8 @@ export default class Transfer extends React.Component {
     to: PropTypes.string,
     amount: PropTypes.number,
     memo: PropTypes.string,
+    callBack: PropTypes.string,
+    history: PropTypes.shape(),
     currency: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     authenticated: PropTypes.bool.isRequired,
@@ -66,6 +73,7 @@ export default class Transfer extends React.Component {
     memo: '',
     currency: 'TME',
     type: 'transfer',
+    callBack: process.env.URL,
     visible: false,
     closeTransfer: () => {},
   };
@@ -88,16 +96,16 @@ export default class Transfer extends React.Component {
 
   componentDidMount() {
     const { cryptosPriceHistory } = this.props;
-    const currentTMERate = _.get(cryptosPriceHistory, 'TME.priceDetails.currentUSDPrice', null);
-    const currentTSDRate = _.get(cryptosPriceHistory, 'TSD.priceDetails.currentUSDPrice', null);
+    //const currentTMERate = _.get(cryptosPriceHistory, 'TME.priceDetails.currentUSDPrice', null);
+    //const currentTSDRate = _.get(cryptosPriceHistory, 'TSD.priceDetails.currentUSDPrice', null);
 
-    if (_.isNull(currentTMERate)) {
-      this.props.getCryptoPriceHistory(TME.symbol);
-    }
+    // if (_.isNull(currentTMERate)) {
+    //   this.props.getCryptoPriceHistory(TME.symbol);
+    // }
 
-    if (_.isNull(currentTSDRate)) {
-      this.props.getCryptoPriceHistory(TSD.symbol);
-    }
+    // if (_.isNull(currentTSDRate)) {
+    //   this.props.getCryptoPriceHistory(TSD.symbol);
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -171,7 +179,7 @@ export default class Transfer extends React.Component {
   };
 
   handleContinueClick = () => {
-    const { form, user } = this.props;
+    const { form, user, callBack } = this.props;
 
     form.validateFields({ force: true }, (errors, values) => {
       if (!errors) {
@@ -181,8 +189,14 @@ export default class Transfer extends React.Component {
           memo: values.memo,
         };
         if (values.type == 'transfer') {
-          const win = window.open(weauthjsInstance.sign('transfer', transferQuery), '_blank');
-          win.focus();
+          this.props.history.push(generateTransferURL(transferQuery, callBack));
+          if (window.analytics) {
+            window.analytics.track('Payment', {
+              category: 'payment',
+              label: `${user.name} sent ${values.to} ${values.amount} ${values.currency} : ${values.memo}`,
+              value: 5,
+            });
+          }
           this.props.closeTransfer();
         }
         else if (values.type == 'request') {
@@ -197,8 +211,14 @@ export default class Transfer extends React.Component {
             amount: `${parseFloat(0.001).toFixed(3)} ${values.currency}`,
             memo: JSON.stringify(requestData),
           }
-          const win = window.open(weauthjsInstance.sign('transfer', requestQuery), '_blank');
-          win.focus();
+          this.props.history.push(this.generateTransferURL(requestQuery, callBack));
+          if (window.analytics) {
+            window.analytics.track('Payment', {
+              category: 'payment',
+              label: `${user.name} sent ${values.to} ${values.amount} ${values.currency} : ${values.memo}`,
+              value: 5,
+            });
+          }
           this.props.closeTransfer();
         }
       }
@@ -407,8 +427,6 @@ export default class Transfer extends React.Component {
         onCancel={this.handleCancelClick}
       >
         <Form className="Transfer" hideRequiredMark>
-
-          
           <Form.Item label={<FormattedMessage id="to_message" defaultMessage={this.getUsernameTitle(this.state.type, intl)} />}>
             {getFieldDecorator('to', {
               rules: [

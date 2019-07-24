@@ -165,7 +165,7 @@ class Network extends React.Component {
 
   componentWillUnmount() {
       clearInterval(this.interval);
-}
+  }
 
   render() {
 
@@ -173,46 +173,46 @@ class Network extends React.Component {
       blocks, } 
     = this.props;
    
-  return (
-  <div className="shifted">
-  <Helmet>
-    <title>
-      WeYouMe Network Monitor
-    </title>
-  </Helmet>
-  <div className="feed-layout container">
-    <Affix className="leftContainer" stickPosition={77}>
-      <div className="left">
-        <LeftSidebar />
-      </div>
-    </Affix>
-    <div className="center">
-    <div className="Network">
-      <div className="Network__title">
-        <h1>
-          <FormattedMessage id="Network_details" defaultMessage="Network Details" />
-        </h1>
-      </div>
-      </div>
-      <div className="Network__search">
-        {this.blockSearch()}
-      </div>
-      <div className="Network__content">
-        {this.displayNetwork()}
-      </div>
-      <div className="Network__blocks">
-      {blocks.map(block => <Block block={block.data} block_num={block.num} key={block.data.block_id} />)}
-      </div>
-    </div>
-    <Affix className="rightContainer" stickPosition={77}>
-      <div className="right">
-      <RightSidebar />
+    return (
+    <div className="shifted">
+    <Helmet>
+      <title>
+        WeYouMe Network Monitor
+      </title>
+    </Helmet>
+    <div className="feed-layout container">
+      <Affix className="leftContainer" stickPosition={77}>
+        <div className="left">
+          <LeftSidebar />
+        </div>
+      </Affix>
+      <div className="center">
+        <div className="Network">
+          <div className="Network__title">
+            <h1>
+              <FormattedMessage id="Network_details" defaultMessage="Network Details" />
+            </h1>
           </div>
-          </Affix>
+          <div className="Network__search">
+            {this.blockSearch()}
+          </div>
+          <div className="Network__content">
+            {this.displayNetwork()}
+          </div>
+          <div className="Network__blocks">
+            {blocks.map(block => <Block block={block.data} block_num={block.num} key={block.data.block_id} />)}
+          </div> 
+        </div>
+      </div>
+      <Affix className="rightContainer" stickPosition={77}>
+        <div className="right">
+          <RightSidebar />
+        </div>
+      </Affix>
+    </div>
   </div>
-</div>
-);
-}
+  );
+  }
 }
 
 

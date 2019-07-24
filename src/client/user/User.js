@@ -4,15 +4,20 @@ import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { Helmet } from 'react-helmet';
 import _ from 'lodash';
-import { currentUserFollowersUser } from '../helpers/apiHelpers';
+import { currentUserFollowsUser } from '../helpers/apiHelpers';
 import {
   getIsAuthenticated,
   getAuthenticatedUser,
   getUser,
+  getFollowingList,
+  getMutualList,
   getIsUserFailed,
   getIsUserLoaded,
   getAuthenticatedUserName,
 } from '../reducers';
+import { 
+  getFollowing, 
+} from '../user/userActions';
 import { openTransfer } from '../wallet/walletActions';
 import { getAccount } from './usersActions';
 import { getAvatarURL } from '../components/Avatar';
@@ -29,11 +34,14 @@ import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount';
     authenticatedUser: getAuthenticatedUser(state),
     authenticatedUserName: getAuthenticatedUserName(state),
     user: getUser(state, ownProps.match.params.name),
+    followingList: getFollowingList(state),
+    mutualList: getMutualList(state),
     loaded: getIsUserLoaded(state, ownProps.match.params.name),
     failed: getIsUserFailed(state, ownProps.match.params.name),
   }),
   {
     getAccount,
+    getFollowing,
     openTransfer,
   },
 )
@@ -45,6 +53,8 @@ export default class User extends React.Component {
     authenticatedUserName: PropTypes.string,
     match: PropTypes.shape().isRequired,
     user: PropTypes.shape().isRequired,
+    followingList: PropTypes.arrayOf(PropTypes.string).isRequired,
+    mutualList: PropTypes.arrayOf(PropTypes.string).isRequired,
     loaded: PropTypes.bool,
     failed: PropTypes.bool,
     getAccount: PropTypes.func,
@@ -59,46 +69,25 @@ export default class User extends React.Component {
     openTransfer: () => {},
   };
 
-  static fetchData({ store, match }) {
-    return store.dispatch(getAccount(match.params.name));
+  static async fetchData({ store, match }) {
+    const { name } = match.params;
+    return Promise.all([
+      store.dispatch(getAccount(name)),
+    ]);
   }
-
-  state = {
-    isFollowing: false,
-  };
 
   componentDidMount() {
-    const { user, authenticated, authenticatedUserName } = this.props;
-    if (!user.id && !user.failed) {
-      this.props.getAccount(this.props.match.params.name);
-    }
+    const { 
+      user,
+      match, 
+    } = this.props;
 
-    if (authenticated) {
-      currentUserFollowersUser(authenticatedUserName, this.props.match.params.name).then(resp => {
-        const result = _.head(resp);
-        const followingUsername = _.get(result, 'following', '');
-        const isFollowing = this.props.authenticatedUserName === followingUsername;
-        this.setState({
-          isFollowing,
-        });
-      });
-    }
-  }
+    const { 
+      name
+    } = match.params;
 
-  componentWillReceiveProps(nextProps) {
-    const diffUsername = this.props.match.params.name !== nextProps.match.params.name;
-    const diffAuthUsername = this.props.authenticatedUserName !== nextProps.authenticatedUserName;
-    if (diffUsername || diffAuthUsername) {
-      currentUserFollowersUser(nextProps.authenticatedUserName, nextProps.match.params.name).then(
-        resp => {
-          const result = _.head(resp);
-          const followingUsername = _.get(result, 'following', '');
-          const isFollowing = nextProps.authenticatedUserName === followingUsername;
-          this.setState({
-            isFollowing,
-          });
-        },
-      );
+    if (_.isEmpty(user) || (!user.id && !user.error)) {
+      this.props.getAccount(name);
     }
   }
 
@@ -115,18 +104,17 @@ export default class User extends React.Component {
       memo: " ",
       currency: 'TME',
       type: 'transfer',
+      callBack: window.location.href,
     };
     this.props.openTransfer(this.transfer);
   };
 
   render() {
-    const { authenticated, authenticatedUser, loaded, failed } = this.props;
-    const { isFollowing } = this.state;
+    const { authenticated, authenticatedUser, followingList, mutualList, loaded, failed, user } = this.props;
     if (failed) return <Error404 />;
 
-    const username = this.props.match.params.name;
-    const { user } = this.props;
-    const { profile = {} } = user.json || {};
+    const username = user.name;
+    const profile = _.get(user, 'profile', {} );
     const busyHost = global.postOrigin || 'https://alpha.weyoume.io';
     const desc = profile.about || `Posts by ${username}`;
     const image = getAvatarURL(username) || '/images/logo-icon.png';
@@ -137,6 +125,8 @@ export default class User extends React.Component {
     const title = `${displayedUsername} - WeYouMe`;
 
     const isSameUser = authenticated && authenticatedUser.name === username;
+    const isFollowing = followingList.includes(username);
+    const isMutual = mutualList.includes(username);
 
     return (
       <div className="main-panel">
@@ -171,6 +161,7 @@ export default class User extends React.Component {
             isSameUser={isSameUser}
             coverImage={profile.cover_image}
             isFollowing={isFollowing}
+            isMutual={isMutual}
             hasCover={hasCover}
             onFollowClick={this.handleFollowClick}
             onTransferClick={this.handleTransferClick}

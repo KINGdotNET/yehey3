@@ -30,7 +30,7 @@ export const reblog = postId => (dispatch, getState, { weauthjsInstance }) => {
         if (window.analytics) {
           window.analytics.track('Reblog', {
             category: 'reblog',
-            label: 'submit',
+            label: `${auth.user.name} : ${post.author} - ${post.permlink}`,
             value: 2,
           });
         }

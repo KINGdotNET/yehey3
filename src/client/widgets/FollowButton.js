@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getAuthenticatedUserName, getFollowingList, getPendingFollows } from '../reducers';
+import { 
+  getAuthenticatedUserName, 
+  getFollowingList, 
+  getPendingFollows, 
+  getMutualList 
+} from '../reducers';
 import { followUser, unfollowUser } from '../user/userActions';
 import withAuthAction from '../auth/withAuthActions';
 import Follow from '../components/Button/Follow';
@@ -11,6 +16,7 @@ import Follow from '../components/Button/Follow';
   state => ({
     authenticatedUserName: getAuthenticatedUserName(state),
     followingList: getFollowingList(state),
+    mutualList: getMutualList(state),
     pendingFollows: getPendingFollows(state),
   }),
   {
@@ -24,6 +30,7 @@ class FollowButton extends React.Component {
     username: PropTypes.string.isRequired,
     authenticatedUserName: PropTypes.string,
     followingList: PropTypes.arrayOf(PropTypes.string).isRequired,
+    mutualList: PropTypes.arrayOf(PropTypes.string).isRequired,
     pendingFollows: PropTypes.arrayOf(PropTypes.string).isRequired,
     onActionInitiated: PropTypes.func.isRequired,
     followUser: PropTypes.func,
@@ -31,6 +38,8 @@ class FollowButton extends React.Component {
   };
 
   static defaultProps = {
+    followingList: [],
+    mutualList: [],
     secondary: false,
     authenticatedUserName: undefined,
     followUser: () => {},
@@ -64,10 +73,12 @@ class FollowButton extends React.Component {
       authenticatedUserName,
       username,
       followingList,
+      mutualList,
       pendingFollows,
       secondary,
     } = this.props;
     const followed = followingList.includes(username);
+    const mutual = mutualList.includes(username);
     const pending = pendingFollows.includes(username);
 
     if (authenticatedUserName === username) return null;
@@ -75,6 +86,7 @@ class FollowButton extends React.Component {
     return (
       <Follow
         isFollowed={followed}
+        isMutual={mutual}
         pending={pending}
         onClick={this.handleFollowClick}
         secondary={secondary}

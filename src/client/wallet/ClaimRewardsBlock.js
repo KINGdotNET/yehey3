@@ -81,8 +81,6 @@ class ClaimRewardsBlock extends Component {
     const SCOREreward = parseFloat(user.SCORErewardBalance);
     const POWERreward = parseFloat(user.SCORErewardBalanceInTME);
     const userHasRewards = TMEreward > 0 || TSDreward > 0 || SCOREreward > 0;
-    // console.log(TMEreward, TSDreward, SCOREreward, POWERreward)
-
     const buttonText = rewardClaimed
       ? intl.formatMessage({
           id: 'reward_claimed',

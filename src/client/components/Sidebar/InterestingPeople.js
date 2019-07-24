@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import User from './User';
+import { Button } from 'antd';
 import './InterestingPeople.less';
 import './SidebarContentBlock.less';
 
@@ -18,13 +19,10 @@ const InterestingPeople = ({ users, onRefresh, isFetchingNetworkUserList }) => (
     <div className="SidebarContentBlock__content">
       {!isFetchingNetworkUserList && users && users.map(user => <User key={`recommendation-${user.name}`} user={user} />)}
       <h4 className="InterestingPeople__more">
-        <Link to={'/discover'}>
-          <FormattedMessage id="discover_more_people" defaultMessage="Discover More People" />
-        </Link>
-      </h4>
-      <h4 className="InterestingPeople__more">
         <Link to={'/invite'}>
-          <FormattedMessage id="invite_people" defaultMessage="Invite Friends" />
+          <Button> 
+            <FormattedMessage id="invite_people" defaultMessage="Invite Friends" />
+          </Button> 
         </Link>
       </h4>
     </div>

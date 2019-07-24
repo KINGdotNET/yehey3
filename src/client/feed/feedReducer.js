@@ -22,10 +22,8 @@ const feedIdsList = (state = [], action, index) => {
     case feedTypes.GET_USER_COMMENTS.START:
     case feedTypes.GET_REPLIES.START:
     case feedTypes.GET_BOOKMARKS.START:
-      //console.log("Getting feedIDsList Start:", index, action);
       return [];
     case feedTypes.GET_FEED_CONTENT.SUCCESS:
-      //console.log("Getting feedIDsList Success:", index, action);
       if (!action.payload) return [];
       if (!action.payload[index]) return [];
       if (!action.payload[index][0]) return [];
@@ -36,7 +34,6 @@ const feedIdsList = (state = [], action, index) => {
       if (!action.payload) return [];
       return action.payload.map(post => post.id)
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
-      //console.log("Getting more feedIDsList Success:", index, action);
       if (!action.payload) return _.uniq([...state]);
       if (!action.payload[index]) return _.uniq([...state]);
       if (!action.payload[index][0]) return _.uniq([...state]);
@@ -58,7 +55,6 @@ const feedCategory = (state = {}, action, index) => {
     case feedTypes.GET_REPLIES.START:
     case feedTypes.GET_MORE_REPLIES.START:
     case feedTypes.GET_BOOKMARKS.START:
-      //console.log("Getting Feedcategory Start:", index, action);
       return {
         ...state,
         isFetching: true,
@@ -68,13 +64,26 @@ const feedCategory = (state = {}, action, index) => {
       };
     case feedTypes.GET_FEED_CONTENT.SUCCESS:
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
-      //console.log("Getting Feedcategory Success:", index, action);
+      var hasMore = false;
+
+      if (index ==2) {
+        hasMore = true;
+      }
+      
+      if (action.payload[index]) {
+        if (action.payload[index][0]) {
+          if ((action.payload[index].length === action.meta.limit) || action.meta.once) {
+            hasMore =  true;
+          }
+        }
+      }
+
       return {
         ...state,
         isFetching: false,
         isLoaded: true,
         failed: false,
-        hasMore: action.payload[index] ? (action.payload[index][0] ? (action.payload[index].length === action.meta.limit) || action.meta.once : false) : false,
+        hasMore: hasMore,
         list: feedIdsList(state.list, action, index),
       };
     case feedTypes.GET_USER_COMMENTS.SUCCESS:
@@ -97,7 +106,6 @@ const feedCategory = (state = {}, action, index) => {
     case feedTypes.GET_REPLIES.ERROR:
     case feedTypes.GET_MORE_REPLIES.ERROR:
     case feedTypes.GET_BOOKMARKS.ERROR:
-    //console.log("Feedcategory", index, "error");
       return {
         ...state,
         isFetching: false,
@@ -157,7 +165,6 @@ const feed = (state = initialState, action) => {
     case feedTypes.GET_MORE_FEED_CONTENT.START:
     case feedTypes.GET_MORE_FEED_CONTENT.SUCCESS:
     case feedTypes.GET_MORE_FEED_CONTENT.ERROR:
-      //console.log("Getting FeedState Init", action);
       return {
         ...state,
         [action.meta.sortBy[0]]: feedSortBy(state[action.meta.sortBy[0]], action),

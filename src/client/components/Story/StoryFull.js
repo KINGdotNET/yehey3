@@ -13,7 +13,7 @@ import {
 } from 'react-intl';
 import { jsonParse } from '../../helpers/formatter';
 import { Link } from 'react-router-dom';
-import { Icon } from 'antd';
+import { Icon, Button } from 'antd';
 import Lightbox from 'react-image-lightbox';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { getFromMetadata, extractImageTags } from '../../helpers/parser';
@@ -33,6 +33,7 @@ import PopoverMenu, { PopoverMenuItem } from '../PopoverMenu/PopoverMenu';
 import PostFeedEmbed from './PostFeedEmbed';
 import PostedFrom from './PostedFrom';
 import { decryptWithMemoKeypair, decryptAES } from '../../helpers/apiHelpers';
+import { getFacebookShareURL, getTwitterShareURL } from '../../helpers/socialProfiles';
 import './StoryFull.less';
 
 @injectIntl
@@ -211,17 +212,27 @@ class StoryFull extends React.Component {
       onTransferClick,
       onPromoteClick,
     } = this.props;
+
+    const { author, permlink, title, url } = post;
+    const baseURL = 'https://alpha.weyoume.io';
+    const postURL = `${baseURL}/i${dropCategory(url)}`;
+    const twitterText = `"${encodeURIComponent(title)}" by @${author}`;
+    const twitterShareURL = getTwitterShareURL(twitterText, postURL);
+    const facebookShareURL = getFacebookShareURL(postURL);
     const { isReported } = postState;
 
     const { open, index } = this.state.lightbox;
 
     let json = jsonParse(post.json);
-    //console.log("json Storyfull:", json);
     let accessList = {};
     let userAccess = false;
     let decryptionKey = '';
     let image = json.image;
     let body = post.body;
+    let postLink = '';
+    if (json && json.link) {
+      postLink = json.link;
+    }
 
     if (json && json.accessList && json.accessList[user.name]) {
       userAccess = true;
@@ -229,7 +240,6 @@ class StoryFull extends React.Component {
       decryptionKey = decryptWithMemoKeypair(user.name, accessList[user.name]);
       body = decryptAES(post.body, decryptionKey);
       image = decryptAES(json.image, decryptionKey).split(',');
-      //console.log("useraccess:", userAccess, body);
     };
 
     json.image = image;
@@ -435,6 +445,17 @@ class StoryFull extends React.Component {
             <i className="iconfont icon-more StoryFull__header__more" />
           </Popover>
         </div>
+        {postLink ? 
+        <div className="StoryFull__content__link__icon" > 
+        <a 
+          href={postLink}
+          target="_blank"
+          className="StoryFull__content__link" >
+          <Button> 
+            Link <i className="iconfont icon-link"/> 
+          </Button> 
+          </a>
+        </div> : <div />} 
         <div className="StoryFull__content">{content}</div>
         {open && (
           <Lightbox
@@ -505,6 +526,18 @@ class StoryFull extends React.Component {
           onTransferClick={onTransferClick}
           onPromoteClick={onPromoteClick}
         />
+        <div className="StoryFull__share">
+        <div className="StoryFull__share__container">
+          <a href={twitterShareURL} target="_blank" className="StoryFull__share__action">
+              <i className="iconfont icon-twitter" /> Share
+          </a>
+        </div>
+        <div className="StoryFull__share__container"> 
+          <a href={facebookShareURL} target="_blank" className="StoryFull__share__action">
+            <i className="iconfont icon-facebook" /> Share
+          </a>
+        </div> 
+        </div>
       </div>
     );
   }

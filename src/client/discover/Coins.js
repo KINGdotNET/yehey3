@@ -20,7 +20,6 @@ class Coins extends React.Component {
             this.setState({
                 coins: coins
             });
-            //console.log("GotCoinsData:", coins[0]);
         });
     }
 
@@ -51,31 +50,6 @@ class Coins extends React.Component {
         );
     }
 
-    // mineChain() {
-    //     var hashPrevBlock = '000000000000000000000000';
-        
-    //     var coinbase = "Hazpool";
-    //     var chaindata = [];
-    //     var newblock = {};
-    //     var time = Date.now();
-    //     var difficulty = 1000;
-    //     while (chaindata.length < 100) {
-    //     var nonce = 0;
-    //     var hashPrevBlock = nexthash;
-    //     var nexthash = (2**256).toString(16);
-    //         while (parseInt(nexthash, 16) > (2**256/difficulty)) {
-    //             nonce = nonce+1;
-    //             time = Date.now();
-    //             newblock = {'hashPrevBlock': hashPrevBlock, 'time': time, 'coinbase': coinbase, 'nonce': nonce};
-    //             nexthash = CryptoJS.SHA256(JSON.stringify(newblock)).toString();
-    //             console.log("mining:", nexthash, newblock);
-    //         }
-    //         chaindata = chaindata.concat(newblock);
-    //         console.log("FOUND BLOCK:", chaindata.length, nexthash, newblock); 
-    //     }
-    //     console.log("chaindata", chaindata);
-    // }
-
     componentWillMount() {
         this.getCoinsData();
     }
@@ -84,7 +58,6 @@ class Coins extends React.Component {
         if (_.isEmpty(this.state.coins) ) {
             this.getCoinsData();
         }
-        //this.mineChain();
     
         this.interval = setInterval(() => {
           this.getCoinsData()

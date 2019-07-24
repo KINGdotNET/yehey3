@@ -100,8 +100,6 @@ const broadcastComment = (
   referral,
   authUsername,
 ) => {
-
-  //console.log("Comment Json:", json, Object.keys(json));
   const operations = [];
   const commentOp = [
     'comment',
@@ -115,7 +113,6 @@ const broadcastComment = (
       json: JSON.stringify(json),
     },
   ];
-  //console.log("commentOp", commentOp);
   operations.push(commentOp);
 
   const commentOptionsConfig = {
@@ -132,7 +129,6 @@ const broadcastComment = (
   } else if (reward === rewardsValues.all) {
     commentOptionsConfig.percent_TSD = 0;
   }
-  //console.log("referral:", referral);
   if (referral && referral !== authUsername) {
     commentOptionsConfig.extensions = [
       [
@@ -159,7 +155,6 @@ const broadcastComment = (
       },
     ]);
   }
-  //console.log("Broadcast Operations:", operations);
   return weauthjsInstance.broadcast(operations);
 };
 
@@ -168,10 +163,7 @@ export function createPost(postData) {
     assert(postData[field] != null, `Developer Error: Missing required field ${field}`);
   });
 
-  //console.log("postData:", postData);
-
   return (dispatch, getState, { weauthjsInstance }) => {
-    //console.log("createpost:", postData);
     const {
       parentAuthor,
       parentPermlink,
@@ -195,7 +187,7 @@ export function createPost(postData) {
     const encryptPost = (permlink) => (access == 'private')
       ? getEncryptedPost(author, newBody, json, accessList, permlink)
       : Promise.resolve({body: postData.body, json: postData.json, permlink});
-        
+
     const state = getState();
     const authUser = state.auth.user;
 
@@ -214,41 +206,40 @@ export function createPost(postData) {
       type: CREATE_POST,
       payload: {
         promise: getPermLink.then(permlink => {
-          //console.log("creating permlink:", permlink),
-            encryptPost(permlink).then(post => {
-              //console.log("creating encrypted post:", post.permlink, post.body, post.json), 
-              broadcastComment(
-                weauthjsInstance,
-                parentAuthor,
-                parentPermlink,
-                author,
-                title,
-                post.body,
-                post.json,
-                !isUpdating && reward,
-                !isUpdating && upvote,
-                post.permlink,
-                referral,
-                authUser.name,
-                  ).then(result => {
-                    if (draftId) {
-                      dispatch(deleteDraft(draftId));
-                      dispatch(addEditedPost(permlink));
-                    }
-                    dispatch(push(`/@${author}/${permlink}`));
-                    if (window.analytics) {
-                      window.analytics.track('Post', {
-                        category: 'post',
-                        label: 'submit',
-                        value: 10,
-                      });
-                    }
-                    return result;})
-                    .catch(err=>{
+          encryptPost(permlink).then(post => {
+            broadcastComment(
+              weauthjsInstance,
+              parentAuthor,
+              parentPermlink,
+              author,
+              title,
+              post.body,
+              post.json,
+              !isUpdating && reward,
+              !isUpdating && upvote,
+              post.permlink,
+              referral,
+              authUser.name,
+                ).then(result => {
+                  if (draftId) {
+                    dispatch(deleteDraft(draftId));
+                    dispatch(addEditedPost(permlink));
+                  }
+                  dispatch(push(`/@${author}/${permlink}`));
+                  if (window.analytics) {
+                    window.analytics.track('Post', {
+                      category: 'post',
+                      label: `${author} - ${permlink}`,
+                      value: 10,
+                    });
+                  }
+                    return result;
+                  }).catch(err=>{
                     console.error('err', err);
-                    return err;});
-                    })
-                    })},
+                    return err;
+                  });
+                })
+              })},
     });
   };
 }

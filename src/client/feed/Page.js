@@ -2,14 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-
 import { getFeedContent } from './feedActions';
 import { getIsLoaded, getIsAuthenticated } from '../reducers';
 import SubFeed from './SubFeed';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import RightSidebar from '../app/Sidebar/RightSidebar';
 import TopicSelector from '../components/TopicSelector';
-import TrendingTagsMenu from '../components/TrendingTagsMenu';
 import Affix from '../components/Utils/Affix';
 import ScrollToTop from '../components/Utils/ScrollToTop';
 import ScrollToTopOnMount from '../components/Utils/ScrollToTopOnMount';
@@ -57,12 +55,12 @@ class Page extends React.Component {
   render() {
     const { authenticated, loaded, location, match } = this.props;
     const { category1, category2, sortBy1, sortBy2 } = match.params;
+    if (!authenticated) {
+      this.props.history.push(`/welcome`);
+    }
     if (!category1 && !category2 && !sortBy1 && !sortBy2) {
       this.props.history.push(`/trending-all/hot-all`);
     }
-    const shouldDisplaySelector = location.pathname !== '/' || (!authenticated && loaded);
-    const displayTopicSelector = location.pathname === '/trending';
-
     const robots = location.pathname === '/' ? 'index,follow' : 'noindex,follow';
 
     return (
@@ -81,7 +79,6 @@ class Page extends React.Component {
               </div>
             </Affix>
             <div className="center">
-              {authenticated && <QuickPostEditor />}
               <TopicSelector
                   isSingle={true}
                   sort={sortBy1}
@@ -101,7 +98,6 @@ class Page extends React.Component {
 						<Affix className="rightContainer" stickPosition={77}>
 							<div className="right">
 								<RightSidebar />
-                <TrendingTagsMenu />
 							</div>
 						</Affix>
           </div>

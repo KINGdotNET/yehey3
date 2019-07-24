@@ -7,8 +7,9 @@ export const deleteComment = 'deleteComment';
 export const customJson = 'customJson';
 export const FOLLOW = 'follow';
 export const REBLOG = 'reblog';
+export const MESSAGE = 'message';
 export const curationReward = 'curationReward';
-export const authorReward = 'authorauthorReward_reward';
+export const authorReward = 'authorReward';
 export const accountWitnessVote = 'accountWitnessVote';
 export const fillSCOREWithdraw = 'fillSCOREWithdraw';
 

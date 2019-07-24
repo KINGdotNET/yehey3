@@ -102,7 +102,6 @@ export default function(html, { mutate = true, resolveIframe } = {}) {
 function traverse(node, state, depth = 0) {
   if (!node || !node.childNodes) return;
   Array(...node.childNodes).forEach(child => {
-    // console.log(depth, 'child.tag,data', child.tagName, child.data)
     const tag = child.tagName ? child.tagName.toLowerCase() : null;
     if (tag) state.htmltags.add(tag);
 
