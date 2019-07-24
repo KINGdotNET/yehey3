@@ -1,0 +1,351 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import wehelpjs from 'wehelpjs';
+import changeCase from 'change-case';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import Avatar from '../components/Avatar';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import _ from 'lodash';
+import { Form, Input, Button, Icon } from 'antd';
+import qs from 'query-string';
+import {
+  getIsAuthenticated,
+  getAuthenticatedUserName
+} from '../reducers';
+import SignForm from './SignForm';
+import SignSuccess from './Sign/Success';
+import SignError from './Sign/Error';
+import SignValidationErrors from './Sign/ValidationErrors';
+import { getOperation, parseQuery, validate, normalize } from '../helpers/operation';
+import customOperations from '../helpers/operations/custom-operations';
+import SignPlaceholderDefault from './Sign/Placeholder/Default';
+import SignPlaceholderComment from './Sign/Placeholder/Comment';
+import SignPlaceholderNonFiltered from './Sign/Placeholder/NonFiltered';
+import SignPlaceholderTransferDelegate from './Sign/Placeholder/TransferDelegate';
+import { notify } from '../app/Notification/notificationActions';
+
+import './Sign.less';
+
+@connect(
+  (state, ownProps) => ({
+    authenticated: getIsAuthenticated(state),
+    authenticatedUserName: getAuthenticatedUserName(state),
+  }),
+  {
+    notify,
+  },
+)
+
+class Sign extends React.Component {
+  static propTypes = {
+    authenticated: PropTypes.bool.isRequired,
+    authenticatedUserName: PropTypes.string,
+    location: PropTypes.shape().isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    const query = qs.parse(this.props.location.search);
+
+    this.state = {
+      type: this.props.match.params.type,
+      base64: this.props.match.params.base64,
+      query: 
+      {
+        ...query,
+        currentUserName: this.props.authenticatedUserName
+      },
+      normalizedQuery: null,
+      normalizedQueries: null,
+      step: 'loading',
+      success: false,
+      error: false,
+    };
+  }
+
+  async componentDidMount() {
+    const { type, query, base64 } = this.state;
+    if (type === 'tx') {
+      if (!base64) {
+        this.setState({ validationErrors: [{ error: 'error_tx_base64_required' }], step: 'validationErrors' });
+      } else {
+        let operationsDecoded;
+        let operationsParsed;
+        try {
+          operationsDecoded = atob(base64);
+        } catch (err) {
+          this.setState({ validationErrors: [{ error: 'error_tx_base64_encode' }], step: 'validationErrors' });
+          return;
+        }
+        try {
+          operationsParsed = JSON.parse(operationsDecoded);
+        } catch (err) {
+          this.setState({ validationErrors: [{ error: 'error_tx_base64_json' }], step: 'validationErrors' });
+          return;
+        }
+        if (this.isTransactionFormatValid(operationsParsed)) {
+          let validationErrors = [];
+          for (let i = 0; i < operationsParsed.length; i += 1) {
+            validationErrors = validationErrors.concat(
+              await validate(
+                operationsParsed[i][0],
+                operationsParsed[i][1] || {}
+                )
+            );
+          }
+          if (validationErrors.length > 0) {
+            this.setState({ validationErrors, step: 'validationErrors' });
+          } else {
+            const normalizedQueries = [];
+            for (let i = 0; i < operationsParsed.length; i += 1) {
+              normalizedQueries.push({
+                operation: operationsParsed[i][0],
+                params: operationsParsed[i][1],
+                normalizedQuery: await normalize(
+                  operationsParsed[i][0],
+                  operationsParsed[i][1]
+                ),
+              });
+            }
+            this.setState({ step: 'form', normalizedQueries });
+          }
+        } else {
+          this.setState({ validationErrors: [{ error: 'error_tx_base64_json' }], step: 'validationErrors' });
+        }
+      }
+    } else {
+      if (getOperation(type) === '') {
+        this.props.router.push('/404');
+      }
+      const validationErrors = await validate(type, query);
+      if (validationErrors.length > 0) {
+        this.setState({ validationErrors, step: 'validationErrors' });
+      } else {
+        const normalizedQuery = await normalize(type, query);
+        this.setState({ step: 'form', normalizedQuery });
+      }
+    }
+  }
+
+  handleSigninClick = () => {
+    this.setState({ step: 'signin' });
+  }
+
+  handleFormClick = () => {
+    this.setState({ step: 'form' });
+  }
+
+  getPlaceholder = (type) => {
+    let Placeholder = SignPlaceholderDefault;
+    Placeholder = (type === 'comment') ? SignPlaceholderComment : Placeholder;
+    Placeholder = (changeCase.snakeCase(type) === 'profile_update' || type === 'profile_update') ? SignPlaceholderNonFiltered : Placeholder;
+    Placeholder = (['transfer', 'delegateSCORE', 'undelegateSCORE'].includes(changeCase.snakeCase(type)) || ['transfer', 'delegateSCORE', 'undelegateSCORE'].includes(type)) ? SignPlaceholderTransferDelegate : Placeholder;
+    return Placeholder;
+  }
+
+  getRoleName = (value) => {
+    if (value === 4) {
+      return 'owner';
+    } else if (value === 3) {
+      return 'active';
+    } else if (value === 2) {
+      return 'posting';
+    }
+    return 'memo';
+  }
+
+  getRoleValue = (role) => {
+    if (role === 'owner') {
+      return 4;
+    } else if (role === 'active') {
+      return 3;
+    } else if (role === 'posting') {
+      return 2;
+    }
+    return 1;
+  }
+
+  getMinRoleOperation = (roles) => {
+    let minRole = 4;
+    for (let i = 0; i < roles.length; i += 1) {
+      minRole = Math.min(minRole, this.getRoleValue(roles[i]));
+    }
+    return minRole;
+  }
+
+  getMergedRoles = (roles, newRoles) => {
+    if (!roles) {
+      return newRoles;
+    }
+    const minRole = this.getMinRoleOperation(roles);
+    const minNewRole = this.getMinRoleOperation(newRoles);
+    const requiredRole = Math.max(minNewRole, minRole);
+    const mergedRoles = [];
+    for (let i = 4; i >= requiredRole; i -= 1) {
+      mergedRoles.push(this.getRoleName(i));
+    }
+    return mergedRoles;
+  }
+
+  isTransactionFormatValid = (transaction) => {
+    if (Array.isArray(transaction)) {
+      for (let i = 0; i < transaction.length; i += 1) {
+        if (!Array.isArray(transaction[i]) || transaction[i].length < 2) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  resetForm = () => {
+    this.setState({
+      step: 'form',
+      error: false,
+      success: false,
+    });
+  };
+
+  sign = async (auth) => {
+    const { type, query, base64 } = this.state;
+    if (type === 'tx') {
+      const operationsToSend = [];
+      const operationsDecoded = atob(base64);
+      const operationsParsed = JSON.parse(operationsDecoded);
+      for (let i = 0; i < operationsParsed.length; i += 1) {
+        const operation = operationsParsed[i][0];
+        const operationParams = operationsParsed[i][1];
+        const params = await parseQuery(operation, operationParams, auth.username);
+        const customOp = customOperations.find(
+          o => o.operation === changeCase.snakeCase(operation) || o.operation === operation
+        );
+        const mappedType = customOp ? customOp.type : operation;
+        operationsToSend.push(
+          [
+            mappedType,
+            params,
+          ]
+        );
+      }
+      wehelpjs.broadcast.send(
+        {
+          extensions: [],
+          operations: operationsToSend,
+        },
+        [auth.wif],
+        (err, result) => {
+          if (!err) {
+            if (result && (query.cb || query.redirect_uri) && query.auto_return) {
+              window.location.href = query.cb || query.redirect_uri;
+            } else {
+              this.setState({ success: result, step: 'result' });
+            }
+          } else {
+            console.error(err);
+            this.setState({ error: err, step: 'result' });
+          }
+        }
+      );
+    } else {
+      const params = await parseQuery(type, query, auth.username);
+
+      /* Broadcast */
+      const customOp = customOperations.find(o => o.operation === changeCase.snakeCase(type) || o.operation === type);
+      const mappedType = customOp ? customOp.type : type;
+      // wehelpjs.broadcast[`${changeCase.camelCase(mappedType)}With`](auth.wif, params, (err, result) => {
+			wehelpjs.broadcast[`${mappedType}With`](auth.wif, params, (err, result) => {
+					if (!err) {
+          if (result && (query.cb || query.redirect_uri) && query.auto_return) {
+            window.location.href = query.cb || query.redirect_uri;
+          } else {
+            this.setState({ success: result, step: 'result' });
+          }
+        } else {
+          console.error(err);
+          this.setState({ error: err, step: 'result' });
+        }
+      });
+    }
+  };
+
+  render() {
+    const {
+      step, 
+      success, 
+      error, 
+      validationErrors, 
+      normalizedQuery, 
+      normalizedQueries,
+      query,
+      type,
+    } = this.state;
+    let op;
+    let roles;
+    let Placeholder;
+    if (normalizedQuery) {
+      op = getOperation(type);
+      roles = op.roles;
+      Placeholder = this.getPlaceholder(type);
+    } else if (normalizedQueries) {
+      normalizedQueries.map(nquery => (
+        roles = this.getMergedRoles(roles, getOperation(nquery.operation).roles)
+      ));
+    }
+    return (
+      <div className="Sign">
+
+        {step === 'loading' && <Icon type='loading' />}
+        {step !== 'loading' && <div className="Sign__content">
+          <div className="Sign_frame">
+            <div className="Sign__wrapper">
+              {step === 'validationErrors' && <SignValidationErrors errors={validationErrors} />}
+              {step === 'form' && normalizedQuery &&
+              <div className="Placeholder">
+                <h3><FormattedMessage id="confirmation_operation" /></h3>
+                <div className="Placeholder__operation-container">
+                  <h2 className="Placeholder__operation-title">{ type }</h2>
+                  <Placeholder query={normalizedQuery} params={op.params} />
+                </div>
+                <Button 
+                  onClick={this.handleSigninClick}
+                  type="primary" 
+                  htmlType="button" 
+                  className="SignForm__button">
+                    <FormattedMessage id="continue" />
+                </Button>
+              </div>
+              }
+              {step === 'form' && normalizedQueries &&
+              <div className="Placeholder">
+                <h5><FormattedMessage id="confirmation_operations" /></h5>
+                {normalizedQueries.map((nquery, idx) => {
+                  const opMulti = getOperation(nquery.operation);
+                  Placeholder = this.getPlaceholder(nquery.operation);
+                  return (
+                    <div className="Placeholder__operation-container" key={`operation_${nquery.operation}_${idx}`}>
+                      <h5 className="Placeholder__operation-title">{ nquery.operation }</h5>
+                      <Placeholder query={nquery.normalizedQuery} params={opMulti.params} />
+                    </div>
+                  );
+                })}
+                <Button onClick={this.handleSigninClick} type="primary" htmlType="button" className="SignForm__button">
+                  <FormattedMessage id="continue" />
+                </Button>
+              </div>}
+              {step === 'signin' && <SignForm roles={roles} sign={this.sign} />}
+              {step === 'signin' && <Button className="Signform__button" size="small" onClick={this.handleFormClick}><FormattedMessage id="cancel" /></Button>}
+              {step === 'result' && success && <SignSuccess autoReturn={query.auto_return} result={success} cb={query.cb || query.redirect_uri} />}
+              {step === 'result' && error && <SignError error={error} resetForm={this.resetForm} />}
+            </div>
+          </div>
+        </div>}
+      </div>
+    );
+  }
+}
+
+export default Sign;
+

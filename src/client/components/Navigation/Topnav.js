@@ -8,28 +8,29 @@ import { Menu, Input, AutoComplete, Button } from 'antd';
 import Action from '../Button/Action';
 import classNames from 'classnames';
 import { searchAutoComplete } from '../../search/searchActions';
+import { NavLink } from 'react-router-dom';
 import { getUpdatedSCUserMetadata } from '../../auth/authActions';
 import {
   getAutoCompleteSearchResults,
   getNotifications,
   getAuthenticatedUserSCMetaData,
   getIsLoadingNotifications,
+  getAuthenticatedUser,
 } from '../../reducers';
 import weauthjsInstance from '../../weauthjsInstance';
 import { PARSED_NOTIFICATIONS } from '../../../common/constants/notifications';
-import BTooltip from '../BTooltip';
 import Avatar from '../Avatar';
 import PopoverMenu, { PopoverMenuItem } from '../PopoverMenu/PopoverMenu';
 import Popover from '../Popover';
-import Notifications from './Notifications/Notifications';
-import LanguageSettings from './LanguageSettings';
 import './Topnav.less';
+import { getAccessListSetting } from '../../settings/settingsReducer';
 
 @injectIntl
 @withRouter
 @connect(
   state => ({
     autoCompleteSearchResults: getAutoCompleteSearchResults(state),
+    user: getAuthenticatedUser(state),
     notifications: getNotifications(state),
     userSCMetaData: getAuthenticatedUserSCMetaData(state),
     loadingNotifications: getIsLoadingNotifications(state),
@@ -43,6 +44,7 @@ class Topnav extends React.Component {
   static propTypes = {
     autoCompleteSearchResults: PropTypes.arrayOf(PropTypes.string),
     intl: PropTypes.shape().isRequired,
+    user:PropTypes.shape(),
     location: PropTypes.shape().isRequired,
     history: PropTypes.shape().isRequired,
     username: PropTypes.string,
@@ -107,27 +109,15 @@ class Topnav extends React.Component {
           'Topnav__mobile-hidden': searchBarActive,
         })}
       >
-        <Menu className="Topnav__menu-container__menu" mode="horizontal">
-          <Menu.Item key="signup">
-            <Action primary>
-            <a target="_blank" rel="noopener noreferrer" href={process.env.SIGNUP_URL}>
-            <div className="Topnav__menu__link">
-                <FormattedMessage id="signup" defaultMessage="Sign up" />
-            </div>
-            </a>
-            </Action>
-          </Menu.Item>
-          <Menu.Item key="divider" disabled>
-            |
-          </Menu.Item>
+        <Menu className="Topnav__menu-container__menu" mode="horizontal" >
           <Menu.Item key="login">
-          <Action primary>
-            <a href={weauthjsInstance.getLoginURL(next)} className="Topnav__menu__link">
-            <div className="Topnav__menu__link"> 
-                <FormattedMessage id="login" defaultMessage="Log in" />
-            </div>
-            </a>
-          </Action>
+            <Action primary>
+              <Link to='/welcome' className="Topnav__menu__link">
+                <div className="Topnav__menu__link"> 
+                    <FormattedMessage id="login" defaultMessage="Log in" />
+                </div>
+              </Link>
+            </Action>
           </Menu.Item>
         </Menu>
       </div>
@@ -135,7 +125,7 @@ class Topnav extends React.Component {
   };
 
   menuForLoggedIn = () => {
-    const { intl, username, notifications, userSCMetaData } = this.props;
+    const { intl, username, notifications, userSCMetaData, user } = this.props;
     const { searchBarActive, popoverVisible } = this.state;
     const lastSeenTimestamp = _.get(userSCMetaData, 'notifications_last_timestamp', 0);
     const notificationsCount = _.isUndefined(lastSeenTimestamp)
@@ -165,10 +155,10 @@ class Topnav extends React.Component {
             </Link>
           </Menu.Item>
 
-          <Menu.Item key="search" className="Topnav__item--badge">
-            <Link to="/search" className="Topnav__link Topnav__link--light Topnav__link--action">
-                <i className="iconfont icon-search" />
-                <FormattedMessage id="nav_search" defaultMessage="Search" />
+          <Menu.Item key="messages" className="Topnav__item--badge">
+            <Link to="/messages" className="Topnav__link Topnav__link--light Topnav__link--action">
+                <i className="iconfont icon-mail" />
+                <FormattedMessage id="nav_messages" defaultMessage="Messages" />
             </Link>
           </Menu.Item>
           
@@ -215,19 +205,22 @@ class Topnav extends React.Component {
                     <FormattedMessage id="my_profile" defaultMessage="My profile" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="trending">
-                    <FormattedMessage id="trending" defaultMessage="Trending" />
+                    <FormattedMessage id="sort_trending" defaultMessage="Top Voted" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="feed">
-                    <FormattedMessage id="feed" defaultMessage="My Feed" />
-                  </PopoverMenuItem>
-                  <PopoverMenuItem key="hot">
-                    <FormattedMessage id="hot" defaultMessage="Hot" />
+                    <FormattedMessage id="sort_feed" defaultMessage="Following" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="new">
-                    <FormattedMessage id="new" defaultMessage="New" />
+                    <FormattedMessage id="sort_created" defaultMessage="Latest" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="boards">
                     <FormattedMessage id="boards" defaultMessage="Boards" />
+                  </PopoverMenuItem>
+                  <PopoverMenuItem key="search">
+                    <FormattedMessage id="search" defaultMessage="Search" />
+                  </PopoverMenuItem>
+                  <PopoverMenuItem key="about">
+                    <FormattedMessage id="about" defaultMessage="About" />
                   </PopoverMenuItem>
                   <PopoverMenuItem key="invite">
                     <FormattedMessage id="invite" defaultMessage="Invite" />
@@ -250,9 +243,7 @@ class Topnav extends React.Component {
 									<PopoverMenuItem key="edit-profile">
                     <FormattedMessage id="edit-profile" defaultMessage="Edit Profile" />
                   </PopoverMenuItem>
-                  <PopoverMenuItem key="about">
-                    <FormattedMessage id="about" defaultMessage="About" />
-                  </PopoverMenuItem>
+                  
                   <PopoverMenuItem key="logout">
                     <FormattedMessage id="logout" defaultMessage="Logout" />
                   </PopoverMenuItem>
@@ -362,8 +353,6 @@ class Topnav extends React.Component {
             </Link>
           </AutoComplete.Option>
         ]);
-    
-    //console.log("formattedAutoCompleteDropdown:", formattedAutoCompleteDropdown);
 
     return (
       <div className="Topnav">

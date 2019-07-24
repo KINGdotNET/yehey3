@@ -54,7 +54,7 @@ export const votePost = (postId, author, permlink, weight = 10000) => (
         if (window.analytics) {
           window.analytics.track('Vote', {
             category: 'vote',
-            label: 'submit',
+            label: `${voter} vote for ${post.author} : ${post.permlink} [${weight}]` ,
             value: 1,
           });
         }

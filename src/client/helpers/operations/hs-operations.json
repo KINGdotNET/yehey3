@@ -1,0 +1,20 @@
+[
+  "vote",
+  "comment",
+  "deleteComment",
+  "customJson",
+  "claimRewardBalance",
+  "transfer",
+  "transferTMEToSCOREFund",
+  "transferToSavings",
+  "transferFromSavings",
+  "cancelTransferFromSavings",
+  "withdrawScore",
+  "delegateScore",
+  "accountWitnessProxy",
+  "accountWitnessVote",
+  "escrowApprove",
+  "escrowDispute",
+  "escrowRelease",
+  "escrowTransfer"
+]

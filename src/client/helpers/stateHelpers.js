@@ -1,36 +1,32 @@
 import _ from 'lodash';
+import uuidv4 from 'uuid/v4';
 
-export const getFeedFromState = (sortBy, category = 'all', state) => {
-  //console.log("GetFeedFromState:", sortBy, category, state);   
+export const getFeedFromState = (sortBy, category = 'all', state) => {  
   if (!state[sortBy]) return [];
   if (!state[sortBy][category]) return [];
   if (!state[sortBy][category].list) return [];
   return state[sortBy][category].list;
 };
 
-export const getFeedLoadingFromState = (sortBy, category = 'all', state) => {
-  // console.log("GetFeedLoadingFromState:", sortBy, category, state);   
+export const getFeedLoadingFromState = (sortBy, category = 'all', state) => { 
   if (!state[sortBy]) return false;
   if (!state[sortBy][category]) return false;
   return state[sortBy][category].isFetching;
 };
 
-export const getFeedFetchedFromState = (sortBy, category = 'all', state) => {
-  // console.log("GetFeedFetchedFromState:", sortBy, category, state);   
+export const getFeedFetchedFromState = (sortBy, category = 'all', state) => {  
   if (!state[sortBy]) return false;
   if (!state[sortBy][category]) return false;
   return state[sortBy][category].isLoaded;
 };
 
-export const getFeedHasMoreFromState = (sortBy, category = 'all', state) => {
-  // console.log("GetFeedHasMoreFromState:", sortBy, category, state);   
+export const getFeedHasMoreFromState = (sortBy, category = 'all', state) => {   
   if (!state[sortBy]) return false;
   if (!state[sortBy][category]) return false;
   return state[sortBy][category].hasMore;
 };
 
-export const getFeedFailedFromState = (sortBy, category = 'all', state) => {
-  // console.log("GetFeedFailedFromState:", sortBy, category, state);   
+export const getFeedFailedFromState = (sortBy, category = 'all', state) => { 
   if (!state[sortBy]) return false;
   if (!state[sortBy][category]) return false;
   return state[sortBy][category].failed;
@@ -89,3 +85,49 @@ export const createAsyncActionType = type => ({
 });
 
 export const getUserDetailsKey = username => `user-${username}`;
+
+export const getMessagesFromState = (name, recipient, state) => {
+  if (!state[name]) return [];
+  if (!state[recipient]) return [];
+  const incoming = state[recipient];
+  const outgoing = state[name].filter(message => message.recipient == recipient );
+  var messageArray = _.flatten(incoming.concat(outgoing));
+  return messageArray.sort((a,b) => a.time - b.time);
+}
+
+export const getMessagesHomeFromState = (mutualList, state) => {
+  var messageArray =_.flatten(Object.values(state));
+  messageArray = messageArray.sort((a,b) => b.time - a.time); 
+  var messagesHomeList = mutualList.map(
+    (contact) => {
+      var firstMessage = messageArray.find(
+        (message) => { return message.sender == contact || message.recipient == contact } );
+      if (firstMessage) {
+        return {
+          ...firstMessage,
+          name: contact,
+          userSent: (firstMessage.recipient == contact),
+          newContact: false,
+        };
+      } else {
+        var nameSum = [...contact].map(char => char.charCodeAt(0))
+          .reduce((current, previous) => previous + current)
+        return { 
+          name: contact,
+          time: (Date.now()-365*86400000-nameSum), // Moves messages back by 1 year
+          messageText: "Send Message...",
+          id: uuidv4(),
+          userSent: false,
+          newContact: true,
+        };
+      }});
+      return messagesHomeList.sort((a,b) => b.time - a.time);
+}
+
+export const getLastMessageTimeFromState = (state) => {
+  var messageArray =_.flatten(Object.values(state));
+  messageArray = messageArray.sort((a,b) => b.time - a.time);
+  var lastMessage = messageArray[0];
+  lastMessageTime = _.get(lastMessage, "time", 0);
+  return lastMessageTime;
+}

@@ -1,0 +1,44 @@
+@import (reference) '../../../styles/modules/variables.less';
+@import (reference) '../../../styles/custom.less';
+
+.TransferInfo {
+  strong {
+    color:#333333;
+    display: block;
+    font-size: 24px;
+  }
+
+  .iconfont {
+    font-size: 50px;
+    color: @primary-color;
+  }
+
+  .TransferInfo__accounts {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: space-evenly;
+
+    .TransferInfo__account {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .TransferInfo__avatar {
+        img {
+          border-radius: 50%;
+        }
+      }
+
+      .TransferInfo__username {
+        font-weight: 700;
+        font-size: 18px;
+        color: #333333;
+      }
+
+    }
+  }
+  .Placeholder__memo {
+    font-size: 16px;
+  }
+}

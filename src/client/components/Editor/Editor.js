@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import _ from 'lodash';
+import changeCase from 'change-case';
 import { Checkbox, Form, Input, Select, Button} from 'antd';
 import { Link } from 'react-router-dom';
 import { rewardsValues } from '../../../common/constants/rewards';
@@ -17,6 +18,8 @@ import { remarkable } from '../Story/Body';
 import BodyContainer from '../../containers/Story/BodyContainer';
 import './Editor.less';
 import ScrollToTopOnMount from '../Utils/ScrollToTopOnMount';
+import { getAccountLite } from '../../helpers/apiHelpers'
+import { userExists } from '../../helpers/validation-utils';
 
 @injectIntl
 @requiresLogin
@@ -189,7 +192,7 @@ class Editor extends React.Component {
     }
 
     value
-      .map(topic => ({ topic, valid: /^[a-z0-9]+(-[a-z0-9]+)*$/.test(topic) }))
+      .map(topic => ({ topic, valid: /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(topic) }))
       .filter(topic => !topic.valid)
       .map(topic =>
         callback(
@@ -217,9 +220,9 @@ class Editor extends React.Component {
         }),
       );
     }
-
+    
     value
-      .map(user => ({ user, valid: /^[a-z0-9]+(-[a-z0-9]+)*$/.test(user) }))
+      .map(user => ({ user, valid: /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(user)  }))
       .filter(user => !user.valid)
       .map(user =>
         callback(
@@ -235,8 +238,27 @@ class Editor extends React.Component {
         ),
       );
 
-    callback();
-  };
+    value.forEach(user => userExists(changeCase.lowerCase(user))
+      .then(res => {
+        if (res.name === user) {
+          if (user === value[value.length-1]){
+            callback();
+          }
+        } else {
+          callback(
+            intl.formatMessage(
+              {
+                id: 'users_error_user_not_found',
+                defaultMessage: 'Account {user} does not exist.',
+              },
+              {
+                user: changeCase.lowerCase(user),
+              },
+            ),
+          );
+        } 
+      }));
+    };
 
   checkLink = intl => (rule, value, callback) => {
     if (value) {
@@ -333,8 +355,6 @@ class Editor extends React.Component {
     const { intl, form, loading, isUpdating, saving, draftId} = this.props;
     const { getFieldDecorator } = form;
     const { body, access, accessList, keyReady} = this.state;
-
-    //console.log("privatepost:", access);
 
     return (
       <Form className="Editor" layout="vertical" onSubmit={this.handleSubmit}>
@@ -438,7 +458,7 @@ class Editor extends React.Component {
           extra={intl.formatMessage({
             id: 'privacy_setting',
             defaultMessage:
-              'Choose between posting publicly, or privately. Private posts use encryption to ensure only users on your connections list can read them.',
+              'Choose between posting publicly, or privately with encryption.',
           })}
         >
           {getFieldDecorator('access', {
@@ -467,7 +487,7 @@ class Editor extends React.Component {
           extra={intl.formatMessage({
             id: 'accessList_extra',
             defaultMessage:
-              'Separate usernames with spaces. Only lowercase letters, numbers and hyphen character is permitted.',
+              'Separate usernames with spaces.',
           })}
         >
           {getFieldDecorator('accessList', {
@@ -583,7 +603,7 @@ class Editor extends React.Component {
           extra={intl.formatMessage({
             id: 'topics_extra',
             defaultMessage:
-              'Separate topics with commas. Only lowercase letters, numbers and hyphen character is permitted.',
+              'Separate topics with commas.',
           })}
         >
           {getFieldDecorator('topics', {
@@ -696,6 +716,11 @@ class Editor extends React.Component {
               <FormattedMessage id="comment_price" defaultMessage="Comment Price" />
             </span>
           }
+          extra={intl.formatMessage({
+            id: 'commentprice_extra',
+            defaultMessage:
+              'Choose a comment price (in TME) that readers are required to pay to comment on your post.',
+          })}
         >
           {getFieldDecorator('commentPrice', {
             initialValue: 0,
@@ -724,13 +749,6 @@ class Editor extends React.Component {
           )}
         </Form.Item>
         <div className="Editor__bottom">
-          <span className="Editor__bottom__info">
-            <i className="iconfont icon-markdown" />{' '}
-            <FormattedMessage
-              id="markdown_supported"
-              defaultMessage="Styling with markdown supported"
-            />
-          </span>
           <div className="Editor__bottom__right">
             {saving && (
               <span className="Editor__bottom__right__saving">

@@ -42,7 +42,7 @@ const isUserActive = user =>
     field =>
       new Date(new Date().valueOf() + new Date().getTimezoneOffset() * 60000).valueOf() -
         Date.parse(user[field]) <
-      5 * 60 * 1000,
+      15 * 60 * 1000,
   );
 
 const UserHero = ({
@@ -54,6 +54,7 @@ const UserHero = ({
   coverImage,
   hasCover,
   isFollowing,
+  isMutual,
   onTransferClick,
 }) => (
   <div>
@@ -75,6 +76,7 @@ const UserHero = ({
                 coverImage={coverImage}
                 hasCover={hasCover}
                 isFollowing={isFollowing}
+                isMutual={isMutual}
                 onTransferClick={onTransferClick}
                 isActive={isUserActive(user)}
               />
@@ -97,6 +99,7 @@ UserHero.propTypes = {
   coverImage: PropTypes.string,
   hasCover: PropTypes.bool,
   isFollowing: PropTypes.bool,
+  isMutual: PropTypes.bool,
   onTransferClick: PropTypes.func,
 };
 
@@ -105,6 +108,7 @@ UserHero.defaultProps = {
   coverImage: '',
   hasCover: false,
   isFollowing: false,
+  isMutual: false,
   isPopoverVisible: false,
   onTransferClick: () => {},
 };

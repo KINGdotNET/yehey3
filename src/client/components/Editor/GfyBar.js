@@ -32,7 +32,6 @@ class GfyBar extends React.Component {
             };
             
             gfycat.search(options).then(data => {
-            //console.log('gfycats', data);
             this.setState({
                 searchData: data,
             });
@@ -47,7 +46,6 @@ class GfyBar extends React.Component {
 
     render() {
         const { searchData } = this.state;
-        //console.log("searchdata", searchData);
         const copyMessage = this.state.copied ? (
             <FormattedMessage id="image_copied" defaultMessage="Link Copied" />
           ) : (

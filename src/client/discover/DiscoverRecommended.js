@@ -67,7 +67,6 @@ static defaultProps = {
       }
 
     const initialUser = people[index];
-    //console.log("Initial Users: ", initialUser);
     getAccountWithFollowingCount(initialUser).then(users =>
       this.setState({
         users: [users],

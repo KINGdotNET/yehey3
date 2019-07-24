@@ -64,16 +64,10 @@ export default class DiscoverPage extends React.Component {
   }
 
   onChange = key => {
-    //console.log("On key change:", key);
     const { match, history } = this.props;
     const section = key === 'recommended' ? '/' : `/${key}`;
     history.push(`${match.url.replace(/\/([^/]*)$/, '')}${section}`);
-    //console.log("matchurl", match.url, match.url.replace(/\/([^/]*)$/, ''));
 
-  };
-
-  componentDidMount() {
-    //this.props.getAllAccounts();
   };
 
   render() {
@@ -81,7 +75,6 @@ export default class DiscoverPage extends React.Component {
     const current = this.props.location.pathname.split('/')[2];
     const busyHost = global.postOrigin || 'https://alpha.weyoume.io';
     const canonicalUrl = `${busyHost}/discover`;
-    //console.log("Rendered Route:" , current);
     const currentKey = current || 'recommended';
     const title = `Discover Accounts`;
 

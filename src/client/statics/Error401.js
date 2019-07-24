@@ -23,17 +23,10 @@ const Error401 = ({ staticContext }) => {
       </h2>
       <p>
       <Button>
-          <a href={weauthjsInstance.getLoginURL()}>
+          <Link to='/welcome'>
             <FormattedMessage id="homepage_link_text" defaultMessage="Login" />
-          </a>
-      </Button>
-      </p>
-      <p>
-        <Button>
-          <Link to="/trending-all/hot-all">
-            <FormattedMessage id="homepage" defaultMessage="Return to the Homepage" />
           </Link>
-        </Button>
+      </Button>
       </p>
     </div>
   );

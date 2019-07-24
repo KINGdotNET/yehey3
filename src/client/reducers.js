@@ -17,6 +17,7 @@ import walletReducer, * as fromWallet from './wallet/walletReducer';
 import reblogReducers, * as fromReblog from './app/Reblog/reblogReducers';
 import settingsReducer, * as fromSettings from './settings/settingsReducer';
 import searchReducer, * as fromSearch from './search/searchReducer';
+import messageReducer, * as fromMessage from './messages/messageReducer';
 
 export default () =>
   combineReducers({
@@ -26,6 +27,7 @@ export default () =>
     editor: editorReducer,
     posts: postsReducer,
     feed: feedReducer,
+    message: messageReducer,
     user: userReducer,
     users: usersReducer,
     notifications: notificationReducer,
@@ -91,7 +93,15 @@ export const getPendingBookmarks = state => fromBookmarks.getPendingBookmarks(st
 export const getRebloggedList = state => fromReblog.getRebloggedList(state.reblog);
 export const getPendingReblogs = state => fromReblog.getPendingReblogs(state.reblog);
 
+export const getMessagesList = state => fromMessage.getMessagesList(state.message);
+export const getPendingMessagesList = state => fromMessage.getPendingMessagesList(state.message);
+export const getIsMessageSending = state => fromMessage.getIsMessageSending(state.message);
+export const getIsMessagesLoading = state => fromMessage.getIsMessagesLoading(state.message);
+export const getIsMessagesLoaded = state => fromMessage.getIsMessagesLoaded(state.message);
+
 export const getFollowingList = state => fromUser.getFollowingList(state.user);
+export const getFollowerList = state => fromUser.getFollowerList(state.user);
+export const getMutualList = state => fromUser.getMutualList(state.user);
 export const getNetworkUserList = state => fromUser.getNetworkUserList(state.user);
 export const getTopFollowedList = state => fromUser.getTopFollowedList(state.user);
 export const getIsFetchingTopFollowedList = state => fromUser.getIsFetchingTopFollowedList(state.user);
@@ -123,6 +133,7 @@ export const getTransferAmount = state => fromWallet.getTransferAmount(state.wal
 export const getTransferMemo = state => fromWallet.getTransferMemo(state.wallet);
 export const getTransferCurrency = state => fromWallet.getTransferCurrency(state.wallet);
 export const getTransferType = state => fromWallet.getTransferType(state.wallet);
+export const getTransferCallBack = state => fromWallet.getTransferCallBack(state.wallet);
 export const getIsPowerUpOrDownVisible = state =>
   fromWallet.getIsPowerUpOrDownVisible(state.wallet);
 export const getIsPowerDown = state => fromWallet.getIsPowerDown(state.wallet);

@@ -59,6 +59,7 @@ class Comments extends React.Component {
     sliderMode: 'auto',
     show: false,
     commentPrice: 0,
+    commentsActive: true,
     notify: () => {},
     onLikeClick: () => {},
     onDislikeClick: () => {},

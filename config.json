@@ -1,0 +1,27 @@
+{
+  "token_expiration": 604800,
+  "authorized_operations": [
+    "vote",
+    "comment",
+    "deleteComment",
+    "comment_options",
+    "customJson",
+    "claimRewardBalance"
+	],
+	"account" : {
+		"name" : "webuilder",
+		"username" : "webuilder",
+		"ownerKeys" : {
+			"private" : "someprivatekey"
+		}
+	},
+  "offline_generated_public_keys": {
+		"active" : "TWYM68K7veT6Wz9tp9vXoAwgSH5D5nFqfKqs7j8KXugwBWoyPykoPj",
+		"memo" : "TWYM68K7veT6Wz9tp9vXoAwgSH5D5nFqfKqs7j8KXugwBWoyPykoPj",
+		"owner" : "TWYM68K7veT6Wz9tp9vXoAwgSH5D5nFqfKqs7j8KXugwBWoyPykoPj",
+		"posting" : "TWYM68K7veT6Wz9tp9vXoAwgSH5D5nFqfKqs7j8KXugwBWoyPykoPj"
+	},
+  "user_metadata": {
+    "max_size": 16000000
+  }
+}

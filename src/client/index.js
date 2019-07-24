@@ -11,7 +11,8 @@ import AppHost from './AppHost';
 import { getBrowserLocale, loadLanguage } from './translations';
 import { setUsedLocale } from './app/appActions';
 import { getLocale } from './reducers';
-require('./wehelpjs.js')
+import '@brainhubeu/react-carousel/lib/style.css';
+require('./wehelpjs.js');
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
   navigator.serviceWorker.register('/service-worker.js');

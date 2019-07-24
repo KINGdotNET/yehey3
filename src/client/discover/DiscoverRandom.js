@@ -68,7 +68,6 @@ class DiscoverRandom extends React.Component {
       }
 
     const initialUsers = allAccounts.slice(0, displayLimit);
-    //console.log("Initial Users:", initialUsers);
     this.setState({
         users: initialUsers,
       });
@@ -88,7 +87,6 @@ class DiscoverRandom extends React.Component {
     const { users } = this.state;
     const { allAccounts, totalSCORE, SCOREbackingTMEfundBalance, isFetchingAllAccountsList} = this.props;
     const hasMore = users.length !== allAccounts.length;
-    //console.log("TotalScore:", totalSCORE, "Rewardfund:", SCOREbackingTMEfundBalance);
    
     return (
       <div>

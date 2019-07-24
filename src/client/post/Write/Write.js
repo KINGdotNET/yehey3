@@ -25,6 +25,7 @@ import {
   getLanguageSetting,
   getAccessListSetting,
   getAccessSetting,
+  getMutualList,
 } from '../../reducers';
 
 import { createPost, saveDraft, newPost } from './editorActions';
@@ -36,6 +37,7 @@ import Affix from '../../components/Utils/Affix';
 @connect(
   (state, props) => ({
     user: getAuthenticatedUser(state),
+    mutuallist: getMutualList(state),
     draftPosts: getDraftPosts(state),
     loading: getIsEditorLoading(state),
     saving: getIsEditorSaving(state),
@@ -57,6 +59,7 @@ import Affix from '../../components/Utils/Affix';
 class Write extends React.Component {
   static propTypes = {
     user: PropTypes.shape().isRequired,
+    mutuallist: PropTypes.array,
     draftPosts: PropTypes.shape().isRequired,
     loading: PropTypes.bool.isRequired,
     intl: PropTypes.shape().isRequired,
@@ -85,6 +88,7 @@ class Write extends React.Component {
     languageSetting: "en",
     access: 'public',
     accessList: [],
+    mutuallist: [],
     newPost: () => {},
     createPost: () => {},
     saveDraft: () => {},
@@ -103,7 +107,7 @@ class Write extends React.Component {
       initialCommentPrice: '0',
       initialReward: this.props.rewardSetting,
       initialUpvote: this.props.upvoteSetting,
-      initialAccessList: this.props.accessList,
+      initialAccessList: _.uniq(this.props.accessList.concat(this.props.mutuallist)),
       initialAccess: this.props.access,
       initialNSFWtag: false,
       initialUpdatedDate: Date.now(),
@@ -129,8 +133,6 @@ class Write extends React.Component {
       if (draftPost.parentPermlink) {
         this.parentPermlink = draftPost.json.board || draftPost.json.tags[0];
       }
-      //console.log("Permlink", this.permlink);
-      //console.log("parentPermlink", this.parentPermlink);
 
       if (draftPost.originalBody) {
         this.originalBody = draftPost.originalBody;
@@ -140,7 +142,6 @@ class Write extends React.Component {
         this.originalLink = draftPost.originalLink;
       }
 
-      // eslint-disable-next-line
       this.setState({
         initialTitle: draftPost.title || '',
         initialBoard: draftPost.board || '',
@@ -269,8 +270,6 @@ class Write extends React.Component {
     if (this.originalLink) {
       data.originalLink = this.originalLink;
     }
-    //console.log("FormPermlink:", data.permlink);
-    //console.log("FormParentPermlink:", data.parentPermlink);
     return data;
   };
 

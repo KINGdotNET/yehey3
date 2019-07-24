@@ -91,15 +91,15 @@ class Transaction extends React.Component {
           </div>
         </Affix>
         <div className="center">
-        <div className="Transaction">
-          <div className="Transaction__title">
-            <h3>
-              <FormattedMessage id="transaction_details" defaultMessage="Transaction Details" />
-            </h3>
-          </div>
-          </div>
-          <div className="Transaction__content">
-            {this.displayTransaction()}
+          <div className="Transaction">
+            <div className="Transaction__title">
+              <h3>
+                <FormattedMessage id="transaction_details" defaultMessage="Transaction Details" />
+              </h3>
+            </div>
+            <div className="Transaction__content">
+              {this.displayTransaction()}
+            </div>
           </div>
         </div>
         <Affix className="rightContainer" stickPosition={77}>

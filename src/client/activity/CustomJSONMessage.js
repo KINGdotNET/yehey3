@@ -57,6 +57,21 @@ const CustomJSONMessage = ({ actionDetails }) => {
         />
       </span>
     );
+  } else if (customActionType === accountHistoryConstants.MESSAGE) {
+    return (
+      <span className="capitalize-text">
+        <FormattedMessage
+          id="message"
+          defaultMessage=" {messageSender} messaged you: {messageLink}"
+          values={{ 
+            messageSender: customActionDetails.sender,
+            messageLink: (
+              <Link to={`/messages/${customActionDetails.sender}`}></Link>
+            ),
+          }}
+        />
+      </span>
+    );
   }
 
   return null;

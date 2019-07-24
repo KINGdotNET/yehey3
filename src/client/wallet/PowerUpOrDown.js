@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Form, Input, Modal } from 'antd';
 import weauthjsInstance from '../weauthjsInstance';
+import { withRouter } from 'react-router-dom';
 import { closePowerUpOrDown } from './walletActions';
+import { generateSignURL } from '../helpers/apiHelpers';
 import {
   getAuthenticatedUser,
   getIsPowerUpOrDownVisible,
@@ -15,6 +17,7 @@ import {
 import formatter from '../helpers/blockchainProtocolFormatter';
 import './Transfer.less';
 
+@withRouter
 @injectIntl
 @connect(
   state => ({
@@ -32,6 +35,7 @@ import './Transfer.less';
 export default class PowerUpOrDown extends React.Component {
   static propTypes = {
     intl: PropTypes.shape().isRequired,
+    history: PropTypes.shape(),
     form: PropTypes.shape().isRequired,
     visible: PropTypes.bool.isRequired,
     closePowerUpOrDown: PropTypes.func.isRequired,
@@ -93,13 +97,10 @@ export default class PowerUpOrDown extends React.Component {
               amount: `${parseFloat(values.amount).toFixed(3)} TME`,
               to: user.name,
             };
-
-        const win = window.open(
-          weauthjsInstance.sign(down ? 'withdrawSCORE' : 'transferTMEtoSCOREfund', transferQuery),
-          '_blank',
-        );
-        win.focus();
-        this.props.closePowerUpOrDown();
+            this.props.closePowerUpOrDown();
+        const callBack =  window.location.href;
+        const operation = down ? 'withdrawSCORE' : 'transferTMEtoSCOREfund';
+        this.props.history.push(generateSignURL(operation, transferQuery, callBack));
       }
     });
   };

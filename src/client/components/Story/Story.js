@@ -41,7 +41,9 @@ class Story extends React.Component {
     intl: PropTypes.shape().isRequired,
     user: PropTypes.shape().isRequired,
     post: PropTypes.shape().isRequired,
-    postUser: PropTypes.shape().isRequired,
+    //postUser: PropTypes.shape().isRequired,
+    //fetchingPostUser: PropTypes.bool,
+    //fetchedPostUser: PropTypes.bool,
     postState: PropTypes.shape().isRequired,
     rewardFund: PropTypes.shape().isRequired,
     defaultVotePercent: PropTypes.number.isRequired,
@@ -75,6 +77,8 @@ class Story extends React.Component {
     pendingFlag: false,
     pendingFollow: false,
     pendingBookmark: false,
+    //fetchingPostUser: false,
+    //fetchedPostUser: false,
     saving: false,
     ownPost: false,
     sliderMode: 'auto',
@@ -123,6 +127,7 @@ class Story extends React.Component {
       memo: "Tip for post: " + post.title,
       currency: 'TME',
       type: 'transfer',
+      callBack: window.location.href,
     };
     this.props.openTransfer(this.transfer);
   }
@@ -134,6 +139,7 @@ class Story extends React.Component {
       memo: "@"+post.author+"/"+post.permlink,
       currency: 'TSD',
       type: 'transfer',
+      callBack: window.location.href,
     };
     this.props.openTransfer(this.transfer);
   }
@@ -281,14 +287,6 @@ class Story extends React.Component {
     }
   }
 
-  componentDidMount() {
-    const { post, postUser } = this.props;
-
-    if(_.isEmpty(postUser)) {
-      this.props.getAccount(post.author);
-    }
-  }
-
   renderStoryPreview() {
     const { post, showImagesOnly, user } = this.props;
     const json = jsonParse(post.json);
@@ -341,7 +339,6 @@ class Story extends React.Component {
     const {
       user,
       post,
-      postUser,
       postState,
       pendingLike,
       pendingDislike,
@@ -382,7 +379,6 @@ class Story extends React.Component {
     
     let authorAvatar = null;
     let authorName = null;
-    //console.log("postUser:", postUser);
 
     if (!ownPost) {
       authorAvatar = (
@@ -396,10 +392,10 @@ class Story extends React.Component {
                   {followText}
                 </div>
               </Action>
-              <div className = "Story__followCount">
+              {/* <div className = "Story__followCount">
                 {`${postUser.follower_count} `}
                 <FormattedMessage id="follower-number" defaultMessage="Followers" />
-              </div>
+              </div> */}
             </span>
             }>
           <Link to={`/@${post.author}`}>
@@ -419,10 +415,10 @@ class Story extends React.Component {
                   {followText}
                 </div>
               </Action> 
-              <div className = "Story__followCount">
+              {/* <div className = "Story__followCount">
                 {pendingFollow ? <div /> : `${postUser.follower_count} `}
                 <FormattedMessage id="follower-number" defaultMessage="Followers" />
-              </div>
+              </div> */}
               </span>
               } >
               <Link to={`/@${post.author}`}>

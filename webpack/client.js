@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
 const CSSExtract = require('mini-css-extract-plugin');
@@ -74,6 +76,10 @@ module.exports = function createConfig(env = 'dev') {
             },
           ],
         },
+        {
+          test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'file-loader',
+        }
       ],
     },
   };

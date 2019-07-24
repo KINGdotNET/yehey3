@@ -27,6 +27,7 @@ import ExitPage from '../client/statics/ExitPage';
 import Boards from '../client/discover/Boards';
 import Network from '../client/discover/Network';
 import About from '../client/discover/About';
+import Welcome from '../client/discover/Welcome';
 import BlockPage from '../client/discover/BlockPage';
 import DiscoverPage from '../client/discover/DiscoverPage';
 import DiscoverRecommended from '../client/discover/DiscoverRecommended';
@@ -35,6 +36,11 @@ import DiscoverPower from '../client/discover/DiscoverPower';
 import DiscoverPosts from '../client/discover/DiscoverPosts';
 import DiscoverRandom from '../client/discover/DiscoverRandom';
 import Coins from '../client/discover/Coins';
+import Authorize from '../client/components/Authorize';
+import Messages from '../client/messages/Messages';
+import MessagesHome from '../client/messages/MessagesHome';
+import Sign from '../client/components/Sign';
+import Generate from '../client/components/GenerateLink';
 
 const routes = [
   {
@@ -46,9 +52,23 @@ const routes = [
         component: Bookmarks,
       },
       {
+        path: '/generate',
+        exact: true,
+        component: Generate,
+      },
+      {
+        path: '/sign/:type?/:base64?',
+        component: Sign,
+      },
+      {
         path: '/drafts',
         exact: true,
         component: Drafts,
+      },
+      {
+        path: '/login',
+        exact: true,
+        component: Authorize,
       },
       {
         path: '/replies',
@@ -180,6 +200,11 @@ const routes = [
         component: About,
       },
       {
+        path: '/welcome',
+        exact: true,
+        component: Welcome,
+      },
+      {
         path: '/:category?/@:author/:permlink',
         component: Post,
       },
@@ -191,6 +216,16 @@ const routes = [
         path: '/tx/:txid',
         exact: true,
         component: Transaction,
+      },
+      {
+        path: '/messages',
+        exact: true,
+        component: MessagesHome,
+      },
+      {
+        path: '/messages/@:recipient',
+        exact: true,
+        component: Messages,
       },
       {
         path: '/block/:num',

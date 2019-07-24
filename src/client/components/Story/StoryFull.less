@@ -13,6 +13,39 @@
     top: 0;
   }
 
+  &__content {
+    &__link {
+      font-family: @font-family;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 2;
+      color: rgb(31, 139, 175);
+      text-align: center;
+      vertical-align: center;
+      &__icon {
+        text-align: right;
+        padding-right: 30px;
+        margin-bottom: 10px;
+        .iconfont {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  &__share {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    text-align: right;
+    
+    &__action {
+      padding-left: 10px;
+      color: @blue-botticelli;
+      position: relative; 
+    }
+  }
+
   &__bullet:after {
     content: '\2022';
     font-size: 14px;
@@ -63,6 +96,8 @@
       & > .Topic {
         margin: auto 4px auto 0;
       }
+
+      
     }
   }
 

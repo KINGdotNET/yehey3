@@ -68,7 +68,6 @@ class Search extends React.Component {
     ]);   
   }
   
-
   constructor(props) {
     super(props);
 
@@ -99,7 +98,6 @@ class Search extends React.Component {
       const searchQueryFromUrl = _.get(searchQueryRegexResults, 1, '');
       this.props.userSearchBlockchain(searchQueryFromUrl, 10);
     }
-    //console.log("COMPONENT DID MOUNT:", searchQuery);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -109,7 +107,6 @@ class Search extends React.Component {
 
     if (oldSearchQuery !== newSearchQuery) {
       this.props.userSearchBlockchain(newSearchQuery, 10);
-      //console.log("COMPONENT WILL RECEIVE PROPS:", newSearchQuery);
     }
   }
 
@@ -242,10 +239,6 @@ class Search extends React.Component {
             </Link>
           </AutoComplete.Option>
         ]);
-    
-    //console.log("formattedAutoCompleteDropdown:", formattedAutoCompleteDropdown);
-
-    //console.log("RENDER:", userSearchResults);
 
     return (
       <div className="settings-layout container">

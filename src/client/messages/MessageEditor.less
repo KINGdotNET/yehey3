@@ -1,0 +1,102 @@
+@import (reference) '../styles/custom.less';
+@import (reference) '../styles/mixins.less';
+
+.MessageEditor {
+  position: fixed;
+  width: 100%;
+  z-index: 1040;
+  bottom: 0px;
+  padding: 0;
+  max-width: 550px;
+  background-color: white;
+
+&__container {
+  margin-bottom: 45px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-right: 5px;
+  padding: 3px;
+  display: flex;
+  flex-direction: row;
+  }
+
+&__payment {
+  z-index: 1050;
+}
+
+&__imagebox {
+
+  color: @blue-botticelli;
+  transition: none;
+
+  input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  label {
+    cursor: pointer;
+  }
+
+  .iconfont {
+    color: @blue-linkWater;
+    font-size: 24px !important;
+    margin-right: 4px;
+    vertical-align: -2px;
+
+    &:hover {
+      color: @primary-color;
+    }
+
+  }
+
+  .anticon {
+    color: @blue-linkWater;
+    font-size: 16px !important;
+    margin-right: 8px !important;
+    vertical-align: 3px;
+  }
+  
+}
+
+&__form {
+  width: 100%;
+}
+
+&__button {
+  margin-right: 3px;
+}
+
+.Buttons__link {
+
+  color: @blue-botticelli;
+  transition: none;
+
+  & > .iconfont {
+    font-size: 24px !important;
+    color: @blue-linkWater;
+  }
+
+  & > .anticon {
+    color: @blue-linkWater;
+    vertical-align: 3px;
+  }
+
+  & > span {
+    vertical-align: top;
+  }
+
+  &:hover {
+    color: @primary-color;
+  }
+
+  &:hover > .iconfont,
+  &.active > .iconfont {
+    color: @primary-color;
+  }
+}
+}

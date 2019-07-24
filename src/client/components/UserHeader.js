@@ -19,6 +19,7 @@ const UserHeader = ({
   coverImage,
   hasCover,
   isFollowing,
+  isMutual,
   onTransferClick,
   isActive,
   ownName,
@@ -29,7 +30,7 @@ const UserHeader = ({
   return (
     <div className={classNames('UserHeader', { 'UserHeader--cover': hasCover })} style={style}>
       <div className="UserHeader__container">
-        <AvatarLightbox username={handle} size={100} isActive={isActive} />
+        <AvatarLightbox username={handle} size={150} isActive={isActive} />
         <div className="UserHeader__user">
           <div className="UserHeader__user__details">
             <h2 className="UserHeader__user__username">
@@ -60,13 +61,22 @@ const UserHeader = ({
 									<img src="/images/dollar.png" className="button-icon on-right"/>
 								</Action>
               </div>)}
+            {!isSameUser && isMutual && (
+              <div className='UserHeader__user__button'>
+                <Link to={`/messages/@${handle}`}>
+                  <Action className="message-user">
+                    <FormattedMessage id="message_user" defaultMessage="Message" />
+                    <i className="iconfont button-icon icon-mail"/>
+                  </Action>
+                </Link> 
+							</div> )}
             {!isSameUser && ownName && (
               <div className='UserHeader__user__button'>
                 <Link to={`/feed-${ownName}/feed-${handle}`}>
-                <Action className="shared-feed">
-									<FormattedMessage id="shared_feed" defaultMessage="Shared Feed" />
-									<i className="iconfont button-icon icon-group"/>
-								</Action>
+                  <Action className="shared-feed">
+                    <FormattedMessage id="shared_feed" defaultMessage="Shared Feed" />
+                    <i className="iconfont button-icon icon-group"/>
+                  </Action>
                 </Link> 
 							</div> )}
 					</div>
