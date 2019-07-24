@@ -34,7 +34,7 @@ export const login = ({ username, wif, role = 'posting' }, cb) => {
         })
         .then(res => res.json())
         .then((data) => {
-            const accounts = getAccounts();
+            const accounts = getAccounts() || [];
             const idx = accounts.findIndex(acc => acc.username === data.name);
             if (idx >= 0) {
               accounts[idx].postingAuths = data.account.posting.account_auths;
