@@ -68,7 +68,7 @@ export default class Authorize extends React.Component {
 
   componentWillMount() {
     this.getAppData();
-    const accounts = getAccounts();
+    const accounts = getAccounts() || [];
     if (accounts.length > 0) {
       this.setState({ step: 1 });
     } else {
@@ -101,7 +101,7 @@ export default class Authorize extends React.Component {
   }
 
   hasAuthorityFromStorage = (username, clientId) => {
-    const accounts = getAccounts();
+    const accounts = getAccounts() || [];
     const account = accounts.find(acc => acc.username === username);
     const auths = account.postingAuths.map(auth => auth[0]);
     return auths.indexOf(clientId) !== -1;
