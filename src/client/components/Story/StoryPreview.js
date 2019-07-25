@@ -14,7 +14,7 @@ import {
 import { getHtml } from './Body';
 import { getProxyImageURL } from '../../helpers/image';
 import { Tag, Icon } from 'antd';
-import { decryptWithMemoKeypair, decryptAES } from '../../helpers/apiHelpers';
+import { decryptWithMemoKeypair, decryptAES, getUserMemoKey } from '../../helpers/apiHelpers';
 
 
 const StoryPreview = ({ post, showImagesOnly, username }) => {
@@ -24,9 +24,9 @@ const StoryPreview = ({ post, showImagesOnly, username }) => {
   let userAccess = false;
   let decryptionKey = '';
   let body = post.body;
-  let storagekey = "UserMemoKey-"+username;
+  const storageKey = getUserMemoKey(username);
 
-  if (json && json.accessList && json.accessList[username] && isPostTaggedPrivate(post) && !_.isEmpty(localStorage.getItem(storagekey))) {
+  if (json && json.accessList && json.accessList[username] && isPostTaggedPrivate(post) && !_.isEmpty(localStorage.getItem(storageKey))) {
     userAccess = true;
     accessList = json.accessList;
     decryptionKey = decryptWithMemoKeypair(username, accessList[username]);

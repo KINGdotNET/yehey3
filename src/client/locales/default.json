@@ -445,7 +445,7 @@
   "password_error": "Passwords do not match or are invalid.",
   "passpik_ready": "PassPik Ready",
   "select_passpik": "Select your PassPik",
-  "passpik_info": "WeYouMe uses a new way of securing your account called PassPik, where your chosen picure is your password.",
+  "passpik_info": "WeYouMe uses a new way of securing your account called PassPik, where your chosen picture is your password.",
   "error_404": "Looks like you followed a bad link. If you think this is a problem with WeAuth, please tell us. Here's a link to the {link}.",
   "error_account_not_found": "Account name is not found",
   "error_account_recover_required": "Please input the account to recover",

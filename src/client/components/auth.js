@@ -67,9 +67,6 @@ export const login = ({ username, wif, role = 'posting' }, cb) => {
         });
       mixpanel.people.increment("logins"); 
     }
-    if (firstLogin) {
-      window.location = '/about';
-    }
   }
 
 export const hasAuthority = (user, clientId, role = 'posting') => {
