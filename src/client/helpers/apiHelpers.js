@@ -153,13 +153,12 @@ export function encryptWithMemoKeypair(username, recipientMemoPublicKey, data) {
  */
 export function retrieveMemoPrivateKey(username) {
       const storageKey = getUserMemoKey(username);
-      const storage = localStorage;
-      if(!_.isEmpty(storage.getItem(storageKey))) {
-        const userMemoPrivateKey = storage.getItem(storageKey);
+      if(!_.isEmpty(localStorage.getItem(storageKey))) {
+        const userMemoPrivateKey = localStorage.getItem(storageKey);
         return userMemoPrivateKey; 
       } else {
         console.error("Please load secret key in profile settings.");
-        return "Unable to retrieve Secret Key";
+        return ("Unable to retrieve Secret Key");
       }
     }
 
@@ -169,11 +168,12 @@ export function retrieveMemoPrivateKey(username) {
  * @param {string} data - The ciphertext string of encrypted memo data, should start with #.
  * @returns {string} The decrypted plaintext string of data.
  */
-export async function decryptWithMemoKeypair(username, data) {
+export function decryptWithMemoKeypair(username, data) {
   if ((typeof username == 'string') && (typeof data == 'string')) {
     const userMemoPrivateKey = retrieveMemoPrivateKey(username);
-    const encryptedBody = wehelpjs.memo.decode(userMemoPrivateKey, data);
-    return encryptedBody.slice(1, encryptedBody.length); 
+    const decryptedData = wehelpjs.memo.decode(userMemoPrivateKey, data);
+    const resolvedData = decryptedData.slice(1, decryptedData.length);
+    return resolvedData;
   } else {
     console.error("Decryption error: Please use strings for username and data parameters.");
     return ("Unable to retrieve Secret Key");

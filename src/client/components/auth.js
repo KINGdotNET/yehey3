@@ -34,7 +34,7 @@ export const login = ({ username, wif, role = 'posting' }, cb) => {
         })
         .then(res => res.json())
         .then((data) => {
-            const accounts = getAccounts();
+            const accounts = getAccounts() || [];
             const idx = accounts.findIndex(acc => acc.username === data.name);
             if (idx >= 0) {
               accounts[idx].postingAuths = data.account.posting.account_auths;
@@ -49,10 +49,8 @@ export const login = ({ username, wif, role = 'posting' }, cb) => {
             })
         .catch(err => console.error("Error:", err));
     };
-    let firstLogin = false;
     if (_.isEmpty(localStorage.getItem('userid'))){
       localStorage.setItem('userid', uuidv4());
-      firstLogin = true;
     }
     const userID = localStorage.getItem('userid');
     if (window.analytics) {
@@ -60,15 +58,19 @@ export const login = ({ username, wif, role = 'posting' }, cb) => {
       username: username, 
       }); 
     }
+    if (window.analytics) {
+      window.analytics.track('Login', {
+        category: 'login',
+        label: `login`,
+        value: 1,
+      });
+    }
     if (mixpanel) {
       mixpanel.identify(userID);
       mixpanel.people.set({
         username: username, 
         });
       mixpanel.people.increment("logins"); 
-    }
-    if (firstLogin) {
-      window.location = '/about';
     }
   }
 

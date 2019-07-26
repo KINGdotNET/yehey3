@@ -2,12 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import wehelpjs from 'wehelpjs';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import AccountForm from './AccountForm';
 import SignForm from './SignForm';
 import Loading from './Icon/Loading';
 import { withRouter } from 'react-router-dom';
 import withAuthActions from '../auth/withAuthActions';
+import { getUserMemoKey } from '../helpers/apiHelpers';
+import qs from 'query-string';
+import { authorize, login, addPostingAuthority } from './auth';
 import fetch from 'isomorphic-fetch';
 import './Sign.less';
 
@@ -51,6 +54,47 @@ export default class CreateAccount extends React.Component {
     return loginURL;
   };
 
+  authorize = (username, ownerPrivateKey) => {
+    const { options } = this.props;
+    const clientId = options.app;
+    const redirectUri = options.callbackURL;
+    const responseType = 'token';
+    const role = 'owner';
+    const scopes = [
+      "vote",
+      "comment",
+      "deleteComment",
+      "comment_options",
+      "customJson",
+      "claimRewardBalance"
+      ];
+    const state = {
+        clientId,
+        responseType,
+        redirectUri,
+        state,
+        step: 0,
+        scopes: [
+          "vote",
+          "comment",
+          "deleteComment",
+          "comment_options",
+          "customJson",
+          "claimRewardBalance"
+          ],
+        app: null,
+      };
+
+    const scopeString = scopes.join(',');
+    login({ username, wif: ownerPrivateKey, role }, () => {
+      addPostingAuthority({ username, wif: ownerPrivateKey, role, clientId }, () => {
+        authorize({ clientId, scope: scopeString}, (errA, resA) => {
+          window.location = `${redirectUri}?${qs.stringify({ ...resA, state })}`;
+        });
+      });
+    });
+  };
+
   submit = data => {
 		data.name = data.name.toLowerCase();
 		let account = data;
@@ -74,13 +118,10 @@ export default class CreateAccount extends React.Component {
 				res.json()
 				.then(res=>{
 					if (res.success) {
-            let storagekey = "UserMemoKey-"+account.name;
-            let memoKeys = wehelpjs.auth.getPrivateKeys(account.name, account.password, ['memo']);
-            localStorage.setItem(storagekey, memoKeys.memo); // Stores the User's Memo PrivateKey in local storage for use in encryption and decryption of posts and messages.
-						notification.success({
-							message: intl.formatMessage({ id: 'success' }),
-							description: intl.formatMessage({ id: 'success_accountCreate' }, { account: account.name }),
-            });
+            const storageKey = getUserMemoKey(account.name);
+            const memoKeys = wehelpjs.auth.getPrivateKeys(account.name, account.password, ['memo', 'owner']);
+            localStorage.setItem(storageKey, memoKeys.memo); // Stores the User's Memo PrivateKey in local storage for use in encryption and decryption of posts and messages.
+						message.success(intl.formatMessage({ id: 'success_accountCreate' }, { account: account.name }));
             if (window.analytics) {
               window.analytics.track('NewAccount', {
                 category: 'registration',
@@ -88,20 +129,13 @@ export default class CreateAccount extends React.Component {
                 value: 10,
               });
             }
-						this.props.history.push(this.getHomeLoginURL());
+						this.authorize(account.name, memoKeys.owner);
 					} else {
 						if(res.err){
 							console.error('res.err', res.err)
-							notification.error({
-								message: intl.formatMessage({ id: 'error' }),
-								description: res.message || intl.formatMessage({ id: 'general_error' }),
-							});
+							message.error(res.message || intl.formatMessage({ id: 'general_error' }));
 						} else {
-							notification.error({
-								message: intl.formatMessage({ id: 'error' }),
-								description: res.message || intl.formatMessage({ id: 'general_error' }),
-							});
-	
+							message.error(res.message || intl.formatMessage({ id: 'general_error' }));
 						}
 					}
 				})
@@ -154,14 +188,18 @@ export default class CreateAccount extends React.Component {
             description: intl.formatMessage({ id: 'general_error' }),
           });
         } else {
-          notification.success({
-            message: intl.formatMessage({ id: 'success' }),
-            description: intl.formatMessage({ id: 'success_accountCreate' }, { account: account.name }),
-          });
-          let storagekey = "UserMemoKey-"+account.name;
-          let memoKeys = wehelpjs.auth.getPrivateKeys(account.name, account.password, ['memo']);
-          localStorage.setItem(storagekey, memoKeys.memo); // Stores the User's Memo PrivateKey in local storage for use in encryption and decryption of posts and messages.
-					this.props.history.push(this.getHomeLoginURL());
+          const storageKey = getUserMemoKey(account.name);
+          const memoKeys = wehelpjs.auth.getPrivateKeys(account.name, account.password, ['memo', 'owner']);
+          localStorage.setItem(storageKey, memoKeys.memo); // Stores the User's Memo PrivateKey in local storage for use in encryption and decryption of posts and messages.
+					message.success(intl.formatMessage({ id: 'success_accountCreate' }, { account: account.name }));
+          if (window.analytics) {
+            window.analytics.track('NewAccount', {
+              category: 'registration',
+              label: `Registered : ${account.name}` ,
+              value: 10,
+            });
+          }
+          this.authorize(account.name, memoKeys.owner);
         }
       }
     );

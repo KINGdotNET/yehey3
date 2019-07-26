@@ -32,7 +32,7 @@ import Topic from '../Button/Topic';
 import PopoverMenu, { PopoverMenuItem } from '../PopoverMenu/PopoverMenu';
 import PostFeedEmbed from './PostFeedEmbed';
 import PostedFrom from './PostedFrom';
-import { decryptWithMemoKeypair, decryptAES } from '../../helpers/apiHelpers';
+import { decryptWithMemoKeypair, decryptAES, getUserMemoKey } from '../../helpers/apiHelpers';
 import { getFacebookShareURL, getTwitterShareURL } from '../../helpers/socialProfiles';
 import './StoryFull.less';
 
@@ -227,6 +227,7 @@ class StoryFull extends React.Component {
     let accessList = {};
     let userAccess = false;
     let decryptionKey = '';
+    const storageKey = getUserMemoKey(user.name);
     let image = json.image;
     let body = post.body;
     let postLink = '';
@@ -234,7 +235,7 @@ class StoryFull extends React.Component {
       postLink = json.link;
     }
 
-    if (json && json.accessList && json.accessList[user.name]) {
+    if (json && json.accessList && json.accessList[user.name] && !_.isEmpty(localStorage.getItem(storageKey))) {
       userAccess = true;
       accessList = json.accessList;
       decryptionKey = decryptWithMemoKeypair(user.name, accessList[user.name]);

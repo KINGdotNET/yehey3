@@ -5,6 +5,7 @@ import wehelpjs from 'wehelpjs';
 import { Form, Icon, Input, Button } from 'antd';
 import { accountExist } from './Utils/validator';
 import ImageInput from './Editor/ImageInput';
+import { getUserMemoKey } from '../helpers/apiHelpers';
 import _ from 'lodash';
 import './Sign.less';
 import { Link } from 'react-router-dom';
@@ -54,11 +55,10 @@ class SignForm extends React.Component {
   }
 
   saveViewKey(username, password, memoPubKey) {
-    
-    let storagekey = "UserMemoKey-"+username;
-    let memoKeys = wehelpjs.auth.getPrivateKeys(username, password, ['memo']);
+    const storageKey = getUserMemoKey(username);
+    const memoKeys = wehelpjs.auth.getPrivateKeys(username, password, ['memo']);
     if (memoPubKey == memoKeys.memoPubkey) {
-      localStorage.setItem(storagekey, memoKeys.memo);
+      localStorage.setItem(storageKey, memoKeys.memo);
     } else {
       console.error("Key match Invalid: on-chain public memo key: ", user.memoKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
       message.error("Secret key invalid, please input correct password.");
