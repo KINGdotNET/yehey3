@@ -49,16 +49,21 @@ export const login = ({ username, wif, role = 'posting' }, cb) => {
             })
         .catch(err => console.error("Error:", err));
     };
-    let firstLogin = false;
     if (_.isEmpty(localStorage.getItem('userid'))){
       localStorage.setItem('userid', uuidv4());
-      firstLogin = true;
     }
     const userID = localStorage.getItem('userid');
     if (window.analytics) {
     window.analytics.identify(userID, {
       username: username, 
       }); 
+    }
+    if (window.analytics) {
+      window.analytics.track('Login', {
+        category: 'login',
+        label: `login`,
+        value: 1,
+      });
     }
     if (mixpanel) {
       mixpanel.identify(userID);

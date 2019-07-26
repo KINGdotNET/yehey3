@@ -88,6 +88,7 @@ class Editor extends React.Component {
       link:'',
       commentPrice: '0',
       access: 'public',
+      accessList: [],
       keyReady: false,
     };
 
@@ -182,7 +183,7 @@ class Editor extends React.Component {
   }
 
   checkTopics = intl => (rule, value, callback) => {
-    if (!value || value.length < 0 || value.length > 10) {
+    if (value.length > 10) {
       callback(
         intl.formatMessage({
           id: 'topics_error_count',
@@ -212,77 +213,81 @@ class Editor extends React.Component {
   };
 
   checkUsers = intl => (rule, value, callback) => {
-    if (!value || value.length < 0 || value.length > 100) {
-      callback(
-        intl.formatMessage({
-          id: 'users_error_count',
-          defaultMessage: 'You can only add up to 100 Users.',
-        }),
-      );
-    }
-    
-    value
-      .map(user => ({ user, valid: /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(user)  }))
-      .filter(user => !user.valid)
-      .map(user =>
+    if (value.length) {
+      if (value.length > 100) {
         callback(
-          intl.formatMessage(
-            {
-              id: 'users_error_invalid_user',
-              defaultMessage: 'Username {user} is invalid.',
-            },
-            {
-              user: user.user,
-            },
-          ),
-        ),
-      );
-
-    value.forEach(user => userExists(changeCase.lowerCase(user))
-      .then(res => {
-        if (res.name === user) {
-          if (user === value[value.length-1]){
-            callback();
-          }
-        } else {
+          intl.formatMessage({
+            id: 'users_error_count',
+            defaultMessage: 'You can only add up to 100 Users.',
+          }),
+        );
+      }
+      value
+        .map(user => ({ user, valid: /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(user)  }))
+        .filter(user => !user.valid)
+        .map(user =>
           callback(
             intl.formatMessage(
               {
-                id: 'users_error_user_not_found',
-                defaultMessage: 'Account {user} does not exist.',
+                id: 'users_error_invalid_user',
+                defaultMessage: 'Username {user} is invalid.',
               },
               {
-                user: changeCase.lowerCase(user),
+                user: user.user,
+              },
+            ),
+          ),
+        );
+
+      value.forEach(user => userExists(changeCase.lowerCase(user))
+        .then(res => {
+          if (res.name === user) {
+            if (user === value[value.length-1]){
+              callback();
+            }
+          } else {
+            callback(
+              intl.formatMessage(
+                {
+                  id: 'users_error_user_not_found',
+                  defaultMessage: 'Account {user} does not exist.',
+                },
+                {
+                  user: changeCase.lowerCase(user),
+                },
+              ),
+            );
+          } 
+        }));
+      } else {
+        callback();
+      }
+    }
+    
+
+    checkLink = intl => (rule, value, callback) => {
+      if (value) {
+      const valid = /^((\w+:\/\/)[-a-zA-Z0-9:@;?&=\/%\+\.\*!'\(\),\$_\{\}\^~\[\]`#|]+)/.test(value);
+      if (!valid) {
+          callback(
+            intl.formatMessage(
+              {
+                id: 'topics_error_invalid_link',
+                defaultMessage: 'Link {link} is invalid.',
+              },
+              {
+                link: value,
               },
             ),
           );
         } 
-      }));
-    };
-
-  checkLink = intl => (rule, value, callback) => {
-    if (value) {
-    const valid = /^((\w+:\/\/)[-a-zA-Z0-9:@;?&=\/%\+\.\*!'\(\),\$_\{\}\^~\[\]`#|]+)/.test(value);
-    if (!valid) {
-        callback(
-          intl.formatMessage(
-            {
-              id: 'topics_error_invalid_link',
-              defaultMessage: 'Link {link} is invalid.',
-            },
-            {
-              link: value,
-            },
-          ),
-        );
-      } 
+        else {
+          callback();
+        }
+      }
       else {
         callback();
       }
-    }
-    else {
-      callback();
-    }
   };
 
   checkCommentPrice = intl => (rule, value, callback) => {

@@ -71,6 +71,7 @@ class Write extends React.Component {
     boardSetting: PropTypes.string,
     languageSetting: PropTypes.string,
     accessList: PropTypes.array,
+    mutuallist: PropTypes.array,
     access: PropTypes.string,
     newPost: PropTypes.func,
     createPost: PropTypes.func,
@@ -107,7 +108,7 @@ class Write extends React.Component {
       initialCommentPrice: '0',
       initialReward: this.props.rewardSetting,
       initialUpvote: this.props.upvoteSetting,
-      initialAccessList: _.uniq(this.props.accessList.concat(this.props.mutuallist)),
+      initialAccessList: _.uniq(this.props.accessList.concat(this.props.mutuallist)) || [],
       initialAccess: this.props.access,
       initialNSFWtag: false,
       initialUpdatedDate: Date.now(),
@@ -194,7 +195,7 @@ class Write extends React.Component {
       const initialBoard = _.get(draftPost, 'json.tags[0]', '');
       const initialBody = _.get(draftPost, 'body', '');
       const initialLink = _.get(draftPost, 'json.link', '');
-      const initialAccess = _.get(draftPost, 'access', this.state.access);
+      const initialAccess = _.get(draftPost, 'access', 'public');
       const initialCommentPrice = _.get(draftPost, 'json.commentPrice', '0');
       const initialTopics = _.get(draftPost, 'json.tags', []);
       const initialAccessList = _.get(draftPost, 'accessList', this.state.initialAccessList);
@@ -234,7 +235,7 @@ class Write extends React.Component {
   getNewPostData = form => {
     const data = {
       body:form.body, 
-      accessList: form.accessList || this.props.accessList,
+      accessList: form.accessList || this.state.initialAccessList,
       access: form.access || this.state.access,
       title: form.title,
       reward: form.reward,

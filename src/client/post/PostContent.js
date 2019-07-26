@@ -79,7 +79,7 @@ class PostContent extends React.Component {
     pendingBookmarks: PropTypes.arrayOf(PropTypes.number).isRequired,
     saving: PropTypes.bool.isRequired,
     rewardFund: PropTypes.shape().isRequired,
-    defaultVotePercent: PropTypes.number.isRequired,
+    defaultVotePercent: PropTypes.number,
     rewriteLinks: PropTypes.bool.isRequired,
     appUrl: PropTypes.string.isRequired,
     bookmarks: PropTypes.shape(),
