@@ -235,7 +235,7 @@ class StoryFull extends React.Component {
       postLink = json.link;
     }
 
-    if (json && json.accessList && json.accessList[user.name] && !_.isEmpty(localStorage.getItem(storageKey))) {
+    if (json && json.accessList && json.accessList[user.name] && _.includes(json.tags, 'private') && !_.isEmpty(localStorage.getItem(storageKey))) {
       userAccess = true;
       accessList = json.accessList;
       decryptionKey = decryptWithMemoKeypair(user.name, accessList[user.name]);

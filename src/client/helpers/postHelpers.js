@@ -140,7 +140,7 @@ export function createPostMetadata(body, board, tags, link, commentPrice, nsfwta
 
   const parsedBody = getHtml(body, {}, 'text');
   const images = getContentImages(parsedBody, true);
-  const normalizedTags = tags.map((tag) => {return changeCase.lowerCase(tag)} );
+  const normalizedTags = _.compact(tags).map((tag) => {return changeCase.lowerCase(tag)} );
 
   let boardWithTags = [board, ...normalizedTags];
   if (nsfwtag) {

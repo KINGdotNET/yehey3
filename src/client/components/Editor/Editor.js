@@ -56,7 +56,7 @@ class Editor extends React.Component {
   static defaultProps = {
     title: '',
     topics: [],
-    board: '',
+    board: 'random',
     body: '',
     accessList: [],
     access: 'public',
@@ -160,9 +160,9 @@ class Editor extends React.Component {
     this.props.form.setFieldsValue({
       title: post.title,
       board: post.board,
-      topics: post.topics,
+      topics: _.compact(post.topics),
       body: post.body,
-      accessList: post.accessList,
+      accessList: _.compact(post.accessList),
       access: post.access,
       link: post.link,
       commentPrice: post.commentPrice,
