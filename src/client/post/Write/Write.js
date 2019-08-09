@@ -128,6 +128,11 @@ class Write extends React.Component {
         tags = draftPost.json.tags;
       }
 
+      let board = boardValues.random;
+      if (!_.isEmpty(draftPost.json.board)) {
+        board = draftPost.json.board;
+      }
+
       if (draftPost.permlink) {
         this.permlink = draftPost.permlink;
       }
@@ -145,7 +150,7 @@ class Write extends React.Component {
 
       this.setState({
         initialTitle: draftPost.title || '',
-        initialBoard: draftPost.board || '',
+        initialBoard: board || this.state.initialBoard,
         initialTopics: tags || [],
         initialBody: draftPost.body || '',
         initialLink: draftPost.link || '',
@@ -192,7 +197,7 @@ class Write extends React.Component {
       const { draftPosts, draftId } = nextProps;
       const draftPost = _.get(draftPosts, draftId, {});
       const initialTitle = _.get(draftPost, 'title', '');
-      const initialBoard = _.get(draftPost, 'json.tags[0]', '');
+      const initialBoard = _.get(draftPost, 'json.board', this.state.initialBoard);
       const initialBody = _.get(draftPost, 'body', '');
       const initialLink = _.get(draftPost, 'json.link', '');
       const initialAccess = _.get(draftPost, 'access', 'public');

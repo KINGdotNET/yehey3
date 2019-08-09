@@ -26,7 +26,7 @@ const StoryPreview = ({ post, showImagesOnly, username }) => {
   let body = post.body;
   const storageKey = getUserMemoKey(username);
 
-  if (json && json.accessList && json.accessList[username] && isPostTaggedPrivate(post) && !_.isEmpty(localStorage.getItem(storageKey))) {
+  if (json && json.accessList && json.accessList[username] && _.includes(json.tags, 'private') && !_.isEmpty(localStorage.getItem(storageKey))) {
     userAccess = true;
     accessList = json.accessList;
     decryptionKey = decryptWithMemoKeypair(username, accessList[username]);
