@@ -60,7 +60,7 @@ class SignForm extends React.Component {
     if (memoPubKey == memoKeys.memoPubkey) {
       localStorage.setItem(storageKey, memoKeys.memo);
     } else {
-      console.error("Key match Invalid: on-chain public memo key: ", user.memoKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
+      console.error("Key match Invalid: on-chain public memo key: ", memoPubKey, " is not equal to derived public memo key: ", memoKeys.memoPubkey);
       message.error("Secret key invalid, please input correct password.");
     }
   }
@@ -236,7 +236,7 @@ class SignForm extends React.Component {
           [{ required: true, message: intl.formatMessage({ id: 'error_password_required' })}]})(
             <ImageInput
               name="password" 
-              placeholder={intl.formatMessage({ id: 'password_or_key' })} 
+              placeholder={intl.formatMessage({ id: 'password_or_key' })}
               autoComplete="on" 
               autoCorrect="off" 
               autoCapitalize="none"

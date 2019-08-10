@@ -5,7 +5,7 @@ import { message } from 'antd';
 import { injectIntl } from 'react-intl';
 import { getAuthenticatedUser } from '../../reducers';
 import { MAXIMUM_UPLOAD_SIZE_HUMAN } from '../../helpers/image';
-import { WeYouMe_PassPik_ImageHash } from '../../helpers/imageHash'
+import { WeYouMe_PassPik_ImageHash } from '../../helpers/imageHash';
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
