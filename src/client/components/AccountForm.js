@@ -50,7 +50,6 @@ class AccountForm extends React.Component {
 				SCORE: '100.000000 SCORE',
 			},
 			details: false,
-			imagepass: false,
 			passwordError: false,
 			passwordReady: false,
 		}
@@ -68,19 +67,19 @@ class AccountForm extends React.Component {
 		this.setState({ data });
 	};
 
-	changePassCallback = (state) => {
-		const { data } = this.state;
-		data['password']= state.password;
-		this.setState({ data });
-		this.passwordMatch(state.isValid);
-	}
+	// changePassCallback = (state) => {
+	// 	const { data } = this.state;
+	// 	data['password']= state.password;
+	// 	this.setState({ data });
+	// 	this.passwordMatch(state.isValid);
+	// }
 
-	changeConfirmCallback = (state) => {
-		const { data } = this.state;
-		data['confirmPassword'] = state.password;
-		this.setState({ data });
-		this.passwordMatch(state.isValid);
-	}
+	// changeConfirmCallback = (state) => {
+	// 	const { data } = this.state;
+	// 	data['confirmPassword'] = state.password;
+	// 	this.setState({ data });
+	// 	this.passwordMatch(state.isValid);
+	// }
 	
 	onSubmit = (event) => {
 		event.preventDefault();
@@ -90,12 +89,6 @@ class AccountForm extends React.Component {
 	toggleDetails = (data) => {
 		this.setState({
 			details: !this.state.details
-		})
-	}
-
-	toggleImagepass = (data) => {
-		this.setState({
-			imagepass: !this.state.imagepass
 		})
 	}
 
@@ -191,7 +184,7 @@ class AccountForm extends React.Component {
 		data['password'] = image;
 		data['confirmPassword'] = image;
 		this.setState({
-		  data,
+		  data: data,
 		});
 		this.passwordMatch(true);
 	}
@@ -283,8 +276,8 @@ class AccountForm extends React.Component {
 						<FormattedMessage id="password_tip" />
 					</div>
 					
-					<div className={(this.state.details ? 'visible' : '') + " extra-details"}>
-					<Form.Item 
+					 <div className={(this.state.details ? 'visible' : '') + " extra-details"}>
+					{/* <Form.Item 
 					className="AccountForm__group" 
 					label= {
 						<span className="AccountForm__label"> 
@@ -343,7 +336,7 @@ class AccountForm extends React.Component {
 						<div className="AccountForm__error">
 							<i className="iconfont icon-prompt" > </i> 
 							<FormattedMessage id="password_error" defaultMessage="Passwords do not match or are invalid" />
-						</div>}
+						</div>} */}
 					<Form.Item 
 						className="AccountForm__group" 
 						label= {
