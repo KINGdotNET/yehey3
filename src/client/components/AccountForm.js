@@ -226,6 +226,7 @@ class AccountForm extends React.Component {
 								<Input
 									className="AccountForm__control"
 									id="username"
+									autoComplete="off" 
 									type="text" 
 									placeholder={ intl.formatMessage({ id: 'username'}) } 
 									autoCorrect="off" 
@@ -247,7 +248,7 @@ class AccountForm extends React.Component {
 						<ImageInput
 							name="password_image_hash" 
 							placeholder={intl.formatMessage({ id: 'password_or_key' })} 
-							autoComplete="on" 
+							autoComplete="off" 
 							autoCorrect="off" 
 							autoCapitalize="none"
 							rows={1}
