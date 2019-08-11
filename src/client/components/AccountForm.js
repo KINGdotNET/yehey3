@@ -217,15 +217,15 @@ class AccountForm extends React.Component {
 							</span>
 						}
 						hasFeedback>
-							{getFieldDecorator('username', {
-								initialValue: data.name,
+							{getFieldDecorator('newusername', {
+								initialValue: '',
 								rules: [
 									{ validator: this.newAccountValid(intl) },
 								],
 							})(
 								<Input
 									className="AccountForm__control"
-									id="username"
+									id="newusername"
 									autoComplete="off" 
 									type="text" 
 									placeholder={ intl.formatMessage({ id: 'username'}) } 
@@ -235,6 +235,7 @@ class AccountForm extends React.Component {
 									onChange={this.onUpdate}
 									autoComplete="off"
 									maxLength="16"
+									data-lpignore="true"
 									/>
 							)}
 					</Form.Item>
@@ -248,9 +249,10 @@ class AccountForm extends React.Component {
 						<ImageInput
 							name="password_image_hash" 
 							placeholder={intl.formatMessage({ id: 'password_or_key' })} 
-							autoComplete="off" 
+							autoComplete="off"
 							autoCorrect="off" 
 							autoCapitalize="none"
+							type="text"
 							rows={1}
 							onImageUpload={this.props.onImageHash}
 							onImageInvalid={this.props.onImageInvalid}
@@ -259,7 +261,7 @@ class AccountForm extends React.Component {
 							uploadIcon={uploadIcon}
 							uploadColor={uploadColor}
 							inputId={'password_image_hash'}
-							type="password"
+							data-lpignore="true"
 						/>)}
 					</Form.Item>
 					
@@ -357,6 +359,7 @@ class AccountForm extends React.Component {
 								type="text"
 								className="AccountForm__control"
 								name="TME"
+								autoComplete="off" 
 								onChange={this.onUpdate}
 								/>
 						)}
@@ -379,6 +382,7 @@ class AccountForm extends React.Component {
 							<Input
 								id="SCORE"
 								type="text"
+								autoComplete="off" 
 								className="AccountForm__control"
 								name="SCORE"
 								onChange={this.onUpdate}
