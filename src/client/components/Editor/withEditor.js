@@ -31,7 +31,7 @@ export default function withEditor(WrappedComponent) {
       // );
       const formData = new FormData();
       formData.append('file', blob);
-      fetch(`https://ipfs.busy.org/upload`, {
+      fetch(`https://ipfs.weyoume.io/upload`, {
         method: 'POST',
         body: formData,
       })

@@ -65,7 +65,7 @@ class Welcome extends React.Component {
                                 stopAutoPlayOnHover
                                 centered
                                 slidesPerPage={1}
-                                autoPlay={4000}                             
+                                autoPlay={5000}                             
                                 value={this.state.value}
                                 onChange={this.onChange} >
                                     <img src="/images/NewWelcome1.png" className="Welcome__image" />
