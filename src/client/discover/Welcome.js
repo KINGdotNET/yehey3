@@ -68,11 +68,11 @@ class Welcome extends React.Component {
                                 autoPlay={4000}                             
                                 value={this.state.value}
                                 onChange={this.onChange} >
-                                    <img src="/images/Welcome6.png" className="Welcome__image" />
-                                    <img src="/images/Welcome7.png" className="Welcome__image" />
-                                    <img src="/images/Welcome8.png" className="Welcome__image" />
-                                    <img src="/images/Welcome4.png" className="Welcome__image" />
-                                    <img src="/images/Welcome9.png" className="Welcome__image" />
+                                    <img src="/images/NewWelcome1.png" className="Welcome__image" />
+                                    <img src="/images/NewWelcome2.png" className="Welcome__image" />
+                                    <img src="/images/NewWelcome3.png" className="Welcome__image" />
+                                    <img src="/images/NewWelcome4.png" className="Welcome__image" />
+                                    <img src="/images/NewWelcome5.png" className="Welcome__image" />
                             </Carousel>
                         <div className="Welcome__dots__container">
                             <Dots
