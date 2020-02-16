@@ -17,7 +17,7 @@
   "delete": "ลบ",
   "delete_selected": "ลบรายการที่เลือก",
   "notify_uploading_image": "อัพโหลดภาพ",
-  "notify_uploading_iamge_error": "ไม่สามารถอัพโหลดรูปภาพ",
+  "notify_uploading_image_error": "ไม่สามารถอัพโหลดรูปภาพ",
   "notify_uploading_image_invalid": "ไฟล์นี้ไม่ถูกต้อง รองรับไฟล์ภาพที่มีขนาด {size} สูงสุดเท่านั้น",
   "signup": "สร้างบัญชีผู้ใช้",
   "login": "เข้าสู่ระบบ",

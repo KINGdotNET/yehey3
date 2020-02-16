@@ -17,7 +17,7 @@
   "delete": "ta bort",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Laddar upp bild",
-  "notify_uploading_iamge_error": "Kunde inte ladda upp bild",
+  "notify_uploading_image_error": "Kunde inte ladda upp bild",
   "notify_uploading_image_invalid": "Den här filen är inte giltig. Bara bild-filer med största storlek {size} stöds",
   "signup": "Registrera dig",
   "login": "Logga in",

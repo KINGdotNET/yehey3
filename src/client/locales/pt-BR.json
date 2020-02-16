@@ -17,7 +17,7 @@
   "delete": "excluir",
   "delete_selected": "Deletar selecionados",
   "notify_uploading_image": "Carregando imagem",
-  "notify_uploading_iamge_error": "Não foi possível carregar a imagem",
+  "notify_uploading_image_error": "Não foi possível carregar a imagem",
   "notify_uploading_image_invalid": "Este arquivo é inválido. Somente arquivos de imagem com tamanho máximo de {size} são suportados",
   "signup": "Cadastre-se",
   "login": "Entrar",

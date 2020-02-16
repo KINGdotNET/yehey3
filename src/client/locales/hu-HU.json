@@ -17,7 +17,7 @@
   "delete": "Törlés",
   "delete_selected": "Kijelöltek törlése",
   "notify_uploading_image": "Kép feltöltése",
-  "notify_uploading_iamge_error": "A kép feltöltése sikertelen",
+  "notify_uploading_image_error": "A kép feltöltése sikertelen",
   "notify_uploading_image_invalid": "A fájl hibás. Csak az olyan képfájlok támogatottak, melyek maximális mérete {size}",
   "signup": "Regisztráció",
   "login": "Bejelentkezés",

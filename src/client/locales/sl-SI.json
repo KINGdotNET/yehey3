@@ -17,7 +17,7 @@
   "delete": "izbriši",
   "delete_selected": "Izbriši izbrano",
   "notify_uploading_image": "Nalaganje slike",
-  "notify_uploading_iamge_error": "Slike ni bilo mogoče naložiti",
+  "notify_uploading_image_error": "Slike ni bilo mogoče naložiti",
   "notify_uploading_image_invalid": "Neveljavna datoteka. Podprte so le slikovne datoteke z največjo velikostjo {size}",
   "signup": "Pridruži se",
   "login": "Prijavi se",

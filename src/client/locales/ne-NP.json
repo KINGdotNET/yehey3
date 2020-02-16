@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "तस्बिर अपलोड हुँदै छ",
-  "notify_uploading_iamge_error": "तस्बिर अपलोड हुन सकेन",
+  "notify_uploading_image_error": "तस्बिर अपलोड हुन सकेन",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "साइन अप गर्नुहोस्",
   "login": "लग ईन गर्नुहोस्",

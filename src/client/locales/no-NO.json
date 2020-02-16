@@ -17,7 +17,7 @@
   "delete": "slett",
   "delete_selected": "Slett valgte",
   "notify_uploading_image": "Laster opp bilde",
-  "notify_uploading_iamge_error": "Kunne ikke laste opp bildet",
+  "notify_uploading_image_error": "Kunne ikke laste opp bildet",
   "notify_uploading_image_invalid": "Denne filen er ugyldig. Bare bildefiler med maksimal størrelse på {size} støttes",
   "signup": "Registrer deg",
   "login": "Logg inn",

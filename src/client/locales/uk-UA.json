@@ -17,7 +17,7 @@
   "delete": "видалити",
   "delete_selected": "Видалити обране",
   "notify_uploading_image": "Завантаження зображення",
-  "notify_uploading_iamge_error": "Не вдалося завантажити зображення",
+  "notify_uploading_image_error": "Не вдалося завантажити зображення",
   "notify_uploading_image_invalid": "Цей файл є неприпустимим. Підтримуються тільки файли зображень з максимальним розміром {size}",
   "signup": "Реєстрація",
   "login": "Увійти",

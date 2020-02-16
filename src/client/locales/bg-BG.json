@@ -17,7 +17,7 @@
   "delete": "изтрий",
   "delete_selected": "Изтрий избраното",
   "notify_uploading_image": "Качване на изображение",
-  "notify_uploading_iamge_error": "Изображението не можа да бъде заредено",
+  "notify_uploading_image_error": "Изображението не можа да бъде заредено",
   "notify_uploading_image_invalid": "Този файл е невалиден. Само изображения с максимален размер {size} са поддържани",
   "signup": "Регистрация",
   "login": "Вход",

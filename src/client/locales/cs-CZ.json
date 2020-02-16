@@ -17,7 +17,7 @@
   "delete": "smazat",
   "delete_selected": "Odstranit vybrané",
   "notify_uploading_image": "Nahrávám obrázek",
-  "notify_uploading_iamge_error": "Obrázek se nepodařilo nahrát",
+  "notify_uploading_image_error": "Obrázek se nepodařilo nahrát",
   "notify_uploading_image_invalid": "Nesprávný soubor. Podporovány jsou pouze obrázky s maximální velikostí {size}",
   "signup": "Registrace",
   "login": "Přihlásit se",

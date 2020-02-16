@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "பதிவேற்றும் படம்",
-  "notify_uploading_iamge_error": "படத்தை பதிவேற்ற முடியாது",
+  "notify_uploading_image_error": "படத்தை பதிவேற்ற முடியாது",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "பதிவு செய்க",
   "login": "உள்நுழை",

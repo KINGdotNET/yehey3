@@ -17,7 +17,7 @@
   "delete": "forigi",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Alŝuti bildon",
-  "notify_uploading_iamge_error": "Ne eblis alŝuti bildon",
+  "notify_uploading_image_error": "Ne eblis alŝuti bildon",
   "notify_uploading_image_invalid": "Ĉi tiu dosiero estas malvalida. Nur bildo-dosieroj de maksimuma pezo {size} estas subtenita",
   "signup": "Registriĝi",
   "login": "Ensaluti",

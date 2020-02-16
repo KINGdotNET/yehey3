@@ -17,7 +17,7 @@
   "delete": "Διαγραφή",
   "delete_selected": "Διαγραφή επιλεγμένων",
   "notify_uploading_image": "Μεταφόρτωση εικόνας",
-  "notify_uploading_iamge_error": "Δεν ήταν δυνατή η μεταφόρτωση της εικόνας",
+  "notify_uploading_image_error": "Δεν ήταν δυνατή η μεταφόρτωση της εικόνας",
   "notify_uploading_image_invalid": "Το αρχείο δεν είναι έγκυρο. Υποστηρίζονται μόνο εικόνες με μέγιστο μέγεθος {size}",
   "signup": "Εγγραφή",
   "login": "Σύνδεση",

@@ -17,7 +17,7 @@
   "delete": "share",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Ana sauke hoto",
-  "notify_uploading_iamge_error": "Ba za a iya ɗaukar hoto ba",
+  "notify_uploading_image_error": "Ba za a iya ɗaukar hoto ba",
   "notify_uploading_image_invalid": "Wannan ɗin ba daidai ba ne. Kayan fayiloli kawai da girman girman girman {size} ana goyan baya",
   "signup": "Sa hannu",
   "login": "Shiga",

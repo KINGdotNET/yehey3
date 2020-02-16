@@ -17,7 +17,7 @@
   "delete": "избриши",
   "delete_selected": "Обриши изабрано",
   "notify_uploading_image": "Додавање фотографије",
-  "notify_uploading_iamge_error": "Није могуће додати фотографију",
+  "notify_uploading_image_error": "Није могуће додати фотографију",
   "notify_uploading_image_invalid": "Ова датотека није подржана. Дозвољене су само фотографије максималне величине {size}",
   "signup": "Региструј се",
   "login": "Пријави се",

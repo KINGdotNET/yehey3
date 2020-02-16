@@ -17,7 +17,7 @@
   "delete": "entfernen",
   "delete_selected": "Die ausgewählten Elemente löschen",
   "notify_uploading_image": "Bild wird hochgeladen",
-  "notify_uploading_iamge_error": "Bild konnte nicht hochgeladen werden",
+  "notify_uploading_image_error": "Bild konnte nicht hochgeladen werden",
   "notify_uploading_image_invalid": "Diese Datei ist ungültig! Nur Bilder mit maximaler Größe von {size} sind zugelassen",
   "signup": "Registrieren",
   "login": "Anmelden",

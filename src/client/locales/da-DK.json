@@ -17,7 +17,7 @@
   "delete": "slet",
   "delete_selected": "Slet markerede",
   "notify_uploading_image": "Overfører billede...",
-  "notify_uploading_iamge_error": "Billedet kunne ikke overføres",
+  "notify_uploading_image_error": "Billedet kunne ikke overføres",
   "notify_uploading_image_invalid": "Denne fil er ugyldig. Kun billeder med maksimal størrelse på {size} er understøttet",
   "signup": "Tilmeld",
   "login": "Log ind",

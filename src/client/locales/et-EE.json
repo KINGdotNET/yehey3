@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Pildi üleslaadimine",
-  "notify_uploading_iamge_error": "Ei saanud pilti üles laadida",
+  "notify_uploading_image_error": "Ei saanud pilti üles laadida",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "Registreeru",
   "login": "Logi sisse",

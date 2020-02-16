@@ -17,7 +17,7 @@
   "delete": "vous devez vous connecter pour utiliser cette fonctionnalité, veuillez {link}",
   "delete_selected": "Supprimer la sélection",
   "notify_uploading_image": "Image en cours d'envoi",
-  "notify_uploading_iamge_error": "Impossible de charger l'image",
+  "notify_uploading_image_error": "Impossible de charger l'image",
   "notify_uploading_image_invalid": "Le fichier est invalide. Seul les fichiers images avec une taille maximum de {size} sont prises en charge",
   "signup": "Inscription",
   "login": "Connexion",

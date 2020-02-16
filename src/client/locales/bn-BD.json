@@ -17,7 +17,7 @@
   "delete": "মুছুন",
   "delete_selected": "নির্বাচিতগুলো মুছুন",
   "notify_uploading_image": "ছবি আপলোড করা হচ্ছে",
-  "notify_uploading_iamge_error": "ছবিটি আপলোড করা যায়নি",
+  "notify_uploading_image_error": "ছবিটি আপলোড করা যায়নি",
   "notify_uploading_image_invalid": "এই ফাইলটি বৈধ নয়। শুধুমাত্র {size} সাইজের ইমেজ ফাইল সমর্থিত",
   "signup": "নিবন্ধন",
   "login": "প্রবেশ",

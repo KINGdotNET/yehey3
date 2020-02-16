@@ -17,7 +17,7 @@
   "delete": "Usuń",
   "delete_selected": "Usuń zaznaczone",
   "notify_uploading_image": "Przesyłanie obrazu",
-  "notify_uploading_iamge_error": "Nie udało się przesłać obrazu",
+  "notify_uploading_image_error": "Nie udało się przesłać obrazu",
   "notify_uploading_image_invalid": "Ten plik jest nieprawidłowy. Obsługiwane są tylko pliki obrazów o maksymalnym rozmiarze {size}",
   "signup": "Zarejestruj się",
   "login": "Zaloguj się",
