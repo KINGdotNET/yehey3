@@ -17,7 +17,7 @@
   "delete": "obrisati",
   "delete_selected": "Obriši označeno",
   "notify_uploading_image": "Učitavanje slike",
-  "notify_uploading_iamge_error": "Nije moguće učitati sliku",
+  "notify_uploading_image_error": "Nije moguće učitati sliku",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "Prijavi se",
   "login": "Prijava",

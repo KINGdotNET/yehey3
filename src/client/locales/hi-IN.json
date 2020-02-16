@@ -17,7 +17,7 @@
   "delete": "मिटाव/हटाव",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "चित्र अपलोड करें",
-  "notify_uploading_iamge_error": "चित्र लोड नहीं हो सकी",
+  "notify_uploading_image_error": "चित्र लोड नहीं हो सकी",
   "notify_uploading_image_invalid": "यह फाइल/रंदा मान्य नहीं है| सिर्फ छवि फाइलें समर्थित है अधिकतम आकृति {size} के साथ",
   "signup": "साइन अप",
   "login": "लॉग इन करें",

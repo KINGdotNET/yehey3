@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Đăng ảnh",
-  "notify_uploading_iamge_error": "Không thể tải hình ảnh",
+  "notify_uploading_image_error": "Không thể tải hình ảnh",
   "notify_uploading_image_invalid": "Tập tin này không hợp lệ. Chỉ các tập tin hình ảnh với kích thước tối đa {size} được hỗ trợ",
   "signup": "Đăng ký",
   "login": "Đăng nhập",

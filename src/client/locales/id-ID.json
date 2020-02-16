@@ -17,7 +17,7 @@
   "delete": "hapus",
   "delete_selected": "Hapus yang terpilih",
   "notify_uploading_image": "Mengunggah gambar",
-  "notify_uploading_iamge_error": "Tidak dapat mengunggah gambar",
+  "notify_uploading_image_error": "Tidak dapat mengunggah gambar",
   "notify_uploading_image_invalid": "Berkas ini tidak valid. Hanya mendukung berkas gambar dengan ukuran maksimal {size}",
   "signup": "Daftar",
   "login": "Masuk",

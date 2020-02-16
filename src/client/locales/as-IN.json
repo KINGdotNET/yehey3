@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "ছবি আপলোড হৈ আছে",
-  "notify_uploading_iamge_error": "ছবি আপলোড কৰিব পৰা নগ'ল",
+  "notify_uploading_image_error": "ছবি আপলোড কৰিব পৰা নগ'ল",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "নতুনকৈ অন্তৰ্ভুক্ত হোৱা",
   "login": "অন্তৰ্ভুক্ত",

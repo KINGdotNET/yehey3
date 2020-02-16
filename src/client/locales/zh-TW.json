@@ -17,7 +17,7 @@
   "delete": "刪除",
   "delete_selected": "刪除所選項",
   "notify_uploading_image": "正在上傳圖像…",
-  "notify_uploading_iamge_error": "無法上傳此圖像",
+  "notify_uploading_image_error": "無法上傳此圖像",
   "notify_uploading_image_invalid": "此文件無效。僅支援不大於 {size} 的圖像。",
   "signup": "註冊",
   "login": "登錄",

@@ -17,7 +17,7 @@
   "delete": "删除",
   "delete_selected": "删除已选项",
   "notify_uploading_image": "正在上传图片",
-  "notify_uploading_iamge_error": "无法上传图片",
+  "notify_uploading_image_error": "无法上传图片",
   "notify_uploading_image_invalid": "此文件无效，仅支持最大为 {size} 的图片文件。",
   "signup": "注册",
   "login": "登录",

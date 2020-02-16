@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Afbeelding uploaden",
-  "notify_uploading_iamge_error": "Kon afbeelding niet hoogladen",
+  "notify_uploading_image_error": "Kon afbeelding niet hoogladen",
   "notify_uploading_image_invalid": "Dit bestand is ongeldig. Alleen afbeeldingen met de maximale grootte van {size} worden ondersteund",
   "signup": "Registreer",
   "login": "Inloggen",

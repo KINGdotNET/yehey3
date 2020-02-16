@@ -17,7 +17,7 @@
   "delete": "削除",
   "delete_selected": "選択を削除",
   "notify_uploading_image": "画像をアップロード中",
-  "notify_uploading_iamge_error": "画像のアップロードに失敗しました",
+  "notify_uploading_image_error": "画像のアップロードに失敗しました",
   "notify_uploading_image_invalid": "このファイルは無効です。最大{size}以下の大きさの画像ファイルのみサポートします。",
   "signup": "サインアップ",
   "login": "ログイン",

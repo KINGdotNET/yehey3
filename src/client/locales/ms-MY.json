@@ -17,7 +17,7 @@
   "delete": "padam",
   "delete_selected": "Padam yang dipilih",
   "notify_uploading_image": "Muat naik gambar",
-  "notify_uploading_iamge_error": "Gagal memuat naik gambar",
+  "notify_uploading_image_error": "Gagal memuat naik gambar",
   "notify_uploading_image_invalid": "Gambar yang dipilih tidak sah. Hanya gambar dengan saiz maksima {size} disokong",
   "signup": "Daftar",
   "login": "Log Masuk",

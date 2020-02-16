@@ -17,7 +17,7 @@
   "delete": "sil",
   "delete_selected": "Seçilenleri sil",
   "notify_uploading_image": "Görüntü yükleniyor",
-  "notify_uploading_iamge_error": "Görüntü yüklenemedi",
+  "notify_uploading_image_error": "Görüntü yüklenemedi",
   "notify_uploading_image_invalid": "Bu dosya geçersiz. Sadece maksimum boyutu {size} olan resim dosyaları desteklenir",
   "signup": "Kayıt Ol",
   "login": "Giriş Yap",

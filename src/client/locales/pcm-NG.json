@@ -17,7 +17,7 @@
   "delete": "delete am",
   "delete_selected": "Delete don de selected",
   "notify_uploading_image": "Foto dey upload",
-  "notify_uploading_iamge_error": "E nor fit upload de foto",
+  "notify_uploading_image_error": "E nor fit upload de foto",
   "notify_uploading_image_invalid": "Dis file nor valid at all. Na only foto files wey get biggest size of {size} na im dey supported",
   "signup": "Regista",
   "login": "Enta",

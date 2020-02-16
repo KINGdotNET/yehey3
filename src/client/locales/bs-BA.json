@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Otpremanje slika",
-  "notify_uploading_iamge_error": "Ne možete postaviti sliku",
+  "notify_uploading_image_error": "Ne možete postaviti sliku",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "Prijaviti se",
   "login": "Ulogovati se",

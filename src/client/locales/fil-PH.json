@@ -17,7 +17,7 @@
   "delete": "burahin",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Nag-uupload ng imahe",
-  "notify_uploading_iamge_error": "Hindi ma-upload ang imahe",
+  "notify_uploading_image_error": "Hindi ma-upload ang imahe",
   "notify_uploading_image_invalid": "Ang dokumentong ito ay imbalido. Tanging mga imaheng dokumento lamang na mayroong sukat hangang {size} ang suportado",
   "signup": "Magparehistro",
   "login": "Pumasok",

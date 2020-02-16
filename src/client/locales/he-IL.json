@@ -17,7 +17,7 @@
   "delete": "מחק",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "טוען תמונה",
-  "notify_uploading_iamge_error": "טעינת תמונה נכשלה",
+  "notify_uploading_image_error": "טעינת תמונה נכשלה",
   "notify_uploading_image_invalid": "קובץ זה אינו חוקי. רק תמונות עם הגודל המרבי של {size} נתמכות",
   "signup": "רישום",
   "login": "כניסה",

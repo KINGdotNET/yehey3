@@ -17,7 +17,7 @@
   "delete": "حذف",
   "delete_selected": "حذف المحدد",
   "notify_uploading_image": "جاري رفع الصورة",
-  "notify_uploading_iamge_error": "تعذّر رفع الصورة",
+  "notify_uploading_image_error": "تعذّر رفع الصورة",
   "notify_uploading_image_invalid": "هذا الملف غير مدعوم. يتم فقط دعم الصور التي يبلغ حجمها {size} كحد أقصى",
   "signup": "إشتراك",
   "login": "تسجيل الدخول",

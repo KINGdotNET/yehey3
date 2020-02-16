@@ -17,7 +17,7 @@
   "delete": "delete",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Carregant imatge",
-  "notify_uploading_iamge_error": "No s'ha pogut carregar la imatge",
+  "notify_uploading_image_error": "No s'ha pogut carregar la imatge",
   "notify_uploading_image_invalid": "This file is invalid. Only image files with maximum size of {size} are supported",
   "signup": "Registre",
   "login": "Entra",

@@ -17,7 +17,7 @@
   "delete": "cancella",
   "delete_selected": "Elimina selezionato",
   "notify_uploading_image": "Caricamento immagini",
-  "notify_uploading_iamge_error": "Impossibile caricare le immagini",
+  "notify_uploading_image_error": "Impossibile caricare le immagini",
   "notify_uploading_image_invalid": "Questo file non è valido. Sono supportati solo file immagine con dimensioni massime di {size}",
   "signup": "Iscriviti",
   "login": "Accedi",

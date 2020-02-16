@@ -17,7 +17,7 @@
   "delete": "মুছে ফেলা",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "চিত্র আপলোড হচ্ছে",
-  "notify_uploading_iamge_error": "চিত্র আপলোড করা যায়নি",
+  "notify_uploading_image_error": "চিত্র আপলোড করা যায়নি",
   "notify_uploading_image_invalid": "এই ফাইলটি বৈধ নয়। ইমেজ ফাইল {size} সর্বোচ্চ মাপ দিয়ে সমর্থিত নয়",
   "signup": "নিবন্ধন",
   "login": "প্রবেশ",

@@ -31,7 +31,7 @@ export default function withEditor(WrappedComponent) {
       // );
       const formData = new FormData();
       formData.append('file', blob);
-      fetch(`https://ipfs.busy.org/upload`, {
+      fetch(`https://ipfs.weyoume.io/upload`, {
         method: 'POST',
         body: formData,
       })
@@ -42,7 +42,7 @@ export default function withEditor(WrappedComponent) {
         errorCallback();
         message.error(
           formatMessage({
-            id: 'notify_uploading_iamge_error',
+            id: 'notify_uploading_image_error',
             defaultMessage: "Image Upload Error",
           }),
         );

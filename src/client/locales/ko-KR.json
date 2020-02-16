@@ -17,7 +17,7 @@
   "delete": "삭제",
   "delete_selected": "선택 항목을 삭제합니다.",
   "notify_uploading_image": "이미지 업로드 중",
-  "notify_uploading_iamge_error": "이미지를 업로드할 수 없습니다.",
+  "notify_uploading_image_error": "이미지를 업로드할 수 없습니다.",
   "notify_uploading_image_invalid": "이 파일은 허용되지 않습니다. 허용되는 이미지 파일의 최대크기는 {size} 입니다.",
   "signup": "회원 가입",
   "login": "로그인",

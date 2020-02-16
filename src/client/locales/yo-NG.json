@@ -17,7 +17,7 @@
   "delete": "paarẹ",
   "delete_selected": "Delete selected",
   "notify_uploading_image": "Fi àwòrán si",
-  "notify_uploading_iamge_error": "Kò le gbé àwòrán si",
+  "notify_uploading_image_error": "Kò le gbé àwòrán si",
   "notify_uploading_image_invalid": "Faili yii jẹ ailopin. Awọn faili aworan ni iwọn to pọju ti {size} ti ni atilẹyin",
   "signup": "Forukósílè",
   "login": "Wo ilé",

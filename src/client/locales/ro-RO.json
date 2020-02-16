@@ -17,7 +17,7 @@
   "delete": "șterge",
   "delete_selected": "Sterge elemente selectate",
   "notify_uploading_image": "Se încarcă imaginea",
-  "notify_uploading_iamge_error": "Nu s-a putut încărca imaginea",
+  "notify_uploading_image_error": "Nu s-a putut încărca imaginea",
   "notify_uploading_image_invalid": "Acest fișier nu este valid. Numai fişierele imagine cu dimensiunea maximă de {size} sunt acceptate",
   "signup": "Înregistrare",
   "login": "Conectați-vă",

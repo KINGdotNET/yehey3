@@ -17,7 +17,7 @@
   "delete": "borrar",
   "delete_selected": "Eliminar seleccionados",
   "notify_uploading_image": "Cargando imagen",
-  "notify_uploading_iamge_error": "No se pudo cargar la imagen",
+  "notify_uploading_image_error": "No se pudo cargar la imagen",
   "notify_uploading_image_invalid": "Archivo invalido. Solo se admiten archivos de imagen con tamaño {size}",
   "signup": "Registrarse",
   "login": "Acceder",
